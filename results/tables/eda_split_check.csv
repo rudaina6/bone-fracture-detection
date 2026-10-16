@@ -1,0 +1,11 @@
+split,region_group,normal,fractured
+test,hand,180,76
+test,hip,53,11
+test,leg,383,42
+test,other,3,2
+test,shoulder,55,12
+train,hand,720,305
+train,hip,210,46
+train,leg,1529,170
+train,other,12,7
+train,shoulder,219,48

@@ -1,0 +1,12 @@
+region_detail,normal,fractured,total,fracture_rate_%,region_group
+hand,900,381,1281,29.7,hand
+hip,169,10,179,5.6,hip
+leg+hip,94,47,141,33.3,hip
+leg,1912,212,2124,10.0,leg
+hand+hip+shoulder,11,3,14,21.4,other
+hand+leg,3,3,6,50.0,other
+hand+hip,0,2,2,100.0,other
+hand+leg+hip,0,1,1,100.0,other
+hand+leg+hip+shoulder,1,0,1,0.0,other
+hand+shoulder,183,50,233,21.5,shoulder
+shoulder,91,10,101,9.9,shoulder

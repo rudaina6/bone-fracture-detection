@@ -1,0 +1,15 @@
+scikit-learn
+scikit-image
+opencv-python
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+joblib
+imbalanced-learn
+# optional gradient boosting (HistGradientBoosting in scikit-learn works without these)
+xgboost
+# optional gradient boosting
+lightgbm
+jupyter

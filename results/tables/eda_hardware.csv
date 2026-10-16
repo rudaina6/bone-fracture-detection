@@ -1,0 +1,11 @@
+region_group,hardware,normal,fractured
+hand,0,900,360
+hand,1,0,21
+leg,0,1910,160
+leg,1,2,52
+hip,0,263,37
+hip,1,0,20
+shoulder,0,274,57
+shoulder,1,0,3
+other,0,15,8
+other,1,0,1
