@@ -23,6 +23,7 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 - **Choice:** 256 px, CLAHE, all five handcrafted families (8,641 dims), `StandardScaler` inside the CV folds, each family weighted 1/sqrt(dims), no dimensionality reduction. Reference linear SVM: C=0.1, `class_weight="balanced"`.
 - **Score of the reference model** (5-fold CV on the 3,266 training images): PR-AUC 0.552 +/- 0.041 (chance 0.176), ROC-AUC 0.813, recall about 0.68 and F2 about 0.60 at the default threshold.
 - **Compared and not better:** z-score instead of CLAHE (0.550), 448 px (0.537), PCA (0.541), tree selection (0.544); L1 selection failed (selected nothing after block weighting). Removing high-resolution images (0.540) or hardware images (0.525) changes the score only within noise.
+- **Two pipelines, one conclusion:** Aiman independently built Phase 2 on `aiman_branch` (Oct 17-21). Both are merged: the shared pipeline in `src/` is the one to use from Phase 3 on; hers is kept in `src/aiman/`, `src/Ablations.py` and `notebooks/02_features.ipynb` (see `src/aiman/README.md` and the cross-check table in `docs/phase2_features.md`).
 - **Hand-off:** `from feature_utils import load_features, make_preprocessor` (see the top of `docs/phase2_features.md`). Features are regenerated with `python src/extract_features.py` (not committed).
 - These CV scores also guided the choices, so they are slightly optimistic; the test set is untouched.
 

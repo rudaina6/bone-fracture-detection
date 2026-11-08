@@ -58,6 +58,30 @@ All numbers are for all five families, linear SVM, unless stated. Fold-to-fold S
 
 **Intensity is not a region shortcut:** it is the weakest family alone (0.343) and removing it changes the full-set score by less than 0.005. (The Phase 1 EDA had flagged it as a possible shortcut.)
 
+## Cross-check with Aiman's pipeline (`aiman_branch`)
+Aiman built the same phase independently (preprocess, five families, family and reduction comparison, resolution and contrast
+ablations); her scripts, notebook, ablations and tables are merged in (`src/aiman/`, `src/Ablations.py`,
+`notebooks/02_features.ipynb`, `results/tables/features_*` and `phase2_ablations.csv`). Same data, same frozen folds, linear SVM, PR-AUC.
+Her runs use no family weighting, so they are comparable with the "no weighting" rows above, not with the 0.552.
+
+| Question | Aiman's branch (unweighted) | This pipeline |
+|---|---|---|
+| All five families, no reduction | 0.419 | 0.423 (C=0.01, unweighted) |
+| PCA | 0.456 (400 components) | 0.541 (95% variance, block-weighted) |
+| L1 selection | **0.458** (1,093 of 8,641 columns kept) | failed once block weighting was applied (selected 0 features) |
+| Tree selection | 0.415 | 0.544 (block-weighted) |
+| CLAHE vs z-score (all families + PCA) | 0.456 vs 0.435 | 0.552 vs 0.550 |
+| 256 vs 448 px (all families + PCA / block-weighted) | 0.456 vs 0.440 | 0.552 vs 0.537 |
+| Intensity alone, CLAHE vs z-score | 0.334 vs 0.296 | 0.343 (CLAHE) |
+
+Both pipelines agree on the conclusions: 448 px does not help, CLAHE is at least as good as z-score, intensity statistics are not a shortcut
+and PCA is a reasonable choice. The one difference is the role of reduction. With unscaled family blocks, PCA (+0.04) and
+L1 selection (+0.04) clearly help because HOG's 8,100 columns dominate; after equal family weighting the full feature set already scores
+0.552 and reduction no longer adds anything. Weighting and reduction are two ways of fixing the same imbalance.
+Aiman's code also drops constant columns (`VarianceThreshold`, the black padded corners of HOG); the shared pipeline leaves them in, which is
+harmless for scaling (they become zeros) but counts them in the HOG block size.
+Her L1 setting (C=0.05, applied to the standardised features without family weights) might still be worth trying inside Phase 3 for the non-linear models.
+
 ## Caveats for the report
 - These scores were used to choose C, resolution, weighting and the feature set on the same folds, so they are slightly optimistic. Phase 3 should tune inside nested CV or say so. The test set has not been used.
 - The decision threshold is the default (score > 0); recall is about 0.68 and F2 about 0.60 there. Threshold tuning belongs to Phase 3.2.
