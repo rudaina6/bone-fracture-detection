@@ -1,7 +1,7 @@
 # Design Note: Classical ML for Multi-Region Fracture Detection
 
 **Course:** CS-245, Fall 2026, NUST SEECS
-**Dataset:** FracAtlas (hand, leg, hip, shoulder; 4,083 X-ray images; 717 fracture images with bounding boxes)
+**Dataset:** FracAtlas (hand, leg, hip, shoulder; 4,083 X-ray images; 719 fracture images with bounding boxes)
 
 ## Why classical methods
 The course requires classical machine learning, so this project uses handcrafted features with

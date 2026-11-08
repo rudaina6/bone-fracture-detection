@@ -1,6 +1,6 @@
 """Phase 1.1: build the master label table (one row per image) from FracAtlas.
 
-Run from the repo root:
+Run from anywhere:
     python src/build_master.py --data-dir data/FracAtlas
 
 The script searches --data-dir for the metadata CSV, the COCO annotation JSON and
@@ -8,7 +8,7 @@ the images, so the exact folder layout does not matter. It prints the CSV column
 finds and runs sanity checks against the numbers in the project plan
 (4,083 images, 717 fractured, ~17.6%). Check those printouts before trusting the output.
 
-Output: data/master.csv
+Output: data/master.csv  (file_path is relative to --data-dir, e.g. images/Fractured/IMG0000019.jpg)
 """
 import argparse
 import json
@@ -16,6 +16,8 @@ from pathlib import Path
 
 import pandas as pd
 from PIL import Image
+
+from paths import REPO_ROOT
 
 REGIONS = ["hand", "leg", "hip", "shoulder"]
 IMG_EXT = {".jpg", ".jpeg", ".png"}
@@ -75,7 +77,7 @@ def index_images(root):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-dir", required=True, type=Path)
-    ap.add_argument("--out", default=Path("data/master.csv"), type=Path)
+    ap.add_argument("--out", default=REPO_ROOT / "data" / "master.csv", type=Path)
     args = ap.parse_args()
     root = args.data_dir
 
@@ -112,12 +114,14 @@ def main():
         if not ps:
             return pd.NA
         if len(ps) == 1:
-            return str(ps[0])
+            return ps[0].relative_to(root).as_posix()
         # name exists in several folders: take the copy whose folder matches the label
         want = "Fractured" if row["fractured"] == 1 else "Non_fractured"
         match = [p for p in ps if p.parent.name == want]
-        return str((match or ps)[0])
+        return (match or ps)[0].relative_to(root).as_posix()
 
+    # file_path is stored RELATIVE to --data-dir (posix slashes) so master.csv works on every machine;
+    # resolve it with src/paths.py::image_path().
     df["file_path"] = df.apply(pick_path, axis=1)
     df["in_both_folders"] = df["image_id"].map(lambda n: int(len(imgs.get(n, [])) > 1))
     n_missing = df["file_path"].isna().sum()

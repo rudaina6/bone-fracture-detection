@@ -13,11 +13,14 @@ from pathlib import Path
 import pandas as pd
 from PIL import Image, ImageOps
 
+from paths import DATA_DIR, REPO_ROOT, image_path
+
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--master", default=Path("data/master.csv"), type=Path)
-    ap.add_argument("--out", default=Path("results/tables/image_integrity.csv"), type=Path)
+    ap.add_argument("--master", default=REPO_ROOT / "data" / "master.csv", type=Path)
+    ap.add_argument("--out", default=REPO_ROOT / "results" / "tables" / "image_integrity.csv", type=Path)
+    ap.add_argument("--data-dir", default=DATA_DIR, type=Path)
     args = ap.parse_args()
 
     df = pd.read_csv(args.master)
@@ -25,7 +28,7 @@ def main():
     for i, r in enumerate(df.itertuples(index=False), 1):
         issue = None
         try:
-            with Image.open(r.file_path) as im:
+            with Image.open(image_path(r.file_path, args.data_dir)) as im:
                 im.load()                       # full decode; raises on truncated data
                 size = ImageOps.exif_transpose(im).size   # COCO sizes/boxes assume the EXIF rotation is applied
                 if size != (int(r.width), int(r.height)):

@@ -8,3 +8,7 @@ __pycache__/
 # OS / editor
 .DS_Store
 .vscode/
+
+# Data and generated features (images are large; master.csv and splits.csv ARE committed)
+data/FracAtlas/
+features/

@@ -16,6 +16,8 @@ from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import StratifiedKFold, train_test_split
 
+from paths import REPO_ROOT
+
 SEED = 42
 TEST_SIZE = 0.20
 N_FOLDS = 5
@@ -24,8 +26,8 @@ MIN_STRATUM = 10
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--master", default=Path("data/master.csv"), type=Path)
-    ap.add_argument("--out", default=Path("results/splits.csv"), type=Path)
+    ap.add_argument("--master", default=REPO_ROOT / "data" / "master.csv", type=Path)
+    ap.add_argument("--out", default=REPO_ROOT / "results" / "splits.csv", type=Path)
     args = ap.parse_args()
 
     df = pd.read_csv(args.master)
