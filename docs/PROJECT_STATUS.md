@@ -12,7 +12,7 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 | 1 | Data preparation and EDA | Complete | 100% | `data/master.csv`, `results/splits.csv`, `notebooks/01_eda.ipynb`, `docs/data_decisions.md` |
 | 2 | Preprocessing and features | **Complete** | 100% | `docs/phase2_features.md`, `src/preprocess.py`, `src/feature_extractors.py`, `src/extract_features.py`, `src/compare_families.py`, `src/feature_utils.py` |
 | 3 | Unified classifier | **Complete** | 100% | `docs/phase3_unified.md`, `src/evaluate.py`, `src/model_zoo.py`, `src/cv_protocol.py`, `src/phase3_unified.py`, `src/phase3_final_test.py`, `results/phase3/`, `results/tables/phase3_*.csv` |
-| 4 | Region-specific classifiers | **Next: can start now** (reuse `model_zoo`, `cv_protocol`, `evaluate`) | 0% | |
+| 4 | Region-specific classifiers | **In progress** (2026-11-10: nested CV done, hip region model better than unified, others no detectable difference; test evaluation next) | 70% | `docs/phase4_regional.md`, `src/phase4_regional.py`, `src/phase4_final_test.py` |
 | 5 | Comparative analysis | Not started | 0% | |
 | 6 | Gap-closing | Not started | 0% | |
 | 7 | Localization | Not started | 0% | |

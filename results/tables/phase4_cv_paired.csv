@@ -1,0 +1,91 @@
+group,metric,diff,lo,hi,p_two_sided,run,model,imbalance,fixed
+routed (4 regions),pr_auc,,,,,linsvm__none,linsvm,none,False
+routed (4 regions),roc_auc,,,,,linsvm__none,linsvm,none,False
+routed (4 regions),recall,0.0246,-0.0086,0.0553,0.166,linsvm__none,linsvm,none,False
+routed (4 regions),precision,0.0477,0.0316,0.0629,0.0,linsvm__none,linsvm,none,False
+routed (4 regions),specificity,0.0497,0.0339,0.0647,0.0,linsvm__none,linsvm,none,False
+routed (4 regions),f2,0.0419,0.017,0.0652,0.001,linsvm__none,linsvm,none,False
+hand,pr_auc,-0.0005,-0.0298,0.0293,0.953,linsvm__none,linsvm,none,False
+hand,roc_auc,0.0143,-0.0058,0.0328,0.136,linsvm__none,linsvm,none,False
+hand,recall,0.0164,-0.0218,0.0564,0.441,linsvm__none,linsvm,none,False
+hand,precision,-0.0232,-0.0422,-0.004,0.016,linsvm__none,linsvm,none,False
+hand,specificity,-0.0639,-0.0977,-0.0285,0.001,linsvm__none,linsvm,none,False
+hand,f2,-0.0055,-0.0344,0.0235,0.738,linsvm__none,linsvm,none,False
+leg,pr_auc,0.0476,0.0147,0.0807,0.007,linsvm__none,linsvm,none,False
+leg,roc_auc,0.023,0.0003,0.0464,0.047,linsvm__none,linsvm,none,False
+leg,recall,-0.0353,-0.092,0.0178,0.241,linsvm__none,linsvm,none,False
+leg,precision,0.1333,0.0982,0.1691,0.0,linsvm__none,linsvm,none,False
+leg,specificity,0.102,0.084,0.1208,0.0,linsvm__none,linsvm,none,False
+leg,f2,0.0596,0.0132,0.1028,0.005,linsvm__none,linsvm,none,False
+hip,pr_auc,0.2873,0.1516,0.4044,0.0,linsvm__none,linsvm,none,False
+hip,roc_auc,0.205,0.1233,0.2969,0.0,linsvm__none,linsvm,none,False
+hip,recall,0.3913,0.2424,0.5306,0.0,linsvm__none,linsvm,none,False
+hip,precision,0.199,0.1184,0.2795,0.0,linsvm__none,linsvm,none,False
+hip,specificity,0.0952,0.0237,0.1667,0.011,linsvm__none,linsvm,none,False
+hip,f2,0.328,0.2087,0.4387,0.0,linsvm__none,linsvm,none,False
+shoulder,pr_auc,0.0255,-0.0994,0.1244,0.817,linsvm__none,linsvm,none,False
+shoulder,roc_auc,0.015,-0.0579,0.0858,0.704,linsvm__none,linsvm,none,False
+shoulder,recall,-0.0625,-0.1957,0.0588,0.417,linsvm__none,linsvm,none,False
+shoulder,precision,-0.008,-0.0727,0.0559,0.806,linsvm__none,linsvm,none,False
+shoulder,specificity,0.0137,-0.0493,0.0759,0.716,linsvm__none,linsvm,none,False
+shoulder,f2,-0.0386,-0.1392,0.0537,0.436,linsvm__none,linsvm,none,False
+routed (4 regions),pr_auc,,,,,rbfsvm__none,rbfsvm,none,False
+routed (4 regions),roc_auc,,,,,rbfsvm__none,rbfsvm,none,False
+routed (4 regions),recall,0.0053,-0.0263,0.0367,0.803,rbfsvm__none,rbfsvm,none,False
+routed (4 regions),precision,0.0381,0.022,0.0551,0.0,rbfsvm__none,rbfsvm,none,False
+routed (4 regions),specificity,0.0474,0.0307,0.0649,0.0,rbfsvm__none,rbfsvm,none,False
+routed (4 regions),f2,0.0268,0.0027,0.0505,0.026,rbfsvm__none,rbfsvm,none,False
+hand,pr_auc,-0.0181,-0.0465,0.0173,0.329,rbfsvm__none,rbfsvm,none,False
+hand,roc_auc,0.0147,-0.0068,0.0366,0.167,rbfsvm__none,rbfsvm,none,False
+hand,recall,0.0689,0.0312,0.1104,0.0,rbfsvm__none,rbfsvm,none,False
+hand,precision,-0.0428,-0.0607,-0.0238,0.0,rbfsvm__none,rbfsvm,none,False
+hand,specificity,-0.1444,-0.1774,-0.1102,0.0,rbfsvm__none,rbfsvm,none,False
+hand,f2,0.01,-0.0175,0.0403,0.47,rbfsvm__none,rbfsvm,none,False
+leg,pr_auc,0.0234,-0.0121,0.0602,0.206,rbfsvm__none,rbfsvm,none,False
+leg,roc_auc,0.0028,-0.0203,0.0247,0.761,rbfsvm__none,rbfsvm,none,False
+leg,recall,-0.0941,-0.1543,-0.0387,0.0,rbfsvm__none,rbfsvm,none,False
+leg,precision,0.1493,0.1128,0.1868,0.0,rbfsvm__none,rbfsvm,none,False
+leg,specificity,0.1236,0.1046,0.1429,0.0,rbfsvm__none,rbfsvm,none,False
+leg,f2,0.0359,-0.0121,0.0806,0.154,rbfsvm__none,rbfsvm,none,False
+hip,pr_auc,0.2226,0.1054,0.3236,0.0,rbfsvm__none,rbfsvm,none,False
+hip,roc_auc,0.1452,0.0741,0.2247,0.0,rbfsvm__none,rbfsvm,none,False
+hip,recall,0.087,-0.06,0.2292,0.318,rbfsvm__none,rbfsvm,none,False
+hip,precision,0.128,0.0674,0.193,0.0,rbfsvm__none,rbfsvm,none,False
+hip,specificity,0.1476,0.0865,0.211,0.0,rbfsvm__none,rbfsvm,none,False
+hip,f2,0.1293,0.0234,0.2308,0.012,rbfsvm__none,rbfsvm,none,False
+shoulder,pr_auc,-0.0767,-0.1556,0.0035,0.068,rbfsvm__none,rbfsvm,none,False
+shoulder,roc_auc,-0.0197,-0.0835,0.0397,0.533,rbfsvm__none,rbfsvm,none,False
+shoulder,recall,-0.125,-0.2549,0.0,0.074,rbfsvm__none,rbfsvm,none,False
+shoulder,precision,-0.0074,-0.0609,0.0458,0.809,rbfsvm__none,rbfsvm,none,False
+shoulder,specificity,0.0502,-0.0184,0.1215,0.186,rbfsvm__none,rbfsvm,none,False
+shoulder,f2,-0.0648,-0.1567,0.0259,0.171,rbfsvm__none,rbfsvm,none,False
+routed (4 regions),pr_auc,,,,,rbfsvm__none__fixed,rbfsvm,none,True
+routed (4 regions),roc_auc,,,,,rbfsvm__none__fixed,rbfsvm,none,True
+routed (4 regions),recall,0.0211,-0.0116,0.0527,0.214,rbfsvm__none__fixed,rbfsvm,none,True
+routed (4 regions),precision,0.0395,0.0234,0.0555,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+routed (4 regions),specificity,0.0437,0.0271,0.0604,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+routed (4 regions),f2,0.0361,0.0112,0.0589,0.005,rbfsvm__none__fixed,rbfsvm,none,True
+hand,pr_auc,-0.0158,-0.0415,0.0133,0.337,rbfsvm__none__fixed,rbfsvm,none,True
+hand,roc_auc,0.0103,-0.008,0.0302,0.269,rbfsvm__none__fixed,rbfsvm,none,True
+hand,recall,0.0885,0.0486,0.1283,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+hand,precision,-0.0452,-0.0649,-0.0253,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+hand,specificity,-0.1653,-0.197,-0.1317,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+hand,f2,0.0178,-0.0141,0.0482,0.251,rbfsvm__none__fixed,rbfsvm,none,True
+leg,pr_auc,0.0294,-0.0045,0.0666,0.091,rbfsvm__none__fixed,rbfsvm,none,True
+leg,roc_auc,0.004,-0.0186,0.0259,0.677,rbfsvm__none__fixed,rbfsvm,none,True
+leg,recall,-0.0882,-0.1462,-0.0342,0.002,rbfsvm__none__fixed,rbfsvm,none,True
+leg,precision,0.1547,0.1179,0.193,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+leg,specificity,0.1249,0.1053,0.1446,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+leg,f2,0.0418,-0.0053,0.0865,0.081,rbfsvm__none__fixed,rbfsvm,none,True
+hip,pr_auc,0.2014,0.0839,0.3136,0.001,rbfsvm__none__fixed,rbfsvm,none,True
+hip,roc_auc,0.134,0.0605,0.2172,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+hip,recall,0.0217,-0.1347,0.1702,0.888,rbfsvm__none__fixed,rbfsvm,none,True
+hip,precision,0.1378,0.0685,0.2099,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+hip,specificity,0.1762,0.1148,0.2392,0.0,rbfsvm__none__fixed,rbfsvm,none,True
+hip,f2,0.0976,-0.0139,0.2081,0.1,rbfsvm__none__fixed,rbfsvm,none,True
+shoulder,pr_auc,-0.0327,-0.1219,0.0611,0.548,rbfsvm__none__fixed,rbfsvm,none,True
+shoulder,roc_auc,-0.0071,-0.0799,0.0594,0.85,rbfsvm__none__fixed,rbfsvm,none,True
+shoulder,recall,-0.0208,-0.1334,0.087,0.873,rbfsvm__none__fixed,rbfsvm,none,True
+shoulder,precision,0.0146,-0.0328,0.0614,0.535,rbfsvm__none__fixed,rbfsvm,none,True
+shoulder,specificity,0.0365,-0.0314,0.1023,0.32,rbfsvm__none__fixed,rbfsvm,none,True
+shoulder,f2,0.0016,-0.0798,0.0758,0.951,rbfsvm__none__fixed,rbfsvm,none,True
