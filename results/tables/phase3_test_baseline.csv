@@ -1,0 +1,2 @@
+model,tn,fp,fn,tp,recall,precision,specificity,f1,f2,accuracy,roc_auc,pr_auc
+never fracture,674,0,143,0,0.0,0.0,1.0,0.0,0.0,0.825,0.5,0.175

@@ -1,0 +1,3 @@
+subset,n,n_pos,tp,fn,fp,tn,recall,specificity
+no hardware,796,123,93,30,154,519,0.7561,0.7712
+hardware,21,20,15,5,1,0,0.75,0.0

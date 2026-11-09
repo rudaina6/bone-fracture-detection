@@ -1,0 +1,11 @@
+threshold,group,n,n_pos,tn,fp,fn,tp
+tuned,overall,817,143,519,155,35,108
+tuned,hand,256,76,113,67,17,59
+tuned,leg,425,42,323,60,12,30
+tuned,hip,64,11,43,10,3,8
+tuned,shoulder,67,12,40,15,2,10
+default,overall,817,143,662,12,87,56
+default,hand,256,76,173,7,48,28
+default,leg,425,42,380,3,25,17
+default,hip,64,11,53,0,5,6
+default,shoulder,67,12,53,2,7,5

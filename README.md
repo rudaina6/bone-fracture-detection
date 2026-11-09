@@ -28,6 +28,17 @@ Later phases load the features with `from feature_utils import load_features, ma
 Preprocessing is in `src/preprocess.py`, the feature families in `src/feature_extractors.py`, and every
 comparison run is appended to `results/experiment_log.csv` by `src/expt_log.py`.
 
+## Phase 3 (unified classifier) - complete, see `docs/phase3_unified.md`
+```
+python src/evaluate.py                                    # self-test of the shared metrics (used by every phase)
+python src/phase3_unified.py --models linsvm logreg_l2 logreg_l1 rbfsvm --imbalance balanced   # nested CV, ~10 min
+python src/phase3_unified.py --models rf hgb --imbalance balanced        # ~45 min; add --fast for coarser grids
+python src/phase3_unified.py --models rbfsvm linsvm --imbalance none smote
+python src/phase3_unified.py --summarize                  # -> results/tables/phase3_cv_summary.csv, phase3_cv_per_region.csv
+python src/phase3_final_test.py --model rbfsvm --imbalance none      # test set, ONCE (lock: results/phase3/TEST_EVALUATED.json)
+```
+Models, grids and imbalance strategies: `src/model_zoo.py`; CV protocol: `src/cv_protocol.py`; metrics and bootstrap CIs: `src/evaluate.py`.
+
 ## Layout
 | Folder | Purpose |
 |---|---|
