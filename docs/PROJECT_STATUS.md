@@ -1,6 +1,6 @@
 # Project status (living document)
 
-**Last updated:** 2026-11-09 (Phase 3 closed) · **Read this first** if you are picking up the project. The plan is in
+**Last updated:** 2026-11-10 (Phase 4 closed) · **Read this first** if you are picking up the project. The plan is in
 `Fracture_Project_Phases.md`; this file says where we actually are, what was decided, and how to reproduce it.
 Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 
@@ -12,12 +12,12 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 | 1 | Data preparation and EDA | Complete | 100% | `data/master.csv`, `results/splits.csv`, `notebooks/01_eda.ipynb`, `docs/data_decisions.md` |
 | 2 | Preprocessing and features | **Complete** | 100% | `docs/phase2_features.md`, `src/preprocess.py`, `src/feature_extractors.py`, `src/extract_features.py`, `src/compare_families.py`, `src/feature_utils.py` |
 | 3 | Unified classifier | **Complete** | 100% | `docs/phase3_unified.md`, `src/evaluate.py`, `src/model_zoo.py`, `src/cv_protocol.py`, `src/phase3_unified.py`, `src/phase3_final_test.py`, `results/phase3/`, `results/tables/phase3_*.csv` |
-| 4 | Region-specific classifiers | **In progress** (2026-11-10: nested CV done, hip region model better than unified, others no detectable difference; test evaluation next) | 70% | `docs/phase4_regional.md`, `src/phase4_regional.py`, `src/phase4_final_test.py` |
-| 5 | Comparative analysis | Not started | 0% | |
+| 4 | Region-specific classifiers | **Complete** | 100% | `docs/phase4_regional.md`, `src/phase4_regional.py`, `src/phase4_final_test.py`, `results/phase4/`, `results/tables/phase4_*.csv` |
+| 5 | Comparative analysis | **Next: can start now** (per-image test scores of both models in `results/phase4/test_scores.csv`) | 0% | |
 | 6 | Gap-closing | Not started | 0% | |
 | 7 | Localization | Not started | 0% | |
 | 8 | Report and presentation | Not started | 0% | |
-| | **Whole project** | | **~40%** | |
+| | **Whole project** | | **~50%** | |
 
 ## Phase 2 summary (full detail: `docs/phase2_features.md`)
 - **Choice:** 256 px, CLAHE, all five handcrafted families (8,641 dims), `StandardScaler` inside the CV folds, each family weighted 1/sqrt(dims), no dimensionality reduction. Reference linear SVM: C=0.1, `class_weight="balanced"`.
@@ -33,6 +33,13 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 - **Test set (used once):** recall 0.755 [0.684, 0.830], precision 0.411, F2 0.647 [0.585, 0.707], specificity 0.770, ROC-AUC 0.834, PR-AUC 0.626 [0.544, 0.711]; confusion TN/FP/FN/TP 519/155/35/108. Per region: hand F2 0.69, leg 0.58, hip 0.65, shoulder 0.69, all CIs overlapping. No sign of implants driving the score (recall 0.756 without hardware, 0.750 with).
 - **Phase 4 must use:** `model_zoo.build/SPECS`, `cv_protocol.nested_cv`, `evaluate.*` and the same imbalance strategy (none + tuned threshold). `results/phase3/test_scores.csv` holds the unified model's per-image test scores for the Phase 5 comparison (paired bootstrap in `evaluate.paired_bootstrap`). Do not run another model selection on the test set.
 - Re-run lock: `results/phase3/TEST_EVALUATED.json`.
+
+## Phase 4 summary (full detail: `docs/phase4_regional.md`)
+- **Setup:** one RBF SVM per region (hand, leg, hip, shoulder) with the Phase 3 features, grid, nested CV and imbalance strategy (none + F2 threshold), trained on that region's training rows only. "Other" (7 fractured) not modelled. Compared with the unified model on the same images (paired bootstrap).
+- **Nested CV:** hip region model clearly better (PR-AUC +0.223 [+0.105, +0.324], 5/5 folds), hand/leg/shoulder no detectable difference (shoulder borderline worse, mostly hyperparameter-tuning noise on 9-10 positives per fold). Linear SVM per region gives the same picture; no region prefers another family.
+- **Test set (used once):** no detectable difference in any region (PR-AUC differences hand +0.045, leg +0.013, hip -0.096, shoulder -0.044, all CIs include 0). The CV hip gain did not replicate (11 fractured hip test images). Routed system (each image to its region's model): recall 0.844 vs 0.759, specificity 0.708 vs 0.773, F2 0.677 vs 0.650 (difference within noise); the hand model's F2 threshold is very liberal (specificity 0.26).
+- **For Phase 5:** `results/phase4/test_scores.csv` (both models' per-image test scores and thresholds), `results/phase4/oof_*.csv` and `results/phase3/oof_*.csv` (same folds). Open questions: why hip differs between CV and test (multiscan near-duplicates? learning curves), and per-region thresholds (Phase 6).
+- Re-run lock: `results/phase4/TEST_EVALUATED.json`.
 
 ## Decisions to keep (details in `docs/data_decisions.md`)
 - Images: 4,083 total, 719 fractured (the plan says 717; 719 is correct, see `docs/data_decisions.md`).

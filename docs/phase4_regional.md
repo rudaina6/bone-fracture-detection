@@ -1,10 +1,14 @@
-# Phase 4: region-specific classifiers (IN PROGRESS: protocol 2026-11-09, CV done 2026-11-10, test pending)
+# Phase 4: region-specific classifiers (COMPLETE, 2026-11-10)
 
 Task: one image-level fracture classifier per region (hand, leg, hip, shoulder), each trained only on that region's
 training images, with **the same features, model family, grid, CV protocol and imbalance strategy as the Phase 3 unified
 model**, and compared with the unified model **on the same images**. **This file records the protocol and the decision
-rules before any Phase 4 result was seen.** Results are added below the line once the runs are done; the rules are not
-changed after that. Status: `docs/PROJECT_STATUS.md`.
+rules before any Phase 4 result was seen**; they were followed as written. The one protocol change (fold-mean instead of
+pooled PR-AUC for the CV comparison) was made after a synthetic dry run, before any real result. Status: `docs/PROJECT_STATUS.md`.
+
+**Result in one line:** with equal tuning, region-specific RBF SVMs are not detectably better or worse than the unified
+model on the test set in any region. In CV hip looked clearly better (+0.22 PR-AUC), but the test (11 fractured hip images)
+did not confirm it.
 
 ## Code
 | File | Role |
@@ -156,8 +160,63 @@ At the tuned thresholds (pooled out-of-fold, differences with 95% paired-bootstr
 - The same pattern appears with the linear SVM: hip is much better specialised (+0.287), and here leg is too (+0.048, CI
   excludes 0). The unified linear SVM is weak on hip (0.408), so the hip gap is not specific to the kernel model.
 
-### 3. Test set (used once)
-*(to be filled after `phase4_final_test.py`)*
+### 3. Test set (used once, 2026-11-10)
+Run after the CV results above were written and committed (commit `f300daa`). Per region, settings and threshold come from a
+grid search over that region's 5 training folds (`tune_cv`; CV PR-AUC optimistic), then a refit on all its training images:
+
+| Region | Params | F2 threshold (margin) | Tuning-fold PR-AUC |
+|---|---|---|---|
+| Hand | C=10, gamma=0.2 | -0.971 | 0.634 |
+| Leg | C=10, gamma=0.05 | -0.758 | 0.614 |
+| Hip | C=100, gamma=0.0125 | -0.624 | 0.751 |
+| Shoulder | C=10, gamma=0.2 | -0.609 | 0.618 |
+
+The unified model is the Phase 3 final model (RBF C=10, gamma=0.05, threshold -0.844), evaluated from its saved test scores on
+the same 812 images (the 4 regions; "other" excluded). 95% CIs: 2,000 bootstrap resamples, thresholds held fixed.
+
+**Ranking (PR-AUC), region-specific vs unified on the same test images:**
+
+| Region | Test fractured | Region-specific | Unified | Difference [95% paired CI] | Verdict (rule 2) |
+|---|---|---|---|---|---|
+| Hand | 76 | 0.686 [0.586, 0.782] | 0.641 [0.535, 0.752] | +0.045 [-0.028, +0.112] | no detectable difference |
+| Leg | 42 | 0.636 [0.488, 0.768] | 0.623 [0.471, 0.759] | +0.013 [-0.070, +0.085] | no detectable difference |
+| Hip | 11 | 0.628 [0.333, 0.865] | 0.724 [0.466, 0.928] | -0.096 [-0.256, +0.047] | no detectable difference |
+| Shoulder | 12 | 0.607 [0.334, 0.836] | 0.651 [0.389, 0.866] | -0.044 [-0.171, +0.082] | no detectable difference |
+
+**At the tuned thresholds** (recall / specificity / F2; TN/FP/FN/TP):
+
+| Region | Region-specific | Unified | F2 difference [95% paired CI] |
+|---|---|---|---|
+| Hand | 0.974 / 0.261 / 0.724 (47/133/2/74) | 0.776 / 0.628 / 0.686 (113/67/17/59) | +0.038 [-0.035, +0.111] |
+| Leg | 0.667 / 0.898 / 0.596 (344/39/14/28) | 0.714 / 0.843 / 0.581 (323/60/12/30) | +0.014 [-0.066, +0.090] |
+| Hip | 0.727 / 0.755 / 0.615 (40/13/3/8) | 0.727 / 0.811 / 0.645 (43/10/3/8) | -0.030 [-0.239, +0.176] |
+| Shoulder | 0.750 / 0.800 / 0.662 (44/11/3/9) | 0.833 / 0.727 / 0.685 (40/15/2/10) | -0.023 [-0.183, +0.101] |
+| **Routed (4 regions)** | 0.844 [0.781, 0.902] / 0.708 / 0.677 [0.617, 0.726] (475/196/22/119) | 0.759 [0.688, 0.827] / 0.773 / 0.650 [0.589, 0.708] (519/152/34/107) | +0.027 [-0.021, +0.076] |
+
+Routed-system differences: recall +0.085 [+0.021, +0.147], specificity -0.066 [-0.099, -0.031], precision -0.035
+[-0.072, +0.002]. Full tables: `results/tables/phase4_test_{metrics,ci,paired,confusion}.csv`; per-image scores of both
+models: `results/phase4/test_scores.csv`.
+
+**What this says**
+- **On the test set, region-specific models are not detectably better or worse than the unified model in any region.**
+  Point estimates favour specialisation for hand and leg (+0.045, +0.013) and the unified model for hip and shoulder
+  (-0.096, -0.044), and every CI includes 0.
+- **The CV hip gain does not replicate.** CV gave +0.223 [+0.105, +0.324]; the test gives -0.096 [-0.256, +0.047]. Both are
+  reported, not reconciled away. The test hip subset has only 11 fractured images, and it happens to be easy for the unified
+  model (test PR-AUC 0.724 vs 0.531 in CV), so the test cannot confirm or rule out a gain of the CV size. Taken together the
+  evidence does not support a *reliable* advantage for a hip-specific model. A hypothesis for Phase 5: hip training images
+  include multiple views of the same patient (no patient ID), and a weakly regularised small model (the hip model chose C=100)
+  can profit from near-duplicates across CV folds more than the unified model. The share of `multiscan` images in hip
+  can show whether that is plausible.
+- **Region models generalise like the unified one:** CV-to-test PR-AUC for the region models was hand 0.619 to 0.686, leg
+  0.608 to 0.636, hip 0.754 to 0.628, shoulder 0.560 to 0.607, all inside the test CIs.
+- **Operating point, not ranking:** the hand model's F2 threshold is very liberal (recall 0.97 but specificity 0.26, 133
+  false alarms out of 180 normal hand images), as it already was in CV (specificity 0.37). With 30% fractured hand images, the
+  F2 optimum sits low. This is what makes the routed system trade specificity (-0.066) for recall (+0.085), with F2
+  unchanged within noise. Per-region thresholds are the Phase 6 question.
+- **Answer for the plan (Phase 4 rule):** the four region models used the same features, family, grid, CV protocol and
+  imbalance strategy as the unified model, and were scored on identical images. On this data the region split does not
+  produce a measurable gain on the test set. The CV result for hip and the learning curves are what Phase 5 has to explain.
 
 ### Reproduce
 ```

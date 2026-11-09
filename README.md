@@ -39,6 +39,17 @@ python src/phase3_final_test.py --model rbfsvm --imbalance none      # test set,
 ```
 Models, grids and imbalance strategies: `src/model_zoo.py`; CV protocol: `src/cv_protocol.py`; metrics and bootstrap CIs: `src/evaluate.py`.
 
+## Phase 4 (region-specific classifiers) - complete, see `docs/phase4_regional.md`
+```
+python src/phase4_regional.py --models rbfsvm --imbalance none                                  # nested CV per region, ~2 min
+python src/phase4_regional.py --models rbfsvm --imbalance none --fixed-params C=10 gamma=0.05   # sensitivity: no per-region tuning
+python src/phase4_regional.py --models linsvm --imbalance none                                  # family check
+python src/phase4_regional.py --summarize               # -> results/tables/phase4_cv_summary.csv, phase4_cv_paired.csv
+python src/phase4_final_test.py --model rbfsvm --imbalance none   # test set, ONCE (lock: results/phase4/TEST_EVALUATED.json)
+```
+Each region model uses the same `model_zoo` / `cv_protocol` / `evaluate` code as Phase 3; the comparison partner is the
+Phase 3 unified model on the same images (`results/phase3/oof_*.csv` in CV, `results/phase3/test_scores.csv` on the test set).
+
 ## Layout
 | Folder | Purpose |
 |---|---|

@@ -1,0 +1,16 @@
+model,threshold,group,n,n_pos,tn,fp,fn,tp
+region-specific,tuned,routed (4 regions),812,141,475,196,22,119
+region-specific,tuned,hand,256,76,47,133,2,74
+region-specific,tuned,leg,425,42,344,39,14,28
+region-specific,tuned,hip,64,11,40,13,3,8
+region-specific,tuned,shoulder,67,12,44,11,3,9
+region-specific,default,routed (4 regions),812,141,642,29,78,63
+region-specific,default,hand,256,76,160,20,38,38
+region-specific,default,leg,425,42,380,3,27,15
+region-specific,default,hip,64,11,48,5,5,6
+region-specific,default,shoulder,67,12,54,1,8,4
+unified,tuned,routed (4 regions),812,141,519,152,34,107
+unified,tuned,hand,256,76,113,67,17,59
+unified,tuned,leg,425,42,323,60,12,30
+unified,tuned,hip,64,11,43,10,3,8
+unified,tuned,shoulder,67,12,40,15,2,10

@@ -1,0 +1,31 @@
+group,metric,diff,lo,hi,p_two_sided
+routed (4 regions),pr_auc,,,,
+routed (4 regions),roc_auc,,,,
+routed (4 regions),recall,0.0851,0.0214,0.1467,0.009
+routed (4 regions),precision,-0.0353,-0.0724,0.0024,0.069
+routed (4 regions),specificity,-0.0656,-0.0993,-0.0307,0.0
+routed (4 regions),f2,0.0268,-0.0213,0.0758,0.3
+hand,pr_auc,0.0448,-0.0283,0.1119,0.275
+hand,roc_auc,0.0342,-0.0114,0.083,0.163
+hand,recall,0.1974,0.1084,0.2895,0.0
+hand,precision,-0.1108,-0.1658,-0.0604,0.0
+hand,specificity,-0.3667,-0.4432,-0.2903,0.0
+hand,f2,0.038,-0.0349,0.1112,0.323
+leg,pr_auc,0.0126,-0.0695,0.0845,0.767
+leg,roc_auc,-0.0026,-0.0456,0.034,0.955
+leg,recall,-0.0476,-0.1429,0.0465,0.459
+leg,precision,0.0846,0.0188,0.1526,0.015
+leg,specificity,0.0548,0.0239,0.0847,0.001
+leg,f2,0.0143,-0.0656,0.0897,0.698
+hip,pr_auc,-0.0963,-0.2557,0.0468,0.202
+hip,roc_auc,-0.0446,-0.1466,0.0417,0.33
+hip,recall,0.0,-0.25,0.25,1.0
+hip,precision,-0.0635,-0.2456,0.1217,0.515
+hip,specificity,-0.0566,-0.1887,0.077,0.49
+hip,f2,-0.0298,-0.2389,0.1756,0.791
+shoulder,pr_auc,-0.044,-0.1712,0.082,0.544
+shoulder,roc_auc,-0.0258,-0.1137,0.0551,0.559
+shoulder,recall,-0.0833,-0.2857,0.0,0.758
+shoulder,precision,0.05,-0.0903,0.2024,0.52
+shoulder,specificity,0.0727,-0.0509,0.193,0.321
+shoulder,f2,-0.0232,-0.1831,0.1005,0.87
