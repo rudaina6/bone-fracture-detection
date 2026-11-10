@@ -50,6 +50,22 @@ python src/phase4_final_test.py --model rbfsvm --imbalance none   # test set, ON
 Each region model uses the same `model_zoo` / `cv_protocol` / `evaluate` code as Phase 3; the comparison partner is the
 Phase 3 unified model on the same images (`results/phase3/oof_*.csv` in CV, `results/phase3/test_scores.csv` on the test set).
 
+## Phase 5 (comparative analysis) - complete, see `docs/phase5_analysis.md`
+```
+python src/phase5_main.py            # 5.1 unified vs region-specific, saved scores only, ~2 min
+python src/phase5_curves.py          # 5.2 learning curves + cross-region transfer, 1,410 fits, ~11 min on 4 cores
+python src/phase5_features.py        # 5.2 PCA/t-SNE, region separability, per-region family importance, ~2 min
+python src/phase5_errors.py          # 5.3 error analysis, saved scores only, ~1 min
+python src/phase5_box_contrast.py    # 5.3 optional: box-local contrast, reads the images, ~10 s
+```
+`--summarize` rebuilds tables and figures from saved runs (`phase5_curves.py`, `phase5_features.py`);
+`--quick` on `phase5_curves.py` is a fast sanity pass. **Phase 5 fits nothing on the test set and chooses no
+model or threshold**: it re-reads the per-image scores Phases 3 and 4 already wrote, and the test locks
+(`results/phase3|phase4/TEST_EVALUATED.json`) are untouched. Two scripts self-check against the earlier
+phases and stop if they disagree - `phase5_main.py` must reproduce the Phase 4 paired differences, and
+`phase5_curves.py`'s region arm at full training size must reproduce
+`results/phase4/oof_rbfsvm__none__fixed.csv` exactly.
+
 ## Layout
 | Folder | Purpose |
 |---|---|

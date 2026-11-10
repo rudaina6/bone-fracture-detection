@@ -1,0 +1,56 @@
+scope,kind,dropped,families,n_families,pr_auc,pr_auc_sd,chance,all_families_pr_auc,delta_vs_all,lift_over_chance
+all regions,all,-,hog+lbp+glcm+gabor+intensity,5,0.6081,0.0248,0.1764,0.6081,0.0,0.4318
+all regions,leave_one_out,gabor,hog+lbp+glcm+intensity,4,0.5984,0.0229,0.1764,0.6081,-0.0097,0.4221
+all regions,leave_one_out,glcm,hog+lbp+gabor+intensity,4,0.6076,0.0204,0.1764,0.6081,-0.0005,0.4313
+all regions,leave_one_out,hog,lbp+glcm+gabor+intensity,4,0.5868,0.0244,0.1764,0.6081,-0.0213,0.4105
+all regions,leave_one_out,intensity,hog+lbp+glcm+gabor,4,0.6077,0.0331,0.1764,0.6081,-0.0004,0.4313
+all regions,leave_one_out,lbp,hog+glcm+gabor+intensity,4,0.6003,0.0249,0.1764,0.6081,-0.0079,0.4239
+all regions,single,gabor,gabor,1,0.4616,0.03,0.1764,0.6081,-0.1465,0.2853
+all regions,single,glcm,glcm,1,0.4394,0.032,0.1764,0.6081,-0.1688,0.263
+all regions,single,hog,hog,1,0.5029,0.0246,0.1764,0.6081,-0.1052,0.3266
+all regions,single,intensity,intensity,1,0.3527,0.0121,0.1764,0.6081,-0.2555,0.1763
+all regions,single,lbp,lbp,1,0.5189,0.0139,0.1764,0.6081,-0.0892,0.3425
+hand,all,-,hog+lbp+glcm+gabor+intensity,5,0.6211,0.0542,0.2976,0.6211,0.0,0.3235
+hand,leave_one_out,gabor,hog+lbp+glcm+intensity,4,0.6106,0.0545,0.2976,0.6211,-0.0105,0.313
+hand,leave_one_out,glcm,hog+lbp+gabor+intensity,4,0.622,0.0538,0.2976,0.6211,0.001,0.3245
+hand,leave_one_out,hog,lbp+glcm+gabor+intensity,4,0.6042,0.0662,0.2976,0.6211,-0.0168,0.3067
+hand,leave_one_out,intensity,hog+lbp+glcm+gabor,4,0.6226,0.0727,0.2976,0.6211,0.0015,0.325
+hand,leave_one_out,lbp,hog+glcm+gabor+intensity,4,0.6159,0.0625,0.2976,0.6211,-0.0052,0.3183
+hand,single,gabor,gabor,1,0.5325,0.0601,0.2976,0.6211,-0.0886,0.2349
+hand,single,glcm,glcm,1,0.5003,0.0446,0.2976,0.6211,-0.1208,0.2027
+hand,single,hog,hog,1,0.5671,0.0855,0.2976,0.6211,-0.054,0.2695
+hand,single,intensity,intensity,1,0.5044,0.0271,0.2976,0.6211,-0.1167,0.2068
+hand,single,lbp,lbp,1,0.5599,0.0458,0.2976,0.6211,-0.0611,0.2624
+hip,all,-,hog+lbp+glcm+gabor+intensity,5,0.7325,0.1485,0.1797,0.7325,0.0,0.5529
+hip,leave_one_out,gabor,hog+lbp+glcm+intensity,4,0.6838,0.2103,0.1797,0.7325,-0.0487,0.5041
+hip,leave_one_out,glcm,hog+lbp+gabor+intensity,4,0.7536,0.1349,0.1797,0.7325,0.0211,0.574
+hip,leave_one_out,hog,lbp+glcm+gabor+intensity,4,0.6645,0.1312,0.1797,0.7325,-0.068,0.4848
+hip,leave_one_out,intensity,hog+lbp+glcm+gabor,4,0.6963,0.131,0.1797,0.7325,-0.0362,0.5166
+hip,leave_one_out,lbp,hog+glcm+gabor+intensity,4,0.6643,0.1254,0.1797,0.7325,-0.0683,0.4846
+hip,single,gabor,gabor,1,0.4408,0.0596,0.1797,0.7325,-0.2917,0.2611
+hip,single,glcm,glcm,1,0.3759,0.1523,0.1797,0.7325,-0.3566,0.1962
+hip,single,hog,hog,1,0.5909,0.0873,0.1797,0.7325,-0.1417,0.4112
+hip,single,intensity,intensity,1,0.4859,0.1494,0.1797,0.7325,-0.2466,0.3062
+hip,single,lbp,lbp,1,0.6504,0.1133,0.1797,0.7325,-0.0822,0.4707
+leg,all,-,hog+lbp+glcm+gabor+intensity,5,0.6139,0.0768,0.1001,0.6139,0.0,0.5138
+leg,leave_one_out,gabor,hog+lbp+glcm+intensity,4,0.6099,0.0786,0.1001,0.6139,-0.0039,0.5099
+leg,leave_one_out,glcm,hog+lbp+gabor+intensity,4,0.6171,0.0629,0.1001,0.6139,0.0033,0.5171
+leg,leave_one_out,hog,lbp+glcm+gabor+intensity,4,0.5837,0.1055,0.1001,0.6139,-0.0301,0.4837
+leg,leave_one_out,intensity,hog+lbp+glcm+gabor,4,0.6015,0.0835,0.1001,0.6139,-0.0123,0.5015
+leg,leave_one_out,lbp,hog+glcm+gabor+intensity,4,0.6032,0.0712,0.1001,0.6139,-0.0107,0.5031
+leg,single,gabor,gabor,1,0.3803,0.0734,0.1001,0.6139,-0.2335,0.2803
+leg,single,glcm,glcm,1,0.3679,0.0548,0.1001,0.6139,-0.2459,0.2679
+leg,single,hog,hog,1,0.53,0.0239,0.1001,0.6139,-0.0839,0.4299
+leg,single,intensity,intensity,1,0.3617,0.1206,0.1001,0.6139,-0.2521,0.2617
+leg,single,lbp,lbp,1,0.5678,0.0821,0.1001,0.6139,-0.0461,0.4677
+shoulder,all,-,hog+lbp+glcm+gabor+intensity,5,0.6037,0.1231,0.1798,0.6037,0.0,0.4239
+shoulder,leave_one_out,gabor,hog+lbp+glcm+intensity,4,0.6173,0.1444,0.1798,0.6037,0.0136,0.4375
+shoulder,leave_one_out,glcm,hog+lbp+gabor+intensity,4,0.5709,0.104,0.1798,0.6037,-0.0327,0.3912
+shoulder,leave_one_out,hog,lbp+glcm+gabor+intensity,4,0.592,0.1519,0.1798,0.6037,-0.0117,0.4122
+shoulder,leave_one_out,intensity,hog+lbp+glcm+gabor,4,0.6413,0.1036,0.1798,0.6037,0.0376,0.4615
+shoulder,leave_one_out,lbp,hog+glcm+gabor+intensity,4,0.6468,0.1112,0.1798,0.6037,0.0432,0.4671
+shoulder,single,gabor,gabor,1,0.5492,0.1314,0.1798,0.6037,-0.0544,0.3695
+shoulder,single,glcm,glcm,1,0.6086,0.13,0.1798,0.6037,0.005,0.4289
+shoulder,single,hog,hog,1,0.5147,0.1079,0.1798,0.6037,-0.0889,0.335
+shoulder,single,intensity,intensity,1,0.452,0.1433,0.1798,0.6037,-0.1517,0.2722
+shoulder,single,lbp,lbp,1,0.5511,0.15,0.1798,0.6037,-0.0525,0.3714

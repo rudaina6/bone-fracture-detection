@@ -1,0 +1,12 @@
+{
+ "n_boot": 2000,
+ "seed": 0,
+ "model": "rbfsvm",
+ "imbalance": "none",
+ "n_cv": 3247,
+ "n_cv_pos": 569,
+ "n_test": 812,
+ "n_test_pos": 141,
+ "date": "2026-11-10T12:30:52",
+ "fitted": "nothing (saved scores only)"
+}

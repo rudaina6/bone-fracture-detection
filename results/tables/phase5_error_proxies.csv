@@ -1,0 +1,321 @@
+source,region,subset,model,proxy,label,binary,estimate,lo,hi,n,n_missed
+cv_oof,hand,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.4866,0.3708,0.5923,305,35
+cv_oof,hand,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.4868,0.3731,0.6002,305,35
+cv_oof,hand,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.5329,0.4586,0.6028,305,35
+cv_oof,hand,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.5158,0.4598,0.563,305,35
+cv_oof,hand,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.3486,0.2541,0.4447,305,35
+cv_oof,hand,missed vs detected (fractured),region,hardware,Surgical hardware present,True,0.0662,-0.0654,0.1473,305,35
+cv_oof,hand,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,0.0745,-0.0098,0.1434,305,35
+cv_oof,hand,missed vs detected (fractured),region,box_std,Box std,False,0.4927,0.3995,0.5931,305,35
+cv_oof,hand,missed vs detected (fractured),region,ring_std,Ring std,False,0.5238,0.406,0.6375,305,35
+cv_oof,hand,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.455,0.3459,0.5645,305,35
+cv_oof,hand,missed vs detected (fractured),region,weber,Weber,False,0.5231,0.419,0.6277,305,35
+cv_oof,hand,missed vs detected (fractured),region,michelson,Michelson,False,0.5495,0.4464,0.649,305,35
+cv_oof,hand,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.4824,0.3904,0.5754,305,56
+cv_oof,hand,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.4827,0.3937,0.5763,305,56
+cv_oof,hand,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.5666,0.514,0.6164,305,56
+cv_oof,hand,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.5149,0.4694,0.5536,305,56
+cv_oof,hand,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.3799,0.3046,0.4554,305,56
+cv_oof,hand,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,0.0835,-0.0805,0.2082,305,56
+cv_oof,hand,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,0.1825,0.1127,0.2462,305,56
+cv_oof,hand,missed vs detected (fractured),unified,box_std,Box std,False,0.4492,0.3644,0.5311,305,56
+cv_oof,hand,missed vs detected (fractured),unified,ring_std,Ring std,False,0.4802,0.3921,0.5628,305,56
+cv_oof,hand,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.4827,0.3953,0.5649,305,56
+cv_oof,hand,missed vs detected (fractured),unified,weber,Weber,False,0.4198,0.3398,0.5029,305,56
+cv_oof,hand,missed vs detected (fractured),unified,michelson,Michelson,False,0.4798,0.3979,0.5657,305,56
+cv_oof,hand,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4735,0.4586,0.489,720,454
+cv_oof,hand,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.539,0.502,0.5755,720,454
+cv_oof,hand,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,,,,720,454
+cv_oof,hand,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,-0.2445,-0.3497,-0.1323,720,454
+cv_oof,hand,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4789,0.4605,0.496,720,350
+cv_oof,hand,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.5657,0.5292,0.6033,720,350
+cv_oof,hand,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,,,,720,350
+cv_oof,hand,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,-0.2745,-0.4078,-0.1289,720,350
+cv_oof,leg,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.671,0.5836,0.7586,170,58
+cv_oof,leg,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.6728,0.5861,0.7643,170,58
+cv_oof,leg,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.6681,0.6041,0.7261,170,58
+cv_oof,leg,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.4967,0.4501,0.541,170,58
+cv_oof,leg,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.4663,0.4047,0.5262,170,58
+cv_oof,leg,missed vs detected (fractured),region,hardware,Surgical hardware present,True,0.25,0.0975,0.3849,170,58
+cv_oof,leg,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,0.1432,-0.0544,0.3262,170,58
+cv_oof,leg,missed vs detected (fractured),region,box_std,Box std,False,0.7235,0.6357,0.8106,170,58
+cv_oof,leg,missed vs detected (fractured),region,ring_std,Ring std,False,0.6612,0.5679,0.7525,170,58
+cv_oof,leg,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.5616,0.4745,0.6551,170,58
+cv_oof,leg,missed vs detected (fractured),region,weber,Weber,False,0.6606,0.5744,0.7427,170,58
+cv_oof,leg,missed vs detected (fractured),region,michelson,Michelson,False,0.6249,0.5263,0.7174,170,58
+cv_oof,leg,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.6854,0.5887,0.7818,170,42
+cv_oof,leg,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.6867,0.5873,0.7809,170,42
+cv_oof,leg,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.6571,0.5899,0.716,170,42
+cv_oof,leg,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.5388,0.4989,0.5744,170,42
+cv_oof,leg,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.4072,0.3425,0.4651,170,42
+cv_oof,leg,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,0.225,0.1068,0.3325,170,42
+cv_oof,leg,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,0.0846,-0.0977,0.2451,170,42
+cv_oof,leg,missed vs detected (fractured),unified,box_std,Box std,False,0.7191,0.6123,0.814,170,42
+cv_oof,leg,missed vs detected (fractured),unified,ring_std,Ring std,False,0.6951,0.5855,0.7908,170,42
+cv_oof,leg,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.4862,0.3773,0.59,170,42
+cv_oof,leg,missed vs detected (fractured),unified,weber,Weber,False,0.6717,0.5828,0.7603,170,42
+cv_oof,leg,missed vs detected (fractured),unified,michelson,Michelson,False,0.6811,0.584,0.7797,170,42
+cv_oof,leg,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4595,0.4298,0.4902,1529,154
+cv_oof,leg,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.6335,0.6023,0.6652,1529,154
+cv_oof,leg,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,0.1008,0.0858,0.1165,1529,154
+cv_oof,leg,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,-0.0398,-0.0868,0.0053,1529,154
+cv_oof,leg,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4526,0.4315,0.4735,1529,343
+cv_oof,leg,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.6321,0.6053,0.6574,1529,343
+cv_oof,leg,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,0.2245,0.2037,0.2457,1529,343
+cv_oof,leg,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,0.0067,-0.0523,0.0656,1529,343
+cv_oof,hip,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.5583,0.2635,0.8683,46,6
+cv_oof,hip,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.5667,0.2797,0.8503,46,6
+cv_oof,hip,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.4417,0.2397,0.5541,46,6
+cv_oof,hip,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.575,0.5244,0.6351,46,6
+cv_oof,hip,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.2125,0.0,0.4268,46,6
+cv_oof,hip,missed vs detected (fractured),region,hardware,Surgical hardware present,True,0.0946,-0.1033,0.2667,46,6
+cv_oof,hip,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,,,,46,6
+cv_oof,hip,missed vs detected (fractured),region,box_std,Box std,False,0.425,0.131,0.75,46,6
+cv_oof,hip,missed vs detected (fractured),region,ring_std,Ring std,False,0.425,0.1623,0.716,46,6
+cv_oof,hip,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.5667,0.3178,0.8215,46,6
+cv_oof,hip,missed vs detected (fractured),region,weber,Weber,False,0.6083,0.321,0.875,46,6
+cv_oof,hip,missed vs detected (fractured),region,michelson,Michelson,False,0.3667,0.1395,0.6072,46,6
+cv_oof,hip,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.6306,0.4182,0.8194,46,10
+cv_oof,hip,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.6361,0.4375,0.8234,46,10
+cv_oof,hip,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.4778,0.3583,0.5606,46,10
+cv_oof,hip,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.5833,0.5278,0.65,46,10
+cv_oof,hip,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.4028,0.2883,0.5,46,10
+cv_oof,hip,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,0.0258,-0.2537,0.2632,46,10
+cv_oof,hip,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,,,,46,10
+cv_oof,hip,missed vs detected (fractured),unified,box_std,Box std,False,0.7833,0.6116,0.9244,46,10
+cv_oof,hip,missed vs detected (fractured),unified,ring_std,Ring std,False,0.7333,0.5376,0.8909,46,10
+cv_oof,hip,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.5639,0.3423,0.7708,46,10
+cv_oof,hip,missed vs detected (fractured),unified,weber,Weber,False,0.6472,0.4602,0.8156,46,10
+cv_oof,hip,missed vs detected (fractured),unified,michelson,Michelson,False,0.7694,0.5664,0.9377,46,10
+cv_oof,hip,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4697,0.4259,0.5075,210,54
+cv_oof,hip,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.7261,0.6589,0.7885,210,54
+cv_oof,hip,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,,,,210,54
+cv_oof,hip,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,,,,210,54
+cv_oof,hip,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4412,0.4058,0.474,210,85
+cv_oof,hip,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.7329,0.6708,0.7945,210,85
+cv_oof,hip,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,,,,210,85
+cv_oof,hip,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,,,,210,85
+cv_oof,shoulder,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.3434,0.1702,0.5333,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.3515,0.1719,0.5371,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.5303,0.5,0.5769,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.7424,0.6571,0.8235,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.2556,0.163,0.3566,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,hardware,Surgical hardware present,True,0.3333,0.2045,0.4681,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,,,,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,box_std,Box std,False,0.8061,0.6807,0.9121,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,ring_std,Ring std,False,0.7414,0.5921,0.8725,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.5677,0.3969,0.7266,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,weber,Weber,False,0.5737,0.3868,0.7684,48,15
+cv_oof,shoulder,missed vs detected (fractured),region,michelson,Michelson,False,0.6182,0.4179,0.8008,48,15
+cv_oof,shoulder,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.2507,0.0639,0.4809,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.2593,0.0764,0.4843,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.5256,0.5,0.5698,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.7051,0.6341,0.7858,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.3205,0.2317,0.407,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,0.2,0.0889,0.3261,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,,,,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,box_std,Box std,False,0.7379,0.554,0.8978,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,ring_std,Ring std,False,0.6581,0.4499,0.8438,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.5613,0.3375,0.784,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,weber,Weber,False,0.6524,0.371,0.9163,48,9
+cv_oof,shoulder,missed vs detected (fractured),unified,michelson,Michelson,False,0.5983,0.3535,0.832,48,9
+cv_oof,shoulder,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4523,0.4146,0.4837,219,78
+cv_oof,shoulder,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.4904,0.4397,0.5412,219,78
+cv_oof,shoulder,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,,,,219,78
+cv_oof,shoulder,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,,,,219,78
+cv_oof,shoulder,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4589,0.4254,0.4875,219,89
+cv_oof,shoulder,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.5381,0.4972,0.5793,219,89
+cv_oof,shoulder,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,,,,219,89
+cv_oof,shoulder,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,,,,219,89
+cv_oof,overall,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.505,0.4444,0.5621,569,114
+cv_oof,overall,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.5061,0.4458,0.5657,569,114
+cv_oof,overall,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.5686,0.5278,0.6043,569,114
+cv_oof,overall,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.5338,0.5048,0.5602,569,114
+cv_oof,overall,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.4174,0.3714,0.462,569,114
+cv_oof,overall,missed vs detected (fractured),region,hardware,Surgical hardware present,True,0.1116,0.0297,0.1887,569,114
+cv_oof,overall,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,0.1004,0.0106,0.179,569,114
+cv_oof,overall,missed vs detected (fractured),region,box_std,Box std,False,0.6245,0.5641,0.6837,569,114
+cv_oof,overall,missed vs detected (fractured),region,ring_std,Ring std,False,0.5961,0.5319,0.6593,569,114
+cv_oof,overall,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.5234,0.4633,0.5822,569,114
+cv_oof,overall,missed vs detected (fractured),region,weber,Weber,False,0.6322,0.5732,0.6868,569,114
+cv_oof,overall,missed vs detected (fractured),region,michelson,Michelson,False,0.5611,0.4949,0.6253,569,114
+cv_oof,overall,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.5239,0.4656,0.5834,569,117
+cv_oof,overall,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.5253,0.465,0.5854,569,117
+cv_oof,overall,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.5815,0.542,0.617,569,117
+cv_oof,overall,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.546,0.5187,0.5714,569,117
+cv_oof,overall,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.3955,0.3485,0.4406,569,117
+cv_oof,overall,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,0.1176,0.0361,0.1899,569,117
+cv_oof,overall,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,0.142,0.0607,0.2122,569,117
+cv_oof,overall,missed vs detected (fractured),unified,box_std,Box std,False,0.593,0.53,0.6502,569,117
+cv_oof,overall,missed vs detected (fractured),unified,ring_std,Ring std,False,0.588,0.5259,0.6494,569,117
+cv_oof,overall,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.5003,0.4388,0.559,569,117
+cv_oof,overall,missed vs detected (fractured),unified,weber,Weber,False,0.5564,0.4947,0.6187,569,117
+cv_oof,overall,missed vs detected (fractured),unified,michelson,Michelson,False,0.5756,0.517,0.6355,569,117
+cv_oof,overall,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4835,0.4707,0.4948,2678,740
+cv_oof,overall,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.5294,0.5085,0.5489,2678,740
+cv_oof,overall,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,0.2764,0.26,0.2937,2678,740
+cv_oof,overall,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,0.0227,-0.0325,0.0782,2678,740
+cv_oof,overall,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4682,0.456,0.48,2678,867
+cv_oof,overall,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.5873,0.5693,0.6063,2678,867
+cv_oof,overall,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,0.3239,0.307,0.3426,2678,867
+cv_oof,overall,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,0.0194,-0.0409,0.0784,2678,867
+test,hand,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.1824,0.0533,0.3378,76,2
+test,hand,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.1824,0.0533,0.3467,76,2
+test,hand,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.6216,0.5743,0.6733,76,2
+test,hand,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.5811,0.5347,0.6233,76,2
+test,hand,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.5338,0.4722,0.6014,76,2
+test,hand,missed vs detected (fractured),region,hardware,Surgical hardware present,True,-0.4865,-1.0,0.027,76,2
+test,hand,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,0.0317,0.0,0.0794,76,2
+test,hand,missed vs detected (fractured),region,box_std,Box std,False,0.3716,0.0,0.7991,76,2
+test,hand,missed vs detected (fractured),region,ring_std,Ring std,False,0.2635,0.1067,0.44,76,2
+test,hand,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.5203,0.0811,0.9467,76,2
+test,hand,missed vs detected (fractured),region,weber,Weber,False,0.2973,0.1959,0.4054,76,2
+test,hand,missed vs detected (fractured),region,michelson,Michelson,False,0.223,0.0946,0.3733,76,2
+test,hand,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.4257,0.2698,0.5824,76,17
+test,hand,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.4277,0.2777,0.5727,76,17
+test,hand,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.6525,0.5948,0.7131,76,17
+test,hand,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.4865,0.3688,0.5846,76,17
+test,hand,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.3998,0.2553,0.5432,76,17
+test,hand,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,-0.7973,-0.88,-0.6986,76,17
+test,hand,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,0.2698,0.1667,0.381,76,17
+test,hand,missed vs detected (fractured),unified,box_std,Box std,False,0.4417,0.2759,0.6121,76,17
+test,hand,missed vs detected (fractured),unified,ring_std,Ring std,False,0.4038,0.2396,0.5657,76,17
+test,hand,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.4736,0.2903,0.6573,76,17
+test,hand,missed vs detected (fractured),unified,weber,Weber,False,0.4088,0.2708,0.5563,76,17
+test,hand,missed vs detected (fractured),unified,michelson,Michelson,False,0.4506,0.2847,0.6219,76,17
+test,hand,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4694,0.44,0.5021,180,133
+test,hand,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.4742,0.3932,0.5547,180,133
+test,hand,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,,,,180,133
+test,hand,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,-0.2831,-0.3494,-0.2182,180,133
+test,hand,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4822,0.4377,0.5204,180,67
+test,hand,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.5604,0.4876,0.6336,180,67
+test,hand,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,,,,180,67
+test,hand,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,-0.4484,-0.6647,-0.1963,180,67
+test,leg,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.6378,0.4562,0.8123,42,14
+test,leg,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.6378,0.4499,0.8196,42,14
+test,leg,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.5587,0.4356,0.6774,42,14
+test,leg,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.5714,0.4639,0.6706,42,14
+test,leg,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.3444,0.2148,0.4856,42,14
+test,leg,missed vs detected (fractured),region,hardware,Surgical hardware present,True,0.35,0.0972,0.5631,42,14
+test,leg,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,0.0921,-0.596,0.45,42,14
+test,leg,missed vs detected (fractured),region,box_std,Box std,False,0.523,0.3367,0.7003,42,14
+test,leg,missed vs detected (fractured),region,ring_std,Ring std,False,0.4592,0.2761,0.6499,42,14
+test,leg,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.5765,0.3703,0.7625,42,14
+test,leg,missed vs detected (fractured),region,weber,Weber,False,0.5816,0.3894,0.7704,42,14
+test,leg,missed vs detected (fractured),region,michelson,Michelson,False,0.4209,0.2216,0.625,42,14
+test,leg,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.65,0.4468,0.8316,42,12
+test,leg,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.6528,0.4519,0.8341,42,12
+test,leg,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.5389,0.4,0.6613,42,12
+test,leg,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.6167,0.5435,0.7,42,12
+test,leg,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.3361,0.225,0.452,42,12
+test,leg,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,0.4,0.2285,0.5806,42,12
+test,leg,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,-0.2368,-0.7937,0.3077,42,12
+test,leg,missed vs detected (fractured),unified,box_std,Box std,False,0.5861,0.4082,0.7625,42,12
+test,leg,missed vs detected (fractured),unified,ring_std,Ring std,False,0.5278,0.3189,0.7302,42,12
+test,leg,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.5722,0.3607,0.7799,42,12
+test,leg,missed vs detected (fractured),unified,weber,Weber,False,0.5722,0.3804,0.7457,42,12
+test,leg,missed vs detected (fractured),unified,michelson,Michelson,False,0.5694,0.364,0.7625,42,12
+test,leg,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4221,0.3513,0.4891,383,39
+test,leg,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.6603,0.593,0.7243,383,39
+test,leg,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,-0.9005,-0.9293,-0.8691,383,39
+test,leg,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,-0.039,-0.1544,0.0645,383,39
+test,leg,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4551,0.4033,0.5025,383,60
+test,leg,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.6339,0.5778,0.6908,383,60
+test,leg,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,-0.8455,-0.882,-0.8089,383,60
+test,leg,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,-0.0541,-0.1896,0.0634,383,60
+test,hip,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.5833,0.0,1.0,11,3
+test,hip,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.5833,0.0,1.0,11,3
+test,hip,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,,,,11,3
+test,hip,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.5625,0.3571,0.7857,11,3
+test,hip,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.2083,0.0,0.4335,11,3
+test,hip,missed vs detected (fractured),region,hardware,Surgical hardware present,True,-0.2333,-0.8,0.3,11,3
+test,hip,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,,,,11,3
+test,hip,missed vs detected (fractured),region,box_std,Box std,False,0.2917,0.0,0.6429,11,3
+test,hip,missed vs detected (fractured),region,ring_std,Ring std,False,0.375,0.0,0.9,11,3
+test,hip,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.5833,0.0,1.0,11,3
+test,hip,missed vs detected (fractured),region,weber,Weber,False,0.6667,0.25,1.0,11,3
+test,hip,missed vs detected (fractured),region,michelson,Michelson,False,0.3333,0.0,0.6667,11,3
+test,hip,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.5,0.0,1.0,11,3
+test,hip,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.5,0.0,1.0,11,3
+test,hip,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,,,,11,3
+test,hip,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.5625,0.3571,0.7778,11,3
+test,hip,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.2083,0.0,0.4444,11,3
+test,hip,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,-0.2333,-0.75,0.3333,11,3
+test,hip,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,,,,11,3
+test,hip,missed vs detected (fractured),unified,box_std,Box std,False,0.6667,0.2222,1.0,11,3
+test,hip,missed vs detected (fractured),unified,ring_std,Ring std,False,0.7083,0.0,1.0,11,3
+test,hip,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.625,0.0,1.0,11,3
+test,hip,missed vs detected (fractured),unified,weber,Weber,False,0.7083,0.25,1.0,11,3
+test,hip,missed vs detected (fractured),unified,michelson,Michelson,False,0.6667,0.2222,1.0,11,3
+test,hip,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4356,0.3301,0.5227,53,13
+test,hip,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.7538,0.6108,0.875,53,13
+test,hip,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,,,,53,13
+test,hip,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,,,,53,13
+test,hip,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4116,0.2611,0.5222,53,10
+test,hip,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.7233,0.5416,0.875,53,10
+test,hip,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,,,,53,10
+test,hip,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,,,,53,10
+test,shoulder,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.3333,0.0,0.8872,12,3
+test,shoulder,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.3333,0.0,0.8889,12,3
+test,shoulder,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.6111,0.5,0.75,12,3
+test,shoulder,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.8333,0.6667,1.0,12,3
+test,shoulder,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.2222,0.0,0.45,12,3
+test,shoulder,missed vs detected (fractured),region,hardware,Surgical hardware present,True,,,,12,3
+test,shoulder,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,,,,12,3
+test,shoulder,missed vs detected (fractured),region,box_std,Box std,False,0.7037,0.2975,1.0,12,3
+test,shoulder,missed vs detected (fractured),region,ring_std,Ring std,False,0.5556,0.0,1.0,12,3
+test,shoulder,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.7407,0.3333,1.0,12,3
+test,shoulder,missed vs detected (fractured),region,weber,Weber,False,0.3704,0.0312,0.7143,12,3
+test,shoulder,missed vs detected (fractured),region,michelson,Michelson,False,0.5185,0.0,1.0,12,3
+test,shoulder,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.1,0.0,0.3,12,2
+test,shoulder,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.1,0.0,0.3333,12,2
+test,shoulder,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.6,0.5,0.7273,12,2
+test,shoulder,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.8,0.6364,0.95,12,2
+test,shoulder,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.25,0.0556,0.5,12,2
+test,shoulder,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,,,,12,2
+test,shoulder,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,,,,12,2
+test,shoulder,missed vs detected (fractured),unified,box_std,Box std,False,0.7,0.2,1.0,12,2
+test,shoulder,missed vs detected (fractured),unified,ring_std,Ring std,False,0.55,0.0,1.0,12,2
+test,shoulder,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.9,0.6667,1.0,12,2
+test,shoulder,missed vs detected (fractured),unified,weber,Weber,False,0.45,0.125,0.75,12,2
+test,shoulder,missed vs detected (fractured),unified,michelson,Michelson,False,0.55,0.0,1.0,12,2
+test,shoulder,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4545,0.3529,0.5,55,11
+test,shoulder,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.4545,0.2857,0.6111,55,11
+test,shoulder,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,,,,55,11
+test,shoulder,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,,,,55,11
+test,shoulder,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4667,0.3846,0.5,55,15
+test,shoulder,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.5117,0.4118,0.6089,55,15
+test,shoulder,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,,,,55,15
+test,shoulder,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,,,,55,15
+test,overall,missed vs detected (fractured),region,box_px_256,Fracture size (px of the 256 input),False,0.4118,0.295,0.5362,141,22
+test,overall,missed vs detected (fractured),region,box_area_frac,Fracture area / image area,False,0.4137,0.297,0.5389,141,22
+test,overall,missed vs detected (fractured),region,fracture_count,Number of fractures annotated,False,0.5691,0.492,0.6341,141,22
+test,overall,missed vs detected (fractured),region,image_px,Image size (width x height),False,0.5823,0.5105,0.6375,141,22
+test,overall,missed vs detected (fractured),region,aspect,Image aspect ratio,False,0.4099,0.3155,0.5,141,22
+test,overall,missed vs detected (fractured),region,hardware,Surgical hardware present,True,-0.063,-0.2762,0.1153,141,22
+test,overall,missed vs detected (fractured),region,multiscan,Multi-scan (near-duplicate views),True,0.1105,-0.0474,0.2167,141,22
+test,overall,missed vs detected (fractured),region,box_std,Box std,False,0.4526,0.3112,0.5949,141,22
+test,overall,missed vs detected (fractured),region,ring_std,Ring std,False,0.4037,0.2654,0.5561,141,22
+test,overall,missed vs detected (fractured),region,contrast_ratio,Contrast ratio,False,0.5901,0.4487,0.7364,141,22
+test,overall,missed vs detected (fractured),region,weber,Weber,False,0.5806,0.4639,0.6921,141,22
+test,overall,missed vs detected (fractured),region,michelson,Michelson,False,0.3631,0.236,0.5084,141,22
+test,overall,missed vs detected (fractured),unified,box_px_256,Fracture size (px of the 256 input),False,0.4659,0.3579,0.58,141,34
+test,overall,missed vs detected (fractured),unified,box_area_frac,Fracture area / image area,False,0.4678,0.3656,0.5826,141,34
+test,overall,missed vs detected (fractured),unified,fracture_count,Number of fractures annotated,False,0.5976,0.5401,0.6504,141,34
+test,overall,missed vs detected (fractured),unified,image_px,Image size (width x height),False,0.5634,0.5022,0.626,141,34
+test,overall,missed vs detected (fractured),unified,aspect,Image aspect ratio,False,0.3604,0.2752,0.4475,141,34
+test,overall,missed vs detected (fractured),unified,hardware,Surgical hardware present,True,0.0354,-0.186,0.2284,141,34
+test,overall,missed vs detected (fractured),unified,multiscan,Multi-scan (near-duplicate views),True,0.1404,-0.0441,0.2913,141,34
+test,overall,missed vs detected (fractured),unified,box_std,Box std,False,0.5049,0.3919,0.6206,141,34
+test,overall,missed vs detected (fractured),unified,ring_std,Ring std,False,0.4673,0.3549,0.589,141,34
+test,overall,missed vs detected (fractured),unified,contrast_ratio,Contrast ratio,False,0.5555,0.4254,0.6821,141,34
+test,overall,missed vs detected (fractured),unified,weber,Weber,False,0.4926,0.3866,0.5915,141,34
+test,overall,missed vs detected (fractured),unified,michelson,Michelson,False,0.4984,0.3843,0.6152,141,34
+test,overall,false alarm vs correct (not fractured),region,image_px,Image size (width x height),False,0.4708,0.445,0.4953,671,196
+test,overall,false alarm vs correct (not fractured),region,aspect,Image aspect ratio,False,0.5123,0.47,0.5557,671,196
+test,overall,false alarm vs correct (not fractured),region,hardware,Surgical hardware present,True,-0.709,-0.7433,-0.6747,671,196
+test,overall,false alarm vs correct (not fractured),region,multiscan,Multi-scan (near-duplicate views),True,-0.0577,-0.1929,0.0675,671,196
+test,overall,false alarm vs correct (not fractured),unified,image_px,Image size (width x height),False,0.4684,0.4402,0.4956,671,152
+test,overall,false alarm vs correct (not fractured),unified,aspect,Image aspect ratio,False,0.5858,0.5456,0.6239,671,152
+test,overall,false alarm vs correct (not fractured),unified,hardware,Surgical hardware present,True,-0.7746,-0.8069,-0.7418,671,152
+test,overall,false alarm vs correct (not fractured),unified,multiscan,Multi-scan (near-duplicate views),True,-0.1295,-0.2571,-0.0093,671,152

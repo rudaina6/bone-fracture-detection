@@ -208,6 +208,18 @@ models: `results/phase4/test_scores.csv`.
   include multiple views of the same patient (no patient ID), and a weakly regularised small model (the hip model chose C=100)
   can profit from near-duplicates across CV folds more than the unified model. The share of `multiscan` images in hip
   can show whether that is plausible.
+  - **[Phase 5 update - this hypothesis was wrong, and the question is now answered: see `docs/phase5_analysis.md`,
+    "The hip question".]** Hip has **0% `multiscan` images** (hand 8.6%, leg 13.5%), so near-duplicate leakage cannot be
+    the explanation - and Phase 5.3 found that multi-scan images *are* measurably easier (+0.14 detection rate), which
+    makes hip's CV number the *least* inflated of the four rather than the most. The CV effect is real: the hip region arm
+    beats the unified arm at every training size from 10 images upward and the gap **widens** with data (+0.083 to
+    +0.209), a unified model trained on zero hip images scores 0.267 against a 0.18 chance level, and all six single-region
+    transfer ratios into and out of hip lie between -0.03 and +0.16 (the pooled "all regions" row reaches only
+    +0.26 size-matched, against hip's own +1.00). The mechanism is that hip's fracture direction is
+    near-orthogonal to the pooled one (cosine 0.193 against hand's 0.625), its lesions are about twice the linear size of
+    any other region's, and it supplies only 7.8% of the training images. What stays unproven is whether the effect
+    **generalises**: 11 fractured test images could not measure it either way. This bullet's "does not support a reliable
+    advantage" therefore stands as written *for the test set*, and is not evidence against the CV result.
 - **Region models generalise like the unified one:** CV-to-test PR-AUC for the region models was hand 0.619 to 0.686, leg
   0.608 to 0.636, hip 0.754 to 0.628, shoulder 0.560 to 0.607, all inside the test CIs.
 - **Operating point, not ranking:** the hand model's F2 threshold is very liberal (recall 0.97 but specificity 0.26, 133
@@ -217,6 +229,12 @@ models: `results/phase4/test_scores.csv`.
 - **Answer for the plan (Phase 4 rule):** the four region models used the same features, family, grid, CV protocol and
   imbalance strategy as the unified model, and were scored on identical images. On this data the region split does not
   produce a measurable gain on the test set. The CV result for hip and the learning curves are what Phase 5 has to explain.
+- **[Phase 5 update]** Phase 5 explained both. The learning curves and the cross-region transfer matrix show that **hip is
+  a genuine region effect and hand, leg and shoulder are not** (`docs/phase5_analysis.md`, 5.2), and 5.1 found that what
+  specialisation mainly changes is not the ranking but the **decision threshold** - McNemar on the test decisions is
+  significant for hand (p=7e-08, favouring the unified model) and for leg (p=0.004, favouring the region model) while
+  every PR-AUC difference stays inside its CI. That makes the "Operating point, not ranking" bullet above the main Phase 4
+  finding in hindsight, and per-region thresholds the cheaper of the two Phase 6 levers.
 
 ### Reproduce
 ```
