@@ -44,32 +44,37 @@ a square, CLAHE clip 2.0 tile 8). 512 would mostly upsample: 91% of the images a
   (mean over the 3,266 training images). 12 px was added to the brief's 16-96 range so that the smallest boxes had a
   chance; the rule did not pick it.
 
-**Chosen: base sizes 16 and 40 px, six window types, 23,110 windows per image.** No single size reaches 90% (best
-71.3%). The chosen pair is also the cheapest set reaching 90% with any number of sizes.
+**The rule's choice was base sizes 16 and 40 px** (six window types, 23,110 windows per image, 92.9% of training boxes
+reachable: hand 96.1%, leg 88.0%, hip 83.7%, shoulder 100%). No single size reaches 90% (best 71.3%), and that pair
+is also the cheapest set reaching 90% with any number of sizes.
+
+**Adopted: base sizes 16, 40 and 64 px, nine window types, 24,213 windows per image.** *[Decided at the STOP 1 review,
+2026-11-22, before any model was trained: adding 64 px lifts hip reachability from 83.7% to 91.8% (leg from 88.0% to
+89.2%) for 4.8% more windows, and hip is the region Phases 5-6 focused on. The rule's choice is kept on record in
+`results/phase7/window_design.json`; the numbers below are for the adopted set
+(`python src/phase7_window_design.py --sizes 16 40 64`).]*
 
 | Group | Training boxes | Reachable, IoU >= 0.5 | Reachable, IoU >= 0.3 | Positive windows (IoU >= 0.5) | Per box, median |
 |---|---|---|---|---|---|
-| All | 748 | **92.9%** | 99.7% | 3,192 | 4 |
-| Hand | 389 | 96.1% | 100% | 1,760 | 4 |
-| Leg | 250 | 88.0% | 99.2% | 959 | 4 |
-| Hip | 49 | 83.7% | 100% | 186 | 4 |
-| Shoulder | 50 | 100% | 100% | 232 | 4 |
+| All | 748 | **93.9%** | 99.7% | 3,511 | 4 |
+| Hand | 389 | 96.1% | 100% | 1,790 | 4 |
+| Leg | 250 | 89.2% | 99.2% | 1,117 | 4 |
+| Hip | 49 | 91.8% | 100% | 305 | 6 |
+| Shoulder | 50 | 100% | 100% | 244 | 4 |
 | Other | 10 | 100% | 100% | 55 | 6 |
 
-| Window (w x h, px at 448) | 16 x 16 | 16 x 32 | 32 x 16 | 40 x 40 | 40 x 80 | 80 x 40 | Total |
-|---|---|---|---|---|---|---|---|
-| Windows per image (mean) | 10,102 | 4,962 | 5,055 | 1,514 | 721 | 756 | 23,110 |
+| Window (w x h, px at 448) | 16 x 16 | 16 x 32 | 32 x 16 | 40 x 40 | 40 x 80 | 80 x 40 | 64 x 64 | 64 x 128 | 128 x 64 | Total |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Windows per image (mean) | 10,102 | 4,962 | 5,055 | 1,514 | 721 | 756 | 575 | 259 | 269 | 24,213 |
 
-Leg (88.0%) and hip (83.7%) are below 90% on their own; the rule is about all boxes. For the record, adding a third
-size (64 px) would raise hip to 91.8% and leg to 89.2% for 4.8% more windows (24,213); the rule as written does not
-take it.
+Leg (89.2%) stays just below 90% on its own; the rule is about all boxes.
 
 ## Pipeline
 
 ### Canonical window features (Dalal-Triggs style, computed densely)
-Every window is resampled to a canonical 32 x 32 patch. Implementation: for each of the six window types, the 448 px
+Every window is resampled to a canonical 32 x 32 patch. Implementation: for each of the nine window types, the 448 px
 image is resized by (32/w, 32/h) into one pyramid level of size `(round(448*32/w), round(448*32/h))` (16 x 16: 896 x
-896; 40 x 80: 358 x 179), features are computed once per level, and windows are slices of the level's feature grid. A
+896; 40 x 80: 358 x 179; 128 x 64: 112 x 224), features are computed once per level, and windows are slices of the level's feature grid. A
 window at cell (i, j) of its level covers image pixels `x = i * w/4`, `y = j * h/4`, w x h; the level's cell grid
 reproduces the design grid exactly (a gate checks it).
 - **HOG:** 9 orientations, 8 px cells, 2 x 2 cells per block, L2-Hys (as Phase 2), on the level image; a window is the
@@ -80,13 +85,13 @@ reproduces the design grid exactly (a gate checks it).
 - 366 dims per window. Family block weights 1/sqrt(dims) and `StandardScaler` fitted inside the folds, as
   `model_zoo.build` does.
 - **Deviations from the Phase 2 features, and why:** 8 px instead of 16 px cells, one LBP scale instead of two, no
-  GLCM or Gabor, a 2 x 2 instead of 4 x 4 LBP grid. Windows are 32 px in canonical form and are scored 23,110 times
+  GLCM or Gabor, a 2 x 2 instead of 4 x 4 LBP grid. Windows are 32 px in canonical form and are scored 24,213 times
   per image, so the descriptor has to be small, local and computable from shared per-level maps.
 
 ### Patch dataset (training images only)
-- **Positives:** every window with IoU >= 0.5 with a ground-truth box (median 4 per box; 3,192 on all training images).
+- **Positives:** every window with IoU >= 0.5 with a ground-truth box (median 4 per box; 3,511 on all training images).
 - **Negatives:** windows with IoU < 0.1 with every box of their image, from normal and fractured images, 3 per positive
-  at the start, sampled uniformly from all such windows of the training images in use (all six types), with a
+  at the start, sampled uniformly from all such windows of the training images in use (all nine types), with a
   generator seeded 0 for every fold.
 - Windows with 0.1 <= IoU < 0.5 are discarded.
 
@@ -107,7 +112,7 @@ highest-scoring survivors per image are added as negatives. The classifier is re
 positives and all negatives gathered so far.
 
 ### Inference
-Score every window; greedy NMS at IoU 0.3 across all six window types; keep at most 10 boxes per image. The
+Score every window; greedy NMS at IoU 0.3 across all nine window types; keep at most 10 boxes per image. The
 image-level score is the best window score (= the top box's score).
 
 ## Evaluation
@@ -211,7 +216,7 @@ output to `results/phase7/<step>.log`. Every fitting run gets a row in `results/
 
 | Analysis | Why it is run | What decides the answer | Fixed when |
 |---|---|---|---|
-| Window design | Square 32-64 px windows reach only 52% of boxes | Rule above (>= 90% reachable, fewest sizes, fewest windows) | before (training box geometry only) |
+| Window design | Square 32-64 px windows reach only 52% of boxes | Rule above (>= 90% reachable, fewest sizes, fewest windows), then 64 px added at the STOP 1 review for hip | before (training box geometry only; no model) |
 | Gates and self-tests | Dense features, folded scoring and AP must be right before anything is trusted | Exact or 1e-5 / 1e-6 agreement; hand-computed cases | before |
 | Detection CV | Honest out-of-fold detection performance | Reported with fold-stratified CIs; no verdict except D1 | before |
 | Mining rounds | The plan asks for two rounds; a third choice would be tuning | D1 | before |
@@ -221,12 +226,12 @@ output to `results/phase7/<step>.log`. Every fitting run gets a row in `results/
 
 ## Known threats (carry into the report)
 
-- **Reachability caps recall:** 92.9% of training boxes overall, but 88.0% of leg and 83.7% of hip boxes.
+- **Reachability caps recall:** 93.9% of training boxes overall, 89.2% of leg and 91.8% of hip boxes.
 - **IoU 0.5 is strict for tiny boxes.** The median hand box is 23 px at 448; a 2-3 px disagreement between annotator
   and window costs a lot of IoU. Recall at IoU 0.3 is reported for that reason.
 - **AP@50:95 near zero by construction** (fixed windows, no box regression).
-- **A linear patch model** is weaker than Phase 3's RBF SVM; it is the price of scoring 23,110 windows per image.
-- **Resampling:** 16 px windows are upsampled 2x to the canonical patch, 80 px ones downsampled 2.5x, and 1:2 windows
+- **A linear patch model** is weaker than Phase 3's RBF SVM; it is the price of scoring 24,213 windows per image.
+- **Resampling:** 16 px windows are upsampled 2x to the canonical patch, 128 px ones downsampled 4x, and 1:2 windows
   are stretched anisotropically, which changes gradient orientations.
 - **Unannotated fractures** in fractured images would be sampled or mined as negatives; the boxes are assumed complete.
 - **Scale mixing across folds** is avoided by fold means; the pooled numbers are shown for reference only.

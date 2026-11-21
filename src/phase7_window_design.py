@@ -14,7 +14,9 @@ the window overlaps the box.
 A box is REACHABLE if some window of the set has IoU >= 0.5 with it; the share of reachable boxes is the upper bound on
 recall at IoU 0.5. Selection rule (Phase 7 protocol, docs/phase7_localization.md): among subsets of the candidate base
 sizes, the smallest number of sizes with >= 90% of training boxes reachable; among those, the fewest windows per
-image (mean over the training images).
+image (mean over the training images). --sizes adopts another set (decided at a review); both are recorded.
+
+    python src/phase7_window_design.py --sizes 16 40 64 --reason "..."    # the set adopted at the STOP 1 review
 """
 import argparse
 import json
@@ -76,6 +78,9 @@ def box_stats(b, w, h, content):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
+    ap.add_argument("--sizes", type=int, nargs="+", default=None,
+                    help="adopt these base sizes instead of the rule's choice (the rule's choice is still recorded)")
+    ap.add_argument("--reason", default="", help="why --sizes overrides the rule (recorded in window_design.json)")
     ap.add_argument("--no-log", action="store_true")
     ap.add_argument("--out-dir", type=Path, default=REPO_ROOT / "results" / "phase7")
     ap.add_argument("--tables-dir", type=Path, default=REPO_ROOT / "results" / "tables")
@@ -129,8 +134,13 @@ def main(argv=None):
         if chosen is not None and k >= chosen["n_sizes"] + 1:
             break
     design = pd.DataFrame(rows).sort_values(["n_sizes", "windows_per_image"])
-    sizes = [int(s) for s in chosen["sizes"].split()]
+    rule_sizes = [int(s) for s in chosen["sizes"].split()]
+    sizes = sorted(args.sizes) if args.sizes else rule_sizes
+    bad = [s for s in sizes if s not in CANDIDATES]
+    if bad:
+        raise SystemExit(f"--sizes {bad} are not candidate base sizes {CANDIDATES}")
     cols = [tix[wh] for wh in window_types(sizes)]
+    adopted_windows = float(per_type[cols].sum())
     reach50, reach30 = best[:, cols].max(1) >= 0.5, best[:, cols].max(1) >= 0.3
     pos = n50[:, cols].sum(1)
     rt = []
@@ -150,8 +160,11 @@ def main(argv=None):
     out = dict(rule="fewest base sizes with >= 90% of training boxes reachable at IoU 0.5 (stride window/4, "
                     "content filter), then fewest windows per image",
                candidates=list(CANDIDATES), aspects=[list(a) for a in ASPECTS], size=SIZE, mid=MID,
-               chosen_sizes=sizes, window_types=[list(wh) for wh in window_types(sizes)],
-               windows_per_image=float(chosen["windows_per_image"]),
+               rule_sizes=rule_sizes, rule_windows_per_image=float(chosen["windows_per_image"]),
+               rule_reach_iou50=float(chosen["reach"]),
+               chosen_sizes=sizes, adopted_reason=args.reason if args.sizes else "the rule's choice",
+               window_types=[list(wh) for wh in window_types(sizes)],
+               windows_per_image=adopted_windows,
                windows_per_image_by_type={f"{w}x{h}": float(per_type[tix[(w, h)]]) for w, h in window_types(sizes)},
                reach_iou50=float(reach50.mean()), reach_iou30=float(reach30.mean()),
                reach_by_region={r["group"]: float(r["reach_iou50"]) for r in rt},
@@ -169,8 +182,11 @@ def main(argv=None):
         d = design[design.n_sizes == k]
         ax.scatter(d.windows_per_image, d.reach, s=10, color=col, alpha=0.6, label=f"{k} base size(s)")
     ax.axhline(TARGET, color=C["ink2"], ls=(0, (3, 2)), lw=1)
-    ax.scatter([chosen["windows_per_image"]], [chosen["reach"]], s=70, facecolor="none", edgecolor=C["ink"], lw=1.5,
-               label=f"chosen: {chosen['sizes']} px")
+    ax.scatter([chosen["windows_per_image"]], [chosen["reach"]], s=70, facecolor="none", edgecolor=C["ink2"], lw=1.2,
+               label=f"rule's choice: {chosen['sizes']} px")
+    if sizes != rule_sizes:
+        ax.scatter([adopted_windows], [reach50.mean()], s=90, marker="s", facecolor="none", edgecolor=C["ink"], lw=1.6,
+                   label=f"adopted: {' '.join(map(str, sizes))} px")
     ax.set_xscale("log")
     ax.set_xlabel("windows per image (mean over training images, log scale)")
     ax.set_ylabel("training boxes reachable (IoU >= 0.5)")
@@ -180,8 +196,9 @@ def main(argv=None):
          "448 px image. Training boxes only. Reachable = some window has IoU >= 0.5 (the upper bound on recall).")
 
     pd.set_option("display.width", 200)
-    print(f"\nChosen base sizes {sizes} px -> window types {window_types(sizes)}")
-    print(f"windows per image {chosen['windows_per_image']:.0f}; reachability IoU 0.5 {reach50.mean():.1%}, "
+    print(f"\nRule's choice {rule_sizes} px ({chosen['windows_per_image']:.0f} windows, reach {chosen['reach']:.1%})")
+    print(f"Adopted base sizes {sizes} px -> window types {window_types(sizes)}")
+    print(f"windows per image {adopted_windows:.0f}; reachability IoU 0.5 {reach50.mean():.1%}, "
           f"IoU 0.3 {reach30.mean():.1%}; positive windows {pos.sum()}")
     print(reach_tab.round(3).to_string(index=False))
     print("\nBest subsets per number of sizes (top 3 by windows among those reaching the target):")
@@ -198,9 +215,11 @@ def main(argv=None):
         log_run(regions="all (pooled), training boxes", feature_set="n/a (box geometry only)",
                 model="n/a (window design analysis, nothing fitted)", imbalance_strategy="n/a",
                 key_hyperparameters=f"448 px; base sizes {sizes}; aspects 1:1 1:2 2:1; stride window/4; content>=50%",
-                cv_score=f"reachability IoU0.5={reach50.mean():.3f}; windows/image={chosen['windows_per_image']:.0f}",
+                cv_score=f"reachability IoU0.5={reach50.mean():.3f}; windows/image={adopted_windows:.0f}",
                 test_metrics="not used (training boxes only)",
-                notes="Phase 7 design analysis (before any model): window set chosen by the protocol rule")
+                notes="Phase 7 design analysis (before any model): " + (
+                    f"rule's choice {rule_sizes}; adopted {sizes} ({args.reason})" if sizes != rule_sizes
+                    else "window set chosen by the protocol rule"))
 
 
 if __name__ == "__main__":

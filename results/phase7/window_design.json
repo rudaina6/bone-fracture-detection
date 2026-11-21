@@ -30,10 +30,18 @@
  ],
  "size": 448,
  "mid": 448,
- "chosen_sizes": [
+ "rule_sizes": [
   16,
   40
  ],
+ "rule_windows_per_image": 23109.85517452541,
+ "rule_reach_iou50": 0.929144385026738,
+ "chosen_sizes": [
+  16,
+  40,
+  64
+ ],
+ "adopted_reason": "STOP 1 review, before any model: lifts hip reachability 83.7% -> 91.8% (leg 88.0% -> 89.2%) for 4.8% more windows; hip is the region Phases 5-6 focused on",
  "window_types": [
   [
    16,
@@ -58,28 +66,43 @@
   [
    80,
    40
+  ],
+  [
+   64,
+   64
+  ],
+  [
+   64,
+   128
+  ],
+  [
+   128,
+   64
   ]
  ],
- "windows_per_image": 23109.85517452541,
+ "windows_per_image": 24212.63962033068,
  "windows_per_image_by_type": {
   "16x16": 10101.890385793018,
   "16x32": 4962.140232700551,
   "32x16": 5055.166564605021,
   "40x40": 1513.572872014697,
   "40x80": 720.9675443968157,
-  "80x40": 756.1175750153093
+  "80x40": 756.1175750153093,
+  "64x64": 574.8928352725046,
+  "64x128": 258.6497244335579,
+  "128x64": 269.2418860992039
  },
- "reach_iou50": 0.929144385026738,
+ "reach_iou50": 0.9385026737967914,
  "reach_iou30": 0.9973262032085561,
  "reach_by_region": {
-  "all": 0.929144385026738,
+  "all": 0.9385026737967914,
   "hand": 0.961439588688946,
-  "leg": 0.88,
-  "hip": 0.8367346938775511,
+  "leg": 0.892,
+  "hip": 0.9183673469387755,
   "shoulder": 1.0,
   "other": 1.0
  },
- "positives_total": 3192,
+ "positives_total": 3511,
  "n_boxes": 748,
  "n_train_images": 3266,
  "cheapest_any_size_count": {
@@ -87,5 +110,5 @@
   "reach": 0.929144385026738,
   "windows_per_image": 23109.85517452541
  },
- "date": "2026-11-22T02:53:22"
+ "date": "2026-11-22T02:58:26"
 }
