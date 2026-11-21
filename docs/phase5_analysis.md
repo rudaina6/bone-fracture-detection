@@ -155,7 +155,10 @@ All on the 3,266 training rows (`cv_protocol.load_train`); nothing is fitted on 
   5x smaller effective gamma and the comparison would measure the wrong thing. This is a plain 5-fold CV, not nested:
   it is a descriptive ranking of families within a region, the same slight optimism applies to every cell, and no
   model choice is made from it. The linear SVM's per-family share of `|w|` is reported next to it as a cheap
-  cross-check, and the unified column is comparable to the Phase 2 family table (`results/tables/features_family_comparison_256_clahe.csv`).
+  cross-check, and the unified column is comparable to the Phase 2 family table (`results/tables/feature_family_s256_m448_clahe_c16_none_C0.1_bw.csv`).
+  *[Reference corrected 2026-11-21, before Phase 6: this sentence used to point to
+  `features_family_comparison_256_clahe.csv`, which is Aiman's table from `notebooks/02_features.ipynb` (no block
+  weighting), not the shared Phase 2 table.]*
 
 ## 5.3 Error analysis
 
@@ -387,7 +390,10 @@ lends to any other region. Even "all regions" - 2,600 images - reaches only +0.2
 
 #### Why: the regions are visibly separable, and hip's fracture direction is orthogonal to the pooled one
 
-- **Region separability** (multinomial logistic, 5-fold CV): **macro-F1 0.765, accuracy 0.940**. The regions
+- **Region separability** (multinomial logistic, 5-fold CV): **macro-F1 0.765, accuracy 0.940**.
+  *[Clarified 2026-11-21: 0.940 is the accuracy. Macro-F1 is much lower almost entirely because "other" is
+  recovered only 1 of 19 times; each of the four modelled regions is recovered 91-97% of the time (hand 944/1025,
+  leg 1646/1699, hip 234/256, shoulder 245/267).]* The regions
   are almost perfectly readable from the same features. Hip is recovered 234/256 times, confused only with
   leg (18); the largest confusion is hand <-> leg (73 + 50). **This matters for Phase 6**: the unified RBF
   SVM *could* in principle condition its behaviour on region without being told the region, because the
