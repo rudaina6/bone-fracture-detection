@@ -1,0 +1,13 @@
+{
+ "n_images": 3266,
+ "positives": 3511,
+ "pool_per_image": 40,
+ "seconds": 78.62354588508606,
+ "positives_by_region": {
+  "hand": 1790,
+  "leg": 1117,
+  "hip": 305,
+  "shoulder": 244,
+  "other": 55
+ }
+}
