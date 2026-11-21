@@ -299,7 +299,136 @@ before approval.
 
 ## Results
 
-*(Empty until the runs. The protocol above was fixed before any result.)*
+*(Stage 3, run 2026-11-22 on the training images only. The protocol above was not changed after the results were
+seen; every verdict below applies the rule as written. Logs: `results/phase6/stage3_*.log`. Tables:
+`results/tables/phase6_*.csv`. Figures: `results/figures/phase6_thresholds.png`, `phase6_kernel_lambda.png`. The test
+set has not been used.)*
+
+### Gates
+
+| Gate | Check | Result |
+|---|---|---|
+| G1 | fresh baseline vs `results/phase3/oof_rbfsvm__none.csv` | **passed**: same parameters in every fold (C=10; gamma 0.2 in fold 0, 0.05 in folds 1-4); max score difference 8.8e-4 (tol 2e-3), max threshold difference 3.0e-4 (tol 1e-3), max fold PR-AUC difference 8.1e-5 (tol 5e-4) |
+| G2 | `mtrbf_all` at lambda = 0 vs G1 | **passed**: parameters, inner PR-AUCs, outer scores and thresholds identical bit for bit |
+
+### Lever 1: per-region thresholds on the unified model
+
+Thresholds per outer fold (margin), chosen on the inner out-of-fold scores (`results/phase6/thresholds_per_fold.csv`):
+
+| Arm, region | Fold 0 | Fold 1 | Fold 2 | Fold 3 | Fold 4 | SD | L4 |
+|---|---|---|---|---|---|---|---|
+| G (global) | -0.833 | -0.916 | -0.970 | -0.935 | -0.862 | 0.056 | reference |
+| R hand | -0.976 | -1.073 | -1.091 | -1.000 | -1.220 | 0.096 | noisy |
+| R leg | -0.508 | -0.716 | -0.576 | -0.656 | -0.840 | 0.128 | noisy |
+| R hip | -0.747 | -0.726 | -1.309 | -1.364 | -0.736 | 0.329 | noisy |
+| R shoulder | -0.941 | -0.798 | -0.802 | -0.856 | -1.148 | 0.146 | noisy |
+
+Pooled out-of-fold F2 (each image at its own fold's thresholds), and the paired differences (95% CI, thresholds
+fixed, 2,000 resamples):
+
+| Group | G | R | R-shrunk | P4 | R - G | R-shrunk - G | R - P4 |
+|---|---|---|---|---|---|---|---|
+| Overall (3,266) | 0.631 | 0.646 | 0.646 | - | +0.015 [-0.000, +0.031] | **+0.015 [+0.001, +0.029]** | - |
+| 4 regions (3,247) | 0.629 | 0.644 | 0.644 | 0.655 | | | -0.011 [-0.033, +0.012] |
+| Hand | 0.684 | 0.689 | 0.687 | 0.694 | +0.005 [-0.017, +0.027] | +0.003 [-0.017, +0.023] | -0.005 [-0.032, +0.022] |
+| Leg | 0.557 | 0.599 | 0.596 | 0.592 | **+0.042 [+0.009, +0.071]** | **+0.040 [+0.011, +0.065]** | +0.007 [-0.037, +0.051] |
+| Hip | 0.590 | 0.557 | 0.577 | 0.719 | -0.033 [-0.116, +0.046] | -0.013 [-0.074, +0.046] | **-0.162 [-0.243, -0.087]** |
+| Shoulder | 0.609 | 0.592 | 0.592 | 0.545 | -0.017 [-0.054, +0.009] | -0.017 [-0.049, +0.005] | +0.047 [-0.037, +0.140] |
+
+Overall, R vs G: recall 0.812 vs 0.797, precision 0.355 vs 0.344, specificity 0.684 vs 0.675.
+
+- **L1 (primary): R - G overall F2 +0.015 [-0.0005, +0.031], R better in 5/5 folds -> "no detectable difference".**
+  The lower bound misses 0 by 0.0005; the rule is applied as written.
+- **L2 (secondary): R-shrunk - G overall F2 +0.015 [+0.001, +0.029], better in 5/5 folds -> "R-shrunk helps".** The
+  interval clears 0 by 0.001, so this verdict is as borderline as L1's, in the other direction. R and R-shrunk have the
+  same overall F2 (0.646); shrinkage mainly narrows the interval, through the two small regions.
+- **L3 (descriptive): per-region thresholds reproduce the Phase 4 decisions in hand and leg, not in hip.** R moves hand
+  the way the hand region model did (recall +0.069, specificity -0.164 vs G; P4 - G: +0.069, -0.144) and leg the way
+  the leg model did (recall -0.065, specificity +0.106; P4 - G: -0.094, +0.123), and R - P4 is within noise in both. In
+  hip, R is far below P4 (F2 -0.162 [-0.243, -0.087]), as expected: hip's Phase 4 gain is in the ranking, which a
+  threshold cannot move. The only region where R is detectably better than G is leg (+0.042).
+- **L4: every region is flagged noisy.** Each region threshold's fold SD is above the global threshold's (0.056); hip's
+  (0.329) is six times larger, with two folds near -0.74 and two near -1.34.
+- **L5:** the intervals above hold the thresholds fixed and leave out the noise of choosing them, which L4 shows is
+  large, especially for hip and shoulder.
+
+### Lever 2: shared-plus-region-specific kernel
+
+lambda chosen per outer fold (full grid, inner selection by mean overall PR-AUC):
+
+| Run | Fold 0 | Fold 1 | Fold 2 | Fold 3 | Fold 4 |
+|---|---|---|---|---|---|
+| `mtrbf_all` (primary) | C=10, g=0.2, **lambda 0.25** | C=10, g=0.05, **0.25** | C=1, g=0.2, **1** | C=10, g=0.05, **0.25** | C=1, g=0.2, **4** |
+| `mtrbf_hip` (secondary) | C=10, g=0.05, **1** | C=10, g=0.05, **1** | C=10, g=0.05, **1** | C=10, g=0.05, **1** | C=10, g=0.05, **0.25** |
+
+Fold-mean PR-AUC on the training images (chance: hand 0.30, leg 0.10, hip 0.18, shoulder 0.18):
+
+| Arm | Overall | Hand | Leg | Hip | Shoulder |
+|---|---|---|---|---|---|
+| Unified (G1 baseline) | 0.602 | 0.637 | 0.584 | 0.531 | 0.636 |
+| `mtrbf_all` (primary) | 0.601 | 0.624 | 0.579 | **0.648** | 0.594 |
+| `mtrbf_hip` (secondary) | 0.613 | 0.638 | 0.594 | 0.632 | 0.646 |
+| P4 region models | - | 0.619 | 0.608 | 0.754 | 0.560 |
+| Diagnostic, lambda fixed at 0.25 / 1 / 4 | 0.600 / 0.607 / 0.604 | 0.631 / 0.635 / 0.623 | 0.569 / 0.586 / 0.600 | 0.613 / 0.607 / 0.668 | 0.610 / 0.621 / 0.598 |
+
+PR-AUC, kernel minus unified (fold-mean differences, images resampled within folds):
+
+| Group | `mtrbf_all` - unified | `mtrbf_hip` - unified | P4 - unified |
+|---|---|---|---|
+| Overall | -0.001 [-0.016, +0.017] | +0.011 [-0.001, +0.024] | - |
+| Hand | -0.013 [-0.032, +0.011] | +0.002 [-0.012, +0.014] | -0.018 [-0.047, +0.018] |
+| Leg | -0.005 [-0.031, +0.020] | +0.009 [-0.008, +0.028] | +0.023 [-0.013, +0.063] |
+| Hip | **+0.117 [+0.026, +0.208]** | **+0.101 [+0.030, +0.174]** | **+0.223 [+0.107, +0.325]** |
+| Shoulder | -0.043 [-0.094, +0.016] | +0.010 [-0.024, +0.042] | -0.077 [-0.149, +0.006] |
+
+- **K1 (primary): `mtrbf_all` hip PR-AUC +0.117 [+0.026, +0.208], and no other region and not overall has an interval
+  below 0 -> "closes part of the hip gap".** Shoulder (-0.043 [-0.094, +0.016]) and hand (-0.013) point the wrong way,
+  but neither interval excludes 0. At its own thresholds the kernel's overall F2 is unchanged (+0.003 [-0.016, +0.024]),
+  with specificity +0.028 [+0.014, +0.041], and hip F2 rises by +0.103 [+0.016, +0.194].
+- **K2: gap closed 0.52**: hip fold-mean PR-AUC 0.648, against 0.531 unified and 0.754 for the hip region model.
+- **K3: lambda = 0 won in 0 of 5 folds**, so the inner CV does select the region term and K3 does not override K1. No
+  grid edge (lambda = 4 in 1 fold; no C or gamma edge).
+- **K4:** hip was singled out by Phase 5 on these same training folds. The result is an honest nested-CV estimate but
+  weaker evidence than a pre-specified one, and it says nothing yet about unseen hip images.
+- **Secondary, `mtrbf_hip`:** hip +0.101 [+0.030, +0.174] with no region pointing down (shoulder +0.010, overall
+  +0.011 [-0.001, +0.024]); lambda = 1 in 4/5 folds with the Phase 3 C and gamma. By rule S1 it cannot be adopted. It is
+  reported as a finding: putting the region term on hip alone recovers almost as much of the hip gap (0.45) without the
+  shoulder and hand cost of the all-region term.
+- **Diagnostics (not used for any choice):** overall PR-AUC is flat in lambda (0.600-0.607). Hip moves from 0.531 at
+  lambda = 0 to 0.61-0.67 once any region term is present; shoulder and hand drift down slightly.
+
+### Rule S: the Phase 6 model
+
+- S1: K1 = "closes part of the hip gap" and K3 does not apply -> ranking model **`mtrbf_all`**.
+- S2: L1 = "no detectable difference", L2 = "R-shrunk helps" -> threshold rule **R-shrunk**.
+- S3: both levers adopted, so the fifth arm is built: R-shrunk thresholds on the kernel's own inner out-of-fold scores
+  (`results/phase6/thresholds_per_fold_mtrbf_all.csv`). **Its own L1 check, kernel+R-shrunk minus kernel, overall F2
+  +0.024 [+0.009, +0.040] -> "helps".**
+
+| Arm (pooled out-of-fold) | Recall | Precision | Specificity | F2 |
+|---|---|---|---|---|
+| G, unified (Phase 3 as is) | 0.797 | 0.344 | 0.675 | 0.631 |
+| R-shrunk, unified | 0.812 | 0.354 | 0.683 | 0.646 |
+| kernel, global threshold | 0.783 | 0.360 | 0.703 | 0.634 |
+| **kernel+R-shrunk** | **0.819** | **0.369** | **0.700** | **0.659** |
+
+Per region, kernel+R-shrunk F2: hand 0.690, leg 0.587, hip 0.710, shoulder 0.621 (kernel+R-shrunk minus kernel:
+hand +0.024 [+0.000, +0.049], leg +0.026 [-0.001, +0.050], hip +0.016 [+0.000, +0.035], shoulder -0.004
+[-0.046, +0.042]). The hand threshold again turns liberal (specificity 0.362), as in Phase 4.
+
+**Rule S selects "kernel+R-shrunk"**: `mtrbf_all` with R-shrunk per-region thresholds. Against G, the difference in
+overall F2 is +0.028 as a point estimate (0.659 vs 0.631). No paired interval for kernel+R-shrunk minus G was
+pre-registered in CV, so none is claimed here; the test run reports it (T6). This choice goes to the team for approval
+before `phase6_final_test.py --phase6-model kernel+R-shrunk --kernel mtrbf_all` is run.
+
+**Caveats that come with this choice (carry into the report)**
+- Both threshold verdicts sit on the edge of their intervals (L1 misses 0 by 0.0005, L2 clears it by 0.001), and
+  every region threshold is noisy (L4). The threshold half of the selected model rests on the weakest evidence in this
+  phase.
+- The kernel's hip gain comes with non-significant losses in shoulder (-0.043) and hand (-0.013), which the
+  hip-only kernel does not show. K1 allows that; the report should state it.
+- The hip effect was selected on these folds (K4), and the 11 fractured hip test images will not be able to confirm a
+  gain of this size (Phase 4 test CI width about 0.30 PR-AUC).
 
 ### Reproduce (planned)
 

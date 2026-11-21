@@ -14,7 +14,7 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 | 3 | Unified classifier | **Complete** | 100% | `docs/phase3_unified.md`, `src/evaluate.py`, `src/model_zoo.py`, `src/cv_protocol.py`, `src/phase3_unified.py`, `src/phase3_final_test.py`, `results/phase3/`, `results/tables/phase3_*.csv` |
 | 4 | Region-specific classifiers | **Complete** | 100% | `docs/phase4_regional.md`, `src/phase4_regional.py`, `src/phase4_final_test.py`, `results/phase4/`, `results/tables/phase4_*.csv` |
 | 5 | Comparative analysis | **Complete** | 100% | `docs/phase5_analysis.md`, `src/phase5_main.py`, `src/phase5_curves.py`, `src/phase5_features.py`, `src/phase5_errors.py`, `src/phase5_box_contrast.py`, `src/phase5_viz.py`, `results/phase5/`, `results/tables/phase5_*.csv`, `results/figures/phase5_*.png` |
-| 6 | Gap-closing | Protocol written, no results yet | 0% | `docs/phase6_gap_closing.md` |
+| 6 | Gap-closing | CV done (Stage 3), test not run: awaiting approval of the Phase 6 model | ~70% | `docs/phase6_gap_closing.md` |
 | 7 | Localization | Not started | 0% | |
 | 8 | Report and presentation | Not started | 0% | |
 | | **Whole project** | | **~62%** | |
