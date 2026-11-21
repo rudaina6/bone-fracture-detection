@@ -161,7 +161,9 @@ tie at the same C and gamma goes to the unified model.
   as diagnostics everywhere: choosing lambda from them would be tuning on the outer folds.
 
 Expected cost on this machine (4 cores, `n_jobs=4`; Phase 3's 16-configuration nested run took 141 s here): about
-10 min each for (b) and (c), about 2.5 min for (a) and for each run in (d).
+10 min each for (b) and (c), about 2.5 min for (a) and for each run in (d). *[Added after results: these were pre-run
+estimates. Actual runtimes are in `results/phase6/stage3_*.log` and the Reproduce block below: (b) 11.8 min, (c) 12.3
+min, (d) 2.7-3.3 min per run; the G1 run plus lever-1 bootstraps took about 15 min.]*
 
 **Metrics**, as in Phase 4. Partners on the same images and folds: the **unified model, meaning the fresh baseline
 G1** (G3), and the Phase 4 region models (`results/phase4/oof_rbfsvm__none.csv`). PR-AUC and ROC-AUC: mean of the
@@ -176,7 +178,9 @@ descriptively.
 K1. **Primary:** hip PR-AUC, `mtrbf_all` minus unified. **"Closes part of the hip gap"** if the 95% CI excludes 0
     above **and** no other region (hand, leg, shoulder) and not the overall PR-AUC has a CI excluding 0 below. Hip
     better but another region or overall worse: **"trades regions"**, not adopted. Otherwise **"no detectable
-    difference"**.
+    difference"**. *[Added after results: the code (`phase6_kernel.k_verdicts`) also returns **"hip worse"** when the
+    hip CI excludes 0 below. That case is not named above; it never fired (both kernels' hip intervals are above 0),
+    and it cannot lead to adoption, since only "closes part of the hip gap" is adopted.]*
 K2. **Gap closed** = (hip kernel - unified) / (hip Phase 4 region model - unified), fold-mean PR-AUC on hip's
     training images, reported as a point estimate beside both differences and their CIs. Not a verdict on its own.
 K3. The lambda chosen in each outer fold is reported. If lambda = 0 wins in 4 or 5 of the 5 folds, the verdict is
@@ -303,6 +307,9 @@ before approval.
 seen; every verdict below applies the rule as written. Logs: `results/phase6/stage3_*.log`. Tables:
 `results/tables/phase6_*.csv`. Figures: `results/figures/phase6_thresholds.png`, `phase6_kernel_lambda.png`. The test
 set has not been used.)*
+
+*[Added after results: numbers in this section come from the full-precision logs and JSON files. The tables in
+`results/tables/phase6_*.csv` are saved rounded to 4 decimals, so re-rounding them to 3 can differ by 0.001.]*
 
 ### Gates
 
@@ -457,6 +464,10 @@ of the four regions):
 | P4 (routed, 4 regions) | 0.844 [0.780, 0.901] | 0.378 | 0.708 | 0.677 [0.622, 0.726] | - |
 
 Per region, F2 of the Phase 6 model: hand 0.726, leg 0.589, hip 0.606, shoulder 0.556 (G: 0.686, 0.581, 0.645, 0.685).
+
+*[Added after results: G's point estimates are exactly the Phase 3 test result, but its CIs differ slightly from those
+in `docs/phase3_unified.md` (e.g. recall [0.681, 0.823] here vs [0.684, 0.830]), because Phase 6 bootstraps with
+seed 0 (protocol) and `phase3_final_test.py` used seed 42.]*
 
 Paired differences on the same test images (95% CI, thresholds fixed). The half-width is the smallest effect the test
 could detect about half the time:

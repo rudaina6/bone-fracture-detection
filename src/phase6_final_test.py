@@ -40,7 +40,7 @@ from expt_log import log_run
 from feature_utils import load_features
 from model_zoo import SPECS, build, grid_for, scores, with_region_tag
 from paths import REPO_ROOT
-from phase6_thresholds import IMB, MODEL, SHRINK_K, THR_METRICS, fmt_ci, read_csv
+from phase6_thresholds import IMB, MODEL, SHRINK_K, THR_METRICS, fmt_ci, read_csv, warn_unknown_regions
 
 MODELS = ("G", "R", "R-shrunk", "kernel", "kernel+R", "kernel+R-shrunk")
 ARM_OF = {"G": "G", "R": "R", "R-shrunk": "R-shrunk", "kernel": "K", "kernel+R": "K+R", "kernel+R-shrunk": "K+R-shrunk"}
@@ -62,6 +62,8 @@ def region_thresholds(y, s, region, thr_global, k_shrink=SHRINK_K):
 
 
 def per_image(region, rule, thr_global):
+    """Each image's threshold: the region's value, or the global threshold ("other"; anything else is warned about)."""
+    warn_unknown_regions(region, "test thresholds")
     return np.array([rule.get(r, thr_global) for r in region], dtype=float)
 
 

@@ -38,7 +38,7 @@ import pandas as pd
 from cv_protocol import load_train, nested_cv
 from evaluate import REGIONS, best_threshold, metrics_by_group, paired_bootstrap, threshold_metrics
 from expt_log import log_run
-from model_zoo import SPECS, grid_for
+from model_zoo import REGION_CODES, SPECS, grid_for
 from paths import REPO_ROOT
 from phase5_viz import C, REGION_LABEL, header, save, setup
 import matplotlib.pyplot as plt      # after phase5_viz, which selects the Agg backend
@@ -146,12 +146,22 @@ def fold_thresholds(inner, folds, k_shrink=SHRINK_K):
     return pd.DataFrame(rows)
 
 
+def warn_unknown_regions(region, where):
+    """Per-region rules fall back to the global threshold outside hand/leg/hip/shoulder. That is intended for "other";
+    any other label is probably a data error, so it is reported rather than handled silently."""
+    unknown = sorted(set(map(str, region)) - set(REGION_CODES))
+    if unknown:
+        print(f"    WARNING ({where}): region labels {unknown} are not region groups; they fall back to the global "
+              "threshold", flush=True)
+
+
 def image_thresholds(df, thr_tab, arm):
     """Each image's threshold under an arm: its own outer fold's value; per region for R / R-shrunk, where "other"
     (or any region without a value) falls back to the fold's global threshold."""
     g = thr_tab[thr_tab.arm == "G"].set_index("fold").thr
     t = g.reindex(df.fold.to_numpy()).to_numpy(dtype=float)
     if arm != "G":
+        warn_unknown_regions(df.region, f"arm {arm}")
         reg_thr = thr_tab[thr_tab.arm == arm].set_index(["fold", "region"]).thr.to_dict()
         t = np.array([reg_thr.get((k, r), tg) for k, r, tg in zip(df.fold, df.region, t)], dtype=float)
     assert not np.isnan(t).any(), "an image has no threshold"
