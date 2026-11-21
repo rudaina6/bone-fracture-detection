@@ -1,0 +1,6 @@
+
+=== secondary: Multi-task RBF SVM (region term for hip only) -> mtrbf_hip | grid={'C': [0.1, 1, 10, 100], 'gamma': [0.8, 0.2, 0.05, 0.0125], 'lam': [0, 0.25, 1, 4]} ===
+    64 configs x 5 outer x 4 inner = 1280 inner fits, then 5 outer refits
+    outer-fold PR-AUC 0.613 +- 0.032 | lambda per fold [1, 1, 1, 1, 0.25] | 12.3 min
+    chosen per fold: [{'C': 10, 'gamma': 0.05, 'lam': 1}, {'C': 10, 'gamma': 0.05, 'lam': 1}, {'C': 10, 'gamma': 0.05, 'lam': 1}, {'C': 10, 'gamma': 0.05, 'lam': 1}, {'C': 10, 'gamma': 0.05, 'lam': 0.25}]
+exit 0
