@@ -1,0 +1,10 @@
+
+=== gate G2 (lambda fixed at 0): Multi-task RBF SVM (region term for every region) -> mtrbf_all__lam0 | grid={'C': [0.1, 1, 10, 100], 'gamma': [0.8, 0.2, 0.05, 0.0125], 'lam': [0]} ===
+    16 configs x 5 outer x 4 inner = 320 inner fits, then 5 outer refits
+    outer-fold PR-AUC 0.602 +- 0.036 | lambda per fold [0, 0, 0, 0, 0] | 4.5 min
+    chosen per fold: [{'C': 10, 'gamma': 0.2, 'lam': 0}, {'C': 10, 'gamma': 0.05, 'lam': 0}, {'C': 10, 'gamma': 0.05, 'lam': 0}, {'C': 10, 'gamma': 0.05, 'lam': 0}, {'C': 10, 'gamma': 0.05, 'lam': 0}]
+
+=== Gate G2: mtrbf_all__lam0 vs the G1 baseline, no tolerance ===
+    same_params=True  lam_all_zero=True  inner_pr_auc_identical=True  scores_identical=True  thresholds_identical=True
+    G2 PASSED
+exit 0

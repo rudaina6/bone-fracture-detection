@@ -1,0 +1,14 @@
+{
+ "same_rows": true,
+ "same_params": true,
+ "lam_all_zero": true,
+ "inner_pr_auc_identical": true,
+ "scores_identical": true,
+ "thresholds_identical": true,
+ "max_abs_score_diff": 0.0,
+ "n_jobs": {
+  "gate": 4,
+  "baseline": 4
+ },
+ "passed": true
+}
