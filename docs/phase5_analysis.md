@@ -437,6 +437,11 @@ from all five (right, negative = the family was helping). Plain 5-fold CV, a ran
   jointly, while everywhere else the families are largely redundant (all-regions leave-one-out changes are
   -0.021 to 0.000).
 - The all-regions column is consistent with the Phase 2 family comparison, as expected.
+  *[Later correction 2026-11-21: against the shared Phase 2 table (`feature_family_s256_m448_clahe_c16_none_C0.1_bw.csv`,
+  see the corrected reference in the protocol above) the agreement is loose rather than exact. Both put HOG and LBP
+  on top and intensity last, but the linear SVM ranks HOG > LBP and GLCM > Gabor (0.467, 0.437, 0.412, 0.385,
+  0.343), while the RBF ablation here ranks LBP > HOG and Gabor > GLCM. No conclusion of this phase rests on that
+  ordering.]*
 
 ### 5.3 Error analysis
 

@@ -217,9 +217,13 @@ S1. Ranking model: the kernel `mtrbf_all` if K1 says "closes part of the hip gap
     unified RBF SVM. `mtrbf_hip` and the diagnostic runs cannot be adopted.
 S2. Threshold rule: R if L1 says "R helps"; otherwise R-shrunk if L2 says "R-shrunk helps"; otherwise G.
 S3. The Phase 6 model is the pair. With the unified model that is G, R or R-shrunk; with the kernel and G it is
-    "kernel" (one global F2 threshold). If both levers are adopted, the per-region thresholds are chosen on the
-    kernel's own scores in the same way, and that combination's CV numbers (from the inner scores saved by run (b))
-    are reported beside both single-lever arms, with no further verdict.
+    "kernel" (one global F2 threshold). If both levers are adopted, a **fifth arm, "kernel+R"** (or kernel+R-shrunk,
+    whichever S2 selected), is built: per-region thresholds chosen on the kernel's own **inner** out-of-fold scores
+    (saved by run (b)) exactly as in lever 1, applied to the kernel's outer scores. It gets **its own L1 check**:
+    overall F2, kernel+R minus kernel (global threshold), paired bootstrap as in L1. The Phase 6 model is kernel+R
+    only if that check says "helps"; otherwise it is "kernel". Both numbers are reported beside the single-lever
+    arms. *[Revised 2026-11-21 at the STOP 1 review, before any result: this replaces "reported with no further
+    verdict".]*
 S4. If neither lever is adopted, the Phase 6 model is G, the Phase 3 model unchanged; the test run still reports every
     arm (T6).
 
