@@ -1,6 +1,6 @@
 # Project status (living document)
 
-**Last updated:** 2026-11-22 (Phase 6 complete) · **Read this first** if you are picking up the project. The plan is in
+**Last updated:** 2026-11-22 (Phase 6 complete; Phase 7 protocol written, no model trained) · **Read this first** if you are picking up the project. The plan is in
 `Fracture_Project_Phases.md`; this file says where we actually are, what was decided, and how to reproduce it.
 Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 
@@ -15,7 +15,7 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 | 4 | Region-specific classifiers | **Complete** | 100% | `docs/phase4_regional.md`, `src/phase4_regional.py`, `src/phase4_final_test.py`, `results/phase4/`, `results/tables/phase4_*.csv` |
 | 5 | Comparative analysis | **Complete** | 100% | `docs/phase5_analysis.md`, `src/phase5_main.py`, `src/phase5_curves.py`, `src/phase5_features.py`, `src/phase5_errors.py`, `src/phase5_box_contrast.py`, `src/phase5_viz.py`, `results/phase5/`, `results/tables/phase5_*.csv`, `results/figures/phase5_*.png` |
 | 6 | Gap-closing | **Complete** | 100% | `docs/phase6_gap_closing.md`, `src/phase6_thresholds.py`, `src/phase6_kernel.py`, `src/phase6_final_test.py`, `tests/test_phase6.py`, `results/phase6/`, `results/tables/phase6_*.csv`, `results/figures/phase6_*.png` |
-| 7 | Localization | Not started | 0% | |
+| 7 | Localization | Protocol written, no model trained | 0% | `docs/phase7_localization.md`, `src/phase7_window_design.py` |
 | 8 | Report and presentation | Not started | 0% | |
 | | **Whole project** | | **~70%** | |
 
