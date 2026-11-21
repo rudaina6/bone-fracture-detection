@@ -66,6 +66,22 @@ phases and stop if they disagree - `phase5_main.py` must reproduce the Phase 4 p
 `phase5_curves.py`'s region arm at full training size must reproduce
 `results/phase4/oof_rbfsvm__none__fixed.csv` exactly.
 
+## Phase 6 (gap-closing) - complete, see `docs/phase6_gap_closing.md`
+```
+python tests/test_phase6.py                                   # synthetic self-tests (~6 min), must pass first
+python src/phase6_thresholds.py                               # gate G1 (fresh unified baseline) + lever 1 per-region thresholds
+python src/phase6_kernel.py --gate                            # gate G2: kernel at lambda=0 bit-identical to the baseline
+python src/phase6_kernel.py --kernels mtrbf_all               # primary shared-plus-region-specific kernel, ~12 min
+python src/phase6_kernel.py --kernels mtrbf_hip               # secondary (hip-only region term), ~12 min
+python src/phase6_kernel.py --diagnostic --kernels mtrbf_all  # fixed-lambda diagnostics (never used to choose lambda)
+python src/phase6_kernel.py --summarize                       # tables, figure, verdicts K1-K4, rule S
+python src/phase6_final_test.py --phase6-model kernel+R-shrunk --kernel mtrbf_all   # test set, ONCE (lock: results/phase6/TEST_EVALUATED.json)
+```
+The kernel is `model_zoo.RegionKernelSVC` (`mtrbf_all`, `mtrbf_hip`); the region travels as the last column of X
+(`model_zoo.with_region_tag`). `cv_protocol.nested_cv(..., return_inner=True)` returns the inner out-of-fold scores
+the thresholds are chosen on. Run everything with the same `--n-jobs` (G2 compares runs bit for bit). Outputs go to
+`results/phase6/`, `results/tables/phase6_*.csv` and `results/figures/phase6_*.png`, never to `results/phase3|4/`.
+
 ## Layout
 | Folder | Purpose |
 |---|---|

@@ -1,6 +1,6 @@
 # Project status (living document)
 
-**Last updated:** 2026-11-21 (Phase 5 complete; Phase 6 protocol written, no Phase 6 results yet) · **Read this first** if you are picking up the project. The plan is in
+**Last updated:** 2026-11-22 (Phase 6 complete) · **Read this first** if you are picking up the project. The plan is in
 `Fracture_Project_Phases.md`; this file says where we actually are, what was decided, and how to reproduce it.
 Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 
@@ -14,10 +14,10 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 | 3 | Unified classifier | **Complete** | 100% | `docs/phase3_unified.md`, `src/evaluate.py`, `src/model_zoo.py`, `src/cv_protocol.py`, `src/phase3_unified.py`, `src/phase3_final_test.py`, `results/phase3/`, `results/tables/phase3_*.csv` |
 | 4 | Region-specific classifiers | **Complete** | 100% | `docs/phase4_regional.md`, `src/phase4_regional.py`, `src/phase4_final_test.py`, `results/phase4/`, `results/tables/phase4_*.csv` |
 | 5 | Comparative analysis | **Complete** | 100% | `docs/phase5_analysis.md`, `src/phase5_main.py`, `src/phase5_curves.py`, `src/phase5_features.py`, `src/phase5_errors.py`, `src/phase5_box_contrast.py`, `src/phase5_viz.py`, `results/phase5/`, `results/tables/phase5_*.csv`, `results/figures/phase5_*.png` |
-| 6 | Gap-closing | CV done (Stage 3), test not run: awaiting approval of the Phase 6 model | ~70% | `docs/phase6_gap_closing.md` |
+| 6 | Gap-closing | **Complete** | 100% | `docs/phase6_gap_closing.md`, `src/phase6_thresholds.py`, `src/phase6_kernel.py`, `src/phase6_final_test.py`, `tests/test_phase6.py`, `results/phase6/`, `results/tables/phase6_*.csv`, `results/figures/phase6_*.png` |
 | 7 | Localization | Not started | 0% | |
 | 8 | Report and presentation | Not started | 0% | |
-| | **Whole project** | | **~62%** | |
+| | **Whole project** | | **~70%** | |
 
 ## Phase 2 summary (full detail: `docs/phase2_features.md`)
 - **Choice:** 256 px, CLAHE, all five handcrafted families (8,641 dims), `StandardScaler` inside the CV folds, each family weighted 1/sqrt(dims), no dimensionality reduction. Reference linear SVM: C=0.1, `class_weight="balanced"`.
@@ -49,6 +49,15 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 - **5.2 (done):** the correctness gate passed exactly (region arm at full size reproduces `oof_rbfsvm__none__fixed.csv`, largest difference 0.00e+00). **Hip is a genuine region effect; hand, leg and shoulder are not.** A unified model trained on *zero* images of a region reaches 0.528 on hand, 0.430 on leg and 0.523 on shoulder — but only **0.267 on hip against a 0.18 chance level**, while hip's own 204 images reach **0.733**. Hip's advantage *widens* with data (+0.083 -> +0.209), the opposite of a scarcity signature. Transfer agrees: every off-diagonal ratio in hip's row and column is between -0.03 and +0.16, while hand<->shoulder share (+0.52, +0.51) and leg->hand is +0.99. Mechanism: the region can be read from the features (a region classifier reaches accuracy 0.94; its macro-F1 is 0.765 because "other" is recovered 1 of 19 times, and hand/leg are confused 73 and 50 times), and hip's linear fracture direction is near-orthogonal to the pooled one (cosine 0.193 vs hand 0.625) while hip supplies only 7.8% of the images. Caveat recorded: shoulder's "flat" verdict reflects a large fold SD (0.123), not a genuinely flat curve.
 - **For Phase 6:** two separate levers, both pointed at by the evidence. (1) Per-region **thresholds** on the single unified model — 5.1 shows specialising changes the threshold far more than the ranking, so most of the routed system's recall/specificity trade should be reachable without four models. (2) A **shared-plus-region-specific kernel** has real headroom specifically for hip: the region information is in the features (region classifier accuracy 0.94, macro-F1 0.765) but the unified model is not exploiting it. The hip CV effect is settled as real and mechanistically explained; whether it **generalises** is not established and the 11-positive test set could not establish it — Phase 6 must not cite the Phase 4 hip test number as support.
 
+## Phase 6 summary (full detail: `docs/phase6_gap_closing.md`)
+- **Discipline:** protocol, decision rules, gates and the rule that picks "the Phase 6 model" were committed before any result (`0922a08`, revised at STOP 1 in `fabc80e`). Test set used once, own lock `results/phase6/TEST_EVALUATED.json`.
+- **Levers:** (1) per-region F2 thresholds on the unified RBF SVM (plan item 2; arms G, R, R-shrunk with k=40); (2) a shared-plus-region-specific kernel `rbf * (1 + lambda [same region])` (plan item 1 done properly; Evgeniou-Pontil multi-task kernel), `mtrbf_all` primary, `mtrbf_hip` secondary. Plan item 3 dropped (imbalance strategies equivalent after threshold tuning).
+- **Gates:** this machine reproduces Phase 3 to ~1e-3, not bit for bit (G1 passed: max score diff 8.8e-4); the kernel at lambda=0 is bit-identical to the unified baseline (G2 passed). All Phase 6 "unified" numbers use the fresh baseline.
+- **CV (training images):** per-region thresholds: overall F2 R-G +0.015 [-0.000, +0.031] (no detectable difference), R-shrunk-G +0.015 [+0.001, +0.029] (helps); every region's threshold is noisy across folds (hip SD 0.33 vs global 0.06). Kernel `mtrbf_all`: hip PR-AUC +0.117 [+0.026, +0.208], no region significantly worse, lambda>0 chosen in 5/5 folds, closes 52% of the hip gap to the Phase 4 hip model. Rule S selected **kernel+R-shrunk** (fifth-arm check vs kernel +0.024 [+0.009, +0.040]); CV F2 0.659 vs 0.631.
+- **Test (used once):** Phase 6 model F2 0.665 [0.612, 0.714] vs Phase 3 0.647: difference **+0.018 [-0.026, +0.067], the CV gain is not confirmed**; it buys recall (+0.084 [+0.028, +0.146]) with specificity (-0.082). Hip PR-AUC -0.114 [-0.321, +0.093]: **not resolvable** with 11 fractured hip images. **Shoulder is worse:** F2 -0.129 [-0.275, -0.034] (specificity), the one clear test effect. Against the routed Phase 4 system: -0.013 [-0.036, +0.007], no detectable difference.
+- **Answer to the plan's question:** one model with a region term and per-region thresholds matches the four region models (no measurable gap left) but does not measurably beat the unified model on test. The hip region effect is real in CV and reachable by a shared kernel; whether it generalises still needs more hip test data.
+- **Secondary finding:** the hip-only kernel `mtrbf_hip` recovered almost as much hip (+0.101 [+0.030, +0.174]) with no region pointing down in CV; it was not adoptable under rule S1 and was not tested.
+
 ## Decisions to keep (details in `docs/data_decisions.md`)
 - Images: 4,083 total, 719 fractured (the plan says 717; 719 is correct, see `docs/data_decisions.md`).
 - Region groups: hand, leg (+leg-only), hip (+leg+hip), shoulder (+hand+shoulder), other (9 fractured images).
@@ -61,6 +70,8 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 - Image-level split: the dataset has no patient ID, so views of one patient may fall in both train and test (396 images carry the `multiscan` flag).
 - Hip and shoulder have only about 46-48 fractured training images and 11-12 fractured test images; their metrics will have wide confidence intervals.
 - Phase 2 scores tuned C and the feature set on the same folds and are slightly optimistic; Phase 3 CV numbers are nested (tuning inside the training folds). The Phase 3 test CIs hold the threshold fixed, so they ignore the uncertainty of choosing it.
+- Reproduction across machines is ~1e-3, not exact (Phase 6 gate G1); exact reproductions only hold on one machine with the same `--n-jobs`. Use the repo's `.venv` (Python 3.11.9); on the Phase 6 machine the bare `python` is 3.14 without imbalanced-learn.
+- Phase 6 shoulder loss on test (F2 -0.129 [-0.275, -0.034]) rests on 12 fractured images and was not significant in CV; report it as a single finding.
 - Surgical hardware: 97 of 99 hardware images are fractured. Phase 3 test recall is the same with and without hardware, so no sign of a shortcut, but only 21 test images have hardware.
 
 ## Open items (from the plan)
@@ -68,7 +79,7 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 - [ ] Ask the instructor whether pretrained CNN features used only as feature extractors are allowed (assume not)
 - [x] FracAtlas metadata column names and treatment of multi-region / hardware images (Phase 1)
 - [ ] Patch sizes and window stride for Phase 7 (box-size percentiles are in `results/tables/eda_box_side_percentiles_256.csv`)
-- [ ] Which gap-closing strategies to prioritise. Phase 5 narrowed this to two, in order of cost: **per-region thresholds** on the single unified model (5.1: specialisation changes the threshold far more than the ranking), and a **shared-plus-region-specific kernel** aimed at hip (5.2: a region classifier reaches accuracy 0.94 from the features, macro-F1 0.765, but the unified model is not exploiting it). Both need validating in Phase 6 on their own terms.
+- [x] Which gap-closing strategies to prioritise (done in Phase 6; see the Phase 6 summary). Phase 5 had narrowed this to two, in order of cost: **per-region thresholds** on the single unified model (5.1: specialisation changes the threshold far more than the ranking), and a **shared-plus-region-specific kernel** aimed at hip (5.2: a region classifier reaches accuracy 0.94 from the features, macro-F1 0.765, but the unified model is not exploiting it). Both need validating in Phase 6 on their own terms.
 
 ## When a phase is finished (checklist)
 1. Update the dashboard and the phase detail in this file (status, percentage, date, key numbers).
