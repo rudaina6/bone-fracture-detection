@@ -1,0 +1,221 @@
+group,metric,diff,lo,hi,p_two_sided,pair,half_width
+overall,recall,0.042,-0.0136,0.1026,0.196,R - G,0.0581
+overall,precision,-0.0381,-0.0717,-0.0045,0.025,R - G,0.0336
+overall,specificity,-0.0549,-0.0838,-0.0234,0.0,R - G,0.0302
+overall,f2,0.0025,-0.0408,0.0478,0.912,R - G,0.0443
+hand,recall,0.1579,0.0814,0.2468,0.0,R - G,0.0827
+hand,precision,-0.1269,-0.1794,-0.0772,0.0,R - G,0.0511
+hand,specificity,-0.3889,-0.4607,-0.3189,0.0,R - G,0.0709
+hand,f2,0.0073,-0.0589,0.0803,0.836,R - G,0.0696
+leg,recall,-0.0714,-0.1613,0.0,0.104,R - G,0.0806
+leg,precision,0.1093,0.048,0.1762,0.001,R - G,0.0641
+leg,specificity,0.0679,0.0429,0.0949,0.0,R - G,0.026
+leg,f2,0.0081,-0.0697,0.0736,0.771,R - G,0.0716
+hip,recall,-0.0909,-0.3,0.0,0.7,R - G,0.15
+hip,precision,0.0556,-0.0694,0.1909,0.418,R - G,0.1302
+hip,specificity,0.0566,0.0,0.1277,0.089,R - G,0.0639
+hip,f2,-0.0417,-0.2171,0.0718,0.721,R - G,0.1444
+shoulder,recall,-0.1667,-0.4286,0.0,0.287,R - G,0.2143
+shoulder,precision,0.0211,-0.0974,0.1422,0.674,R - G,0.1198
+shoulder,specificity,0.0727,0.0172,0.1509,0.034,R - G,0.0669
+shoulder,f2,-0.0879,-0.2808,0.062,0.34,R - G,0.1714
+overall,recall,0.042,-0.008,0.0985,0.166,R-shrunk - G,0.0533
+overall,precision,-0.0405,-0.0712,-0.009,0.016,R-shrunk - G,0.0311
+overall,specificity,-0.0579,-0.0853,-0.0293,0.0,R-shrunk - G,0.028
+overall,f2,0.001,-0.0401,0.0446,0.984,R-shrunk - G,0.0424
+hand,recall,0.1447,0.0704,0.2289,0.0,R-shrunk - G,0.0793
+hand,precision,-0.12,-0.1717,-0.0718,0.0,R-shrunk - G,0.0499
+hand,specificity,-0.3556,-0.4271,-0.2873,0.0,R-shrunk - G,0.0699
+hand,f2,0.007,-0.0583,0.0773,0.852,R-shrunk - G,0.0678
+leg,recall,-0.0714,-0.1613,0.0,0.104,R-shrunk - G,0.0806
+leg,precision,0.0885,0.0301,0.1459,0.004,R-shrunk - G,0.0579
+leg,specificity,0.0601,0.0368,0.0859,0.0,R-shrunk - G,0.0245
+leg,f2,0.0005,-0.0765,0.0608,0.938,R-shrunk - G,0.0687
+hip,recall,-0.0909,-0.3,0.0,0.7,R-shrunk - G,0.15
+hip,precision,-0.0069,-0.1,0.0778,1.0,R-shrunk - G,0.0889
+hip,specificity,0.0189,0.0,0.0588,0.702,R-shrunk - G,0.0294
+hip,f2,-0.0618,-0.2297,0.031,0.7,R-shrunk - G,0.1304
+shoulder,recall,-0.0833,-0.2727,0.0,0.721,R-shrunk - G,0.1364
+shoulder,precision,-0.0087,-0.0741,0.0478,0.991,R-shrunk - G,0.0609
+shoulder,specificity,0.0182,0.0,0.0588,0.721,R-shrunk - G,0.0294
+shoulder,f2,-0.0511,-0.1911,0.027,0.722,R-shrunk - G,0.109
+overall,pr_auc,0.0024,-0.0374,0.0411,0.946,K - G,0.0392
+overall,roc_auc,0.0082,-0.0124,0.0303,0.436,K - G,0.0213
+overall,recall,0.0979,0.0417,0.1594,0.001,K - G,0.0589
+overall,precision,-0.0727,-0.1079,-0.0408,0.0,K - G,0.0336
+overall,specificity,-0.1246,-0.1541,-0.0952,0.0,K - G,0.0295
+overall,f2,0.0071,-0.0372,0.055,0.788,K - G,0.0461
+hand,pr_auc,0.0207,-0.0314,0.067,0.487,K - G,0.0492
+hand,roc_auc,0.0311,-0.0097,0.0777,0.13,K - G,0.0437
+hand,recall,0.1579,0.0811,0.2532,0.0,K - G,0.086
+hand,precision,-0.0431,-0.0941,0.0086,0.106,K - G,0.0514
+hand,specificity,-0.1611,-0.235,-0.0888,0.0,K - G,0.0731
+hand,f2,0.0677,0.0026,0.1425,0.037,K - G,0.07
+leg,pr_auc,-0.0223,-0.0809,0.0289,0.378,K - G,0.0549
+leg,roc_auc,-0.0083,-0.035,0.0188,0.545,K - G,0.0269
+leg,recall,0.0238,-0.0741,0.1364,0.864,K - G,0.1052
+leg,precision,-0.075,-0.1305,-0.026,0.002,K - G,0.0523
+leg,specificity,-0.0757,-0.1106,-0.042,0.0,K - G,0.0343
+leg,f2,-0.0432,-0.1183,0.0338,0.275,K - G,0.076
+hip,pr_auc,-0.1145,-0.3207,0.0934,0.3,K - G,0.2071
+hip,roc_auc,-0.0309,-0.1042,0.0438,0.408,K - G,0.074
+hip,recall,0.0909,0.0,0.3,0.697,K - G,0.15
+hip,precision,-0.1632,-0.3222,-0.0381,0.008,K - G,0.1421
+hip,specificity,-0.2453,-0.3654,-0.1321,0.0,K - G,0.1167
+hip,f2,-0.0531,-0.1946,0.1154,0.473,K - G,0.155
+shoulder,pr_auc,0.0254,-0.0814,0.1606,0.673,K - G,0.121
+shoulder,roc_auc,-0.0288,-0.1144,0.0452,0.444,K - G,0.0798
+shoulder,recall,-0.0833,-0.2857,0.0,0.74,K - G,0.1429
+shoulder,precision,-0.1568,-0.2792,-0.0673,0.0,K - G,0.1059
+shoulder,specificity,-0.2364,-0.3618,-0.1296,0.0,K - G,0.1161
+shoulder,f2,-0.1555,-0.2959,-0.0595,0.0,K - G,0.1182
+overall,pr_auc,0.0024,-0.0374,0.0411,0.946,K+R-shrunk - G,0.0392
+overall,roc_auc,0.0082,-0.0124,0.0303,0.436,K+R-shrunk - G,0.0213
+overall,recall,0.0839,0.0278,0.1462,0.007,K+R-shrunk - G,0.0592
+overall,precision,-0.047,-0.082,-0.0119,0.008,K+R-shrunk - G,0.035
+overall,specificity,-0.0816,-0.1111,-0.0505,0.0,K+R-shrunk - G,0.0303
+overall,f2,0.0185,-0.0262,0.0671,0.456,K+R-shrunk - G,0.0466
+hand,pr_auc,0.0207,-0.0314,0.067,0.487,K+R-shrunk - G,0.0492
+hand,roc_auc,0.0311,-0.0097,0.0777,0.13,K+R-shrunk - G,0.0437
+hand,recall,0.1711,0.0895,0.2692,0.0,K+R-shrunk - G,0.0899
+hand,precision,-0.0933,-0.1453,-0.0429,0.0,K+R-shrunk - G,0.0512
+hand,specificity,-0.2944,-0.3661,-0.2235,0.0,K+R-shrunk - G,0.0713
+hand,f2,0.0398,-0.0285,0.116,0.266,K+R-shrunk - G,0.0722
+leg,pr_auc,-0.0223,-0.0809,0.0289,0.378,K+R-shrunk - G,0.0549
+leg,roc_auc,-0.0083,-0.035,0.0188,0.545,K+R-shrunk - G,0.0269
+leg,recall,-0.0238,-0.1091,0.0588,0.754,K+R-shrunk - G,0.084
+leg,precision,0.0385,-0.021,0.1005,0.186,K+R-shrunk - G,0.0608
+leg,specificity,0.0287,-0.0026,0.061,0.085,K+R-shrunk - G,0.0318
+leg,f2,0.008,-0.0615,0.0744,0.83,K+R-shrunk - G,0.068
+hip,pr_auc,-0.1145,-0.3207,0.0934,0.3,K+R-shrunk - G,0.2071
+hip,roc_auc,-0.0309,-0.1042,0.0438,0.408,K+R-shrunk - G,0.074
+hip,recall,0.0,-0.2857,0.25,1.0,K+R-shrunk - G,0.2679
+hip,precision,-0.0808,-0.2593,0.0819,0.371,K+R-shrunk - G,0.1706
+hip,specificity,-0.0755,-0.2,0.0526,0.324,K+R-shrunk - G,0.1263
+hip,f2,-0.0391,-0.2442,0.1637,0.719,K+R-shrunk - G,0.204
+shoulder,pr_auc,0.0254,-0.0814,0.1606,0.673,K+R-shrunk - G,0.121
+shoulder,roc_auc,-0.0288,-0.1144,0.0452,0.444,K+R-shrunk - G,0.0798
+shoulder,recall,-0.0833,-0.2857,0.0,0.74,K+R-shrunk - G,0.1429
+shoulder,precision,-0.1273,-0.2527,-0.0386,0.003,K+R-shrunk - G,0.107
+shoulder,specificity,-0.1636,-0.2857,-0.0526,0.009,K+R-shrunk - G,0.1166
+shoulder,f2,-0.1294,-0.2755,-0.0336,0.003,K+R-shrunk - G,0.1209
+4 regions,pr_auc,,,,,R - P4,
+4 regions,roc_auc,,,,,R - P4,
+4 regions,recall,-0.0426,-0.085,-0.0071,0.035,R - P4,0.0389
+4 regions,precision,-0.0036,-0.0293,0.0225,0.795,R - P4,0.0259
+4 regions,specificity,0.0104,-0.018,0.0396,0.507,R - P4,0.0288
+4 regions,f2,-0.0245,-0.0569,0.0057,0.111,R - P4,0.0313
+hand,pr_auc,-0.0448,-0.114,0.0281,0.263,R - P4,0.071
+hand,roc_auc,-0.0342,-0.0848,0.0107,0.139,R - P4,0.0477
+hand,recall,-0.0395,-0.0875,0.0,0.083,R - P4,0.0438
+hand,precision,-0.0161,-0.0414,0.0075,0.189,R - P4,0.0244
+hand,specificity,-0.0222,-0.0957,0.0492,0.597,R - P4,0.0725
+hand,f2,-0.0307,-0.067,-0.0014,0.044,R - P4,0.0328
+leg,pr_auc,-0.0126,-0.0876,0.0661,0.799,R - P4,0.0769
+leg,roc_auc,0.0026,-0.0345,0.0461,0.912,R - P4,0.0403
+leg,recall,-0.0238,-0.1081,0.0527,0.816,R - P4,0.0804
+leg,precision,0.0247,-0.0455,0.0992,0.499,R - P4,0.0723
+leg,specificity,0.0131,-0.0106,0.0408,0.37,R - P4,0.0257
+leg,f2,-0.0062,-0.0777,0.0605,0.888,R - P4,0.0691
+hip,pr_auc,0.0963,-0.0413,0.2512,0.197,R - P4,0.1462
+hip,roc_auc,0.0446,-0.0386,0.1554,0.342,R - P4,0.097
+hip,recall,-0.0909,-0.3,0.0,0.704,R - P4,0.15
+hip,precision,0.119,-0.0952,0.35,0.294,R - P4,0.2226
+hip,specificity,0.1132,-0.0364,0.2549,0.159,R - P4,0.1456
+hip,f2,-0.0119,-0.1948,0.1348,0.929,R - P4,0.1648
+shoulder,pr_auc,0.044,-0.0819,0.1755,0.508,R - P4,0.1287
+shoulder,roc_auc,0.0258,-0.0487,0.1132,0.555,R - P4,0.081
+shoulder,recall,-0.0833,-0.2727,0.0,0.733,R - P4,0.1364
+shoulder,precision,-0.0289,-0.1746,0.1125,0.748,R - P4,0.1436
+shoulder,specificity,0.0,-0.098,0.1034,1.0,R - P4,0.1007
+shoulder,f2,-0.0647,-0.2224,0.0455,0.426,R - P4,0.1339
+4 regions,pr_auc,,,,,R-shrunk - P4,
+4 regions,roc_auc,,,,,R-shrunk - P4,
+4 regions,recall,-0.0426,-0.0891,0.0,0.064,R-shrunk - P4,0.0445
+4 regions,precision,-0.0061,-0.0338,0.0203,0.66,R-shrunk - P4,0.027
+4 regions,specificity,0.0075,-0.0218,0.0372,0.669,R-shrunk - P4,0.0295
+4 regions,f2,-0.026,-0.0614,0.0061,0.14,R-shrunk - P4,0.0338
+hand,pr_auc,-0.0448,-0.114,0.0281,0.263,R-shrunk - P4,0.071
+hand,roc_auc,-0.0342,-0.0848,0.0107,0.139,R-shrunk - P4,0.0477
+hand,recall,-0.0526,-0.1111,-0.0125,0.028,R-shrunk - P4,0.0493
+hand,precision,-0.0092,-0.0354,0.0163,0.475,R-shrunk - P4,0.0258
+hand,specificity,0.0111,-0.0595,0.0843,0.814,R-shrunk - P4,0.0719
+hand,f2,-0.031,-0.0733,0.0015,0.064,R-shrunk - P4,0.0374
+leg,pr_auc,-0.0126,-0.0876,0.0661,0.799,R-shrunk - P4,0.0769
+leg,roc_auc,0.0026,-0.0345,0.0461,0.912,R-shrunk - P4,0.0403
+leg,recall,-0.0238,-0.1081,0.0527,0.816,R-shrunk - P4,0.0804
+leg,precision,0.004,-0.0661,0.0746,0.929,R-shrunk - P4,0.0704
+leg,specificity,0.0052,-0.0208,0.0313,0.746,R-shrunk - P4,0.0261
+leg,f2,-0.0138,-0.0852,0.0545,0.733,R-shrunk - P4,0.0698
+hip,pr_auc,0.0963,-0.0413,0.2512,0.197,R-shrunk - P4,0.1462
+hip,roc_auc,0.0446,-0.0386,0.1554,0.342,R-shrunk - P4,0.097
+hip,recall,-0.0909,-0.3,0.0,0.704,R-shrunk - P4,0.15
+hip,precision,0.0565,-0.1214,0.25,0.578,R-shrunk - P4,0.1857
+hip,specificity,0.0755,-0.0638,0.2116,0.338,R-shrunk - P4,0.1377
+hip,f2,-0.0321,-0.2055,0.1051,0.752,R-shrunk - P4,0.1553
+shoulder,pr_auc,0.044,-0.0819,0.1755,0.508,R-shrunk - P4,0.1287
+shoulder,roc_auc,0.0258,-0.0487,0.1132,0.555,R-shrunk - P4,0.081
+shoulder,recall,0.0,-0.2222,0.25,1.0,R-shrunk - P4,0.2361
+shoulder,precision,-0.0587,-0.2134,0.0909,0.479,R-shrunk - P4,0.1521
+shoulder,specificity,-0.0545,-0.1731,0.0612,0.442,R-shrunk - P4,0.1172
+shoulder,f2,-0.028,-0.2127,0.1619,0.776,R-shrunk - P4,0.1873
+4 regions,pr_auc,,,,,K - P4,
+4 regions,roc_auc,,,,,K - P4,
+4 regions,recall,0.0071,-0.0294,0.0438,0.843,K - P4,0.0366
+4 regions,precision,-0.0407,-0.0675,-0.0151,0.001,K - P4,0.0262
+4 regions,specificity,-0.0596,-0.0913,-0.0269,0.0,K - P4,0.0322
+4 regions,f2,-0.0247,-0.0547,0.006,0.102,K - P4,0.0303
+hand,pr_auc,-0.0241,-0.0765,0.0262,0.387,K - P4,0.0514
+hand,roc_auc,-0.0031,-0.033,0.0299,0.817,K - P4,0.0314
+hand,recall,-0.0395,-0.0875,0.0,0.105,K - P4,0.0438
+hand,precision,0.0677,0.0387,0.0988,0.0,K - P4,0.0301
+hand,specificity,0.2056,0.1437,0.2701,0.0,K - P4,0.0632
+hand,f2,0.0296,-0.0067,0.0635,0.118,K - P4,0.0351
+leg,pr_auc,-0.0349,-0.0887,0.0138,0.184,K - P4,0.0512
+leg,roc_auc,-0.0057,-0.0335,0.0259,0.685,K - P4,0.0297
+leg,recall,0.0714,0.0,0.1579,0.082,K - P4,0.079
+leg,precision,-0.1596,-0.237,-0.0917,0.0,K - P4,0.0726
+leg,specificity,-0.1305,-0.1658,-0.096,0.0,K - P4,0.0349
+leg,f2,-0.0576,-0.125,0.0188,0.133,K - P4,0.0719
+hip,pr_auc,-0.0181,-0.1646,0.12,0.937,K - P4,0.1423
+hip,roc_auc,0.0137,-0.0395,0.0759,0.635,K - P4,0.0577
+hip,recall,0.0909,0.0,0.3077,0.725,K - P4,0.1538
+hip,precision,-0.0997,-0.2264,0.01,0.086,K - P4,0.1182
+hip,specificity,-0.1887,-0.32,-0.0577,0.004,K - P4,0.1312
+hip,f2,-0.0233,-0.1488,0.1396,0.706,K - P4,0.1442
+shoulder,pr_auc,0.0694,-0.0213,0.1832,0.159,K - P4,0.1023
+shoulder,roc_auc,-0.003,-0.0694,0.0491,0.99,K - P4,0.0593
+shoulder,recall,0.0,0.0,0.0,1.0,K - P4,0.0
+shoulder,precision,-0.2068,-0.3509,-0.0974,0.0,K - P4,0.1267
+shoulder,specificity,-0.3091,-0.4386,-0.1964,0.0,K - P4,0.1211
+shoulder,f2,-0.1324,-0.2223,-0.0693,0.0,K - P4,0.0765
+4 regions,pr_auc,,,,,K+R-shrunk - P4,
+4 regions,roc_auc,,,,,K+R-shrunk - P4,
+4 regions,recall,-0.0071,-0.0333,0.0155,0.793,K+R-shrunk - P4,0.0244
+4 regions,precision,-0.0147,-0.0357,0.0055,0.154,K+R-shrunk - P4,0.0206
+4 regions,specificity,-0.0164,-0.0416,0.0075,0.203,K+R-shrunk - P4,0.0246
+4 regions,f2,-0.0132,-0.0356,0.0074,0.233,K+R-shrunk - P4,0.0215
+hand,pr_auc,-0.0241,-0.0765,0.0262,0.387,K+R-shrunk - P4,0.0514
+hand,roc_auc,-0.0031,-0.033,0.0299,0.817,K+R-shrunk - P4,0.0314
+hand,recall,-0.0263,-0.0685,0.0,0.258,K+R-shrunk - P4,0.0342
+hand,precision,0.0175,-0.0033,0.0387,0.107,K+R-shrunk - P4,0.021
+hand,specificity,0.0722,0.0166,0.1283,0.019,K+R-shrunk - P4,0.0559
+hand,f2,0.0017,-0.03,0.0268,0.848,K+R-shrunk - P4,0.0284
+leg,pr_auc,-0.0349,-0.0887,0.0138,0.184,K+R-shrunk - P4,0.0512
+leg,roc_auc,-0.0057,-0.0335,0.0259,0.685,K+R-shrunk - P4,0.0297
+leg,recall,0.0238,0.0,0.079,0.717,K+R-shrunk - P4,0.0395
+leg,precision,-0.0461,-0.0996,0.0065,0.1,K+R-shrunk - P4,0.053
+leg,specificity,-0.0261,-0.0486,-0.0026,0.041,K+R-shrunk - P4,0.023
+leg,f2,-0.0063,-0.0417,0.0415,0.709,K+R-shrunk - P4,0.0416
+hip,pr_auc,-0.0181,-0.1646,0.12,0.937,K+R-shrunk - P4,0.1423
+hip,roc_auc,0.0137,-0.0395,0.0759,0.635,K+R-shrunk - P4,0.0577
+hip,recall,0.0,0.0,0.0,1.0,K+R-shrunk - P4,0.0
+hip,precision,-0.0173,-0.125,0.0882,0.85,K+R-shrunk - P4,0.1066
+hip,specificity,-0.0189,-0.1229,0.0893,0.85,K+R-shrunk - P4,0.1061
+hip,f2,-0.0093,-0.0688,0.0447,0.85,K+R-shrunk - P4,0.0568
+shoulder,pr_auc,0.0694,-0.0213,0.1832,0.159,K+R-shrunk - P4,0.1023
+shoulder,roc_auc,-0.003,-0.0694,0.0491,0.99,K+R-shrunk - P4,0.0593
+shoulder,recall,0.0,0.0,0.0,1.0,K+R-shrunk - P4,0.0
+shoulder,precision,-0.1773,-0.3171,-0.079,0.0,K+R-shrunk - P4,0.119
+shoulder,specificity,-0.2364,-0.3585,-0.1356,0.0,K+R-shrunk - P4,0.1115
+shoulder,f2,-0.1062,-0.1846,-0.0511,0.0,K+R-shrunk - P4,0.0667

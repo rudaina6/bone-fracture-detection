@@ -1,4 +1,4 @@
-# Phase 6: gap-closing (protocol written 2026-11-21, before any result)
+# Phase 6: gap-closing (COMPLETE, 2026-11-22; protocol written 2026-11-21, before any result)
 
 Task: bring the single unified model closer to what the region-specific models achieve, without training four
 separate models (plan, Phase 6). Phase 5 located the gap in two different places, and each gets its own lever: the
@@ -430,15 +430,89 @@ before `phase6_final_test.py --phase6-model kernel+R-shrunk --kernel mtrbf_all` 
 - The hip effect was selected on these folds (K4), and the 11 fractured hip test images will not be able to confirm a
   gain of this size (Phase 4 test CI width about 0.30 PR-AUC).
 
-### Reproduce (planned)
+### Test set (used once, 2026-11-22)
+
+The Phase 6 model chosen by rule S (kernel+R-shrunk, as committed in `fabc80e`) was approved at STOP 2. Then
+`python src/phase6_final_test.py --phase6-model kernel+R-shrunk --kernel mtrbf_all` was run once (log
+`results/phase6/stage4_final_test.log`, 23.9 min). Steps:
+- **T1:** passed. tune_cv re-derived C=10, gamma=0.05, with a threshold of -0.844039 against Phase 3's -0.843974.
+- **T2:** R and R-shrunk thresholds were taken from that tune_cv's out-of-fold scores.
+- **T3:** tune_cv of `mtrbf_all` chose C=1, gamma=0.2, lambda=1, with a global threshold of -0.914.
+- **T4:** the lock (`results/phase6/TEST_EVALUATED.json`, 01:39:20.14) was written before any saved test score was read
+  and before the kernel scored a test image. The per-image file written straight after it is timestamped 01:39:20.58,
+  and the mock run in the self-tests checks the same order.
+
+**Nothing was chosen from these numbers.** No model, threshold or rule was changed after they were seen.
+
+Every pre-registered arm (95% bootstrap CIs, 2,000 resamples; 817 test images, 143 fractured; P4 on the 812 images
+of the four regions):
+
+| Arm | Recall | Precision | Specificity | F2 | PR-AUC |
+|---|---|---|---|---|---|
+| G (= Phase 3 result) | 0.755 [0.681, 0.823] | 0.411 | 0.770 [0.737, 0.803] | 0.647 [0.585, 0.705] | 0.626 [0.540, 0.705] |
+| R | 0.797 [0.728, 0.866] | 0.373 | 0.715 | 0.649 [0.591, 0.703] | 0.626 |
+| R-shrunk | 0.797 [0.727, 0.863] | 0.370 | 0.712 | 0.648 [0.589, 0.702] | 0.626 |
+| K (kernel, global threshold) | 0.853 [0.792, 0.906] | 0.338 | 0.645 | 0.654 [0.599, 0.702] | 0.629 [0.547, 0.704] |
+| **K+R-shrunk (the Phase 6 model)** | **0.839 [0.776, 0.898]** | **0.364** | **0.688 [0.652, 0.724]** | **0.665 [0.612, 0.714]** | 0.629 |
+| P4 (routed, 4 regions) | 0.844 [0.780, 0.901] | 0.378 | 0.708 | 0.677 [0.622, 0.726] | - |
+
+Per region, F2 of the Phase 6 model: hand 0.726, leg 0.589, hip 0.606, shoulder 0.556 (G: 0.686, 0.581, 0.645, 0.685).
+
+Paired differences on the same test images (95% CI, thresholds fixed). The half-width is the smallest effect the test
+could detect about half the time:
+
+| Pair, group | F2 | Recall | Specificity | PR-AUC | F2 half-width |
+|---|---|---|---|---|---|
+| **K+R-shrunk - G, overall** | **+0.018 [-0.026, +0.067]** | +0.084 [+0.028, +0.146] | -0.082 [-0.111, -0.051] | +0.002 [-0.037, +0.041] | |
+| K+R-shrunk - G, hand | +0.040 [-0.028, +0.116] | +0.171 | -0.294 | +0.021 | |
+| K+R-shrunk - G, leg | +0.008 [-0.062, +0.074] | -0.024 | +0.029 | -0.022 | |
+| K+R-shrunk - G, hip | -0.039 [-0.244, +0.164] | +0.000 | -0.075 | -0.114 [-0.321, +0.093] | 0.204 |
+| K+R-shrunk - G, shoulder | **-0.129 [-0.275, -0.034]** | -0.083 | -0.164 [-0.286, -0.053] | +0.025 | 0.121 |
+| K - G, overall | +0.007 [-0.037, +0.055] | +0.098 | -0.125 | +0.002 [-0.037, +0.041] | |
+| K - G, hip | -0.053 [-0.195, +0.115] | +0.091 | -0.245 | **-0.114 [-0.321, +0.093]** | 0.155 |
+| K - G, shoulder | **-0.156 [-0.296, -0.060]** | -0.083 | -0.236 | +0.025 | 0.118 |
+| R - G, overall | +0.002 [-0.041, +0.048] | +0.042 | -0.055 | - | |
+| R-shrunk - G, overall | +0.001 [-0.040, +0.045] | +0.042 | -0.058 | - | |
+| R-shrunk - G, hip / shoulder | -0.062 / -0.051 | | | - | 0.130 / 0.109 |
+| K+R-shrunk - P4, 4 regions | -0.013 [-0.036, +0.007] | -0.007 | -0.016 | - | |
+| K+R-shrunk - P4, shoulder | **-0.106 [-0.185, -0.051]** | +0.000 | -0.236 | +0.069 | 0.067 |
+| R - P4, 4 regions | -0.024 [-0.057, +0.006] | -0.043 [-0.085, -0.007] | +0.010 | - | |
+
+All pairs and metrics are in `results/tables/phase6_test_paired.csv`; per-arm CIs are in `phase6_test_ci.csv`.
+
+**What the test says**
+- **The test does not confirm the CV gain of the Phase 6 model.** Against the Phase 3 model its overall F2 is +0.018
+  [-0.026, +0.067], with an interval that includes 0. CV had +0.028 as a point estimate. What it does reproduce is the
+  operating-point trade: recall +0.084 [+0.028, +0.146] for specificity -0.082 [-0.111, -0.051]. Ranking is unchanged
+  overall (PR-AUC +0.002).
+- **Lever 1 on its own (R, R-shrunk) changes nothing on test overall** (F2 +0.002, +0.001). It moves hand and leg as
+  in CV and Phase 4: hand specificity falls to 0.24-0.27, and leg specificity rises.
+- **The hip gain is not confirmed and cannot be resolved here.** On 11 fractured hip images, K - G hip PR-AUC is -0.114
+  [-0.321, +0.093], an interval about 0.41 wide that contains both the CV estimate (+0.117) and its negative. As
+  pre-registered (T6, K4), this is "not resolvable with this test set". It neither supports nor refutes the CV result.
+- **Shoulder is worse on test, and that is detectable.** The kernel lowers shoulder F2 by -0.156 [-0.296, -0.060]
+  against G, and by -0.129 [-0.275, -0.034] with R-shrunk thresholds, through specificity (-0.24 / -0.16). In CV the
+  kernel's shoulder PR-AUC already pointed down (-0.043 [-0.094, +0.016]) without reaching significance; the test
+  ranking difference for shoulder (+0.025) is not what moved. The loss sits in the operating point. A plausible reading,
+  not tested here: the region term shifts shoulder's margins, so the kernel's global threshold (and the shrunk
+  shoulder threshold, chosen on about 38 fractured images) lands too low for shoulder.
+  With 12 fractured shoulder test images this is a single finding, not a replicated one, but it is the one clear
+  test-set effect of Phase 6 and goes into the report.
+- **Against the routed Phase 4 system, the Phase 6 model is not detectably different overall** (F2 -0.013 [-0.036,
+  +0.007]). It is worse on shoulder (-0.106) and level elsewhere. One model with a region term and per-region
+  thresholds performs like four region models on these 812 images, which is the plan's Phase 6 question answered in its
+  weakest form: no measurable gap left, and no measurable gain over the unified model either.
+
+### Reproduce
 
 Run with the repository's `.venv` Python on the Phase 6 machine (its bare `python` is 3.14 without imbalanced-learn).
 ```
-python tests/test_phase6.py                                   # synthetic self-tests, must pass first
-python src/phase6_thresholds.py                               # gate G1 + lever 1, ~2.5 min
-python src/phase6_kernel.py --gate                            # gate G2, ~2.5 min
-python src/phase6_kernel.py --kernels mtrbf_all mtrbf_hip     # ~10 min each
-python src/phase6_kernel.py --diagnostic --kernels mtrbf_all  # 3 runs, ~2.5 min each
-python src/phase6_kernel.py --summarize                       # tables, figure, verdicts K1-K4
-python src/phase6_final_test.py ...                           # test set, ONCE, after approval (lock: results/phase6/TEST_EVALUATED.json)
+python tests/test_phase6.py                                   # synthetic self-tests (~6 min), must pass first
+python src/phase6_thresholds.py                               # gate G1 + lever 1, ~15 min with the bootstraps
+python src/phase6_kernel.py --gate                            # gate G2, ~3 min
+python src/phase6_kernel.py --kernels mtrbf_all               # ~12 min
+python src/phase6_kernel.py --kernels mtrbf_hip               # ~12 min
+python src/phase6_kernel.py --diagnostic --kernels mtrbf_all  # 3 runs, ~3 min each
+python src/phase6_kernel.py --summarize                       # tables, figure, verdicts K1-K4, rule S (~15 min)
+python src/phase6_final_test.py --phase6-model kernel+R-shrunk --kernel mtrbf_all   # test set, ONCE (lock: results/phase6/TEST_EVALUATED.json)
 ```
