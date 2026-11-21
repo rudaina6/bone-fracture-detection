@@ -1,0 +1,187 @@
+{
+ "kernels": {
+  "mtrbf_all": {
+   "role": "primary",
+   "K1": {
+    "verdict": "closes part of the hip gap",
+    "hip": {
+     "diff": 0.11651618311023629,
+     "lo": 0.026061815323126732,
+     "hi": 0.2076121739453082,
+     "p_two_sided": 0.011
+    },
+    "worse_in": [],
+    "by_group": {
+     "overall": {
+      "diff": -0.0006990195246491249,
+      "lo": -0.01642960130484466,
+      "hi": 0.017227858432801103,
+      "p_two_sided": 0.975
+     },
+     "hand": {
+      "diff": -0.012820663309709967,
+      "lo": -0.03154189283351825,
+      "hi": 0.010892069594234256,
+      "p_two_sided": 0.32
+     },
+     "leg": {
+      "diff": -0.00489701999075467,
+      "lo": -0.03082150954334884,
+      "hi": 0.020397352215136423,
+      "p_two_sided": 0.75
+     },
+     "hip": {
+      "diff": 0.11651618311023629,
+      "lo": 0.026061815323126732,
+      "hi": 0.2076121739453082,
+      "p_two_sided": 0.011
+     },
+     "shoulder": {
+      "diff": -0.0427071233232937,
+      "lo": -0.09430270724145932,
+      "hi": 0.015578002549303773,
+      "p_two_sided": 0.151
+     }
+    }
+   },
+   "K2": {
+    "gap_closed": 0.5235372502048455,
+    "hip_pr_auc_fold": {
+     "kernel": 0.6476432366619246,
+     "unified": 0.5311270535516884,
+     "P4": 0.7536827228276504
+    },
+    "kernel_minus_unified": {
+     "diff": 0.11651618311023629,
+     "lo": 0.026061815323126732,
+     "hi": 0.2076121739453082,
+     "p_two_sided": 0.011
+    },
+    "P4_minus_unified": {
+     "diff": 0.222555669275962,
+     "lo": 0.10654116437706948,
+     "hi": 0.3247961770956781,
+     "p_two_sided": 0.0
+    }
+   },
+   "K3": {
+    "lam_per_fold": [
+     0.25,
+     0.25,
+     1,
+     0.25,
+     4
+    ],
+    "n_lambda_zero": 0,
+    "overrides_K1": false,
+    "n_lambda_top": 1,
+    "grid_edge_top": false,
+    "edge_warnings": []
+   },
+   "K4": "Hip was singled out by Phase 5 on the same training folds: nested CV makes the score honest, but a positive hip result is weaker evidence than a pre-specified one.",
+   "verdict": "closes part of the hip gap",
+   "adopted": true
+  },
+  "mtrbf_hip": {
+   "role": "secondary",
+   "K1": {
+    "verdict": "closes part of the hip gap",
+    "hip": {
+     "diff": 0.100599641077052,
+     "lo": 0.030225369146405504,
+     "hi": 0.1742053803930937,
+     "p_two_sided": 0.007
+    },
+    "worse_in": [],
+    "by_group": {
+     "overall": {
+      "diff": 0.011372223325672493,
+      "lo": -0.001072491875410146,
+      "hi": 0.023743283697623793,
+      "p_two_sided": 0.074
+     },
+     "hand": {
+      "diff": 0.0015635520135026892,
+      "lo": -0.012391286633055451,
+      "hi": 0.01403400849452626,
+      "p_two_sided": 0.865
+     },
+     "leg": {
+      "diff": 0.009434060868876526,
+      "lo": -0.0077078756397507995,
+      "hi": 0.028493659405177518,
+      "p_two_sided": 0.302
+     },
+     "hip": {
+      "diff": 0.100599641077052,
+      "lo": 0.030225369146405504,
+      "hi": 0.1742053803930937,
+      "p_two_sided": 0.007
+     },
+     "shoulder": {
+      "diff": 0.009672262163693967,
+      "lo": -0.02391992554078767,
+      "hi": 0.04236861431534672,
+      "p_two_sided": 0.562
+     }
+    }
+   },
+   "K2": {
+    "gap_closed": 0.4520201233441133,
+    "hip_pr_auc_fold": {
+     "kernel": 0.6317266946287404,
+     "unified": 0.5311270535516884,
+     "P4": 0.7536827228276504
+    },
+    "kernel_minus_unified": {
+     "diff": 0.100599641077052,
+     "lo": 0.030225369146405504,
+     "hi": 0.1742053803930937,
+     "p_two_sided": 0.007
+    },
+    "P4_minus_unified": {
+     "diff": 0.222555669275962,
+     "lo": 0.10654116437706948,
+     "hi": 0.3247961770956781,
+     "p_two_sided": 0.0
+    }
+   },
+   "K3": {
+    "lam_per_fold": [
+     1,
+     1,
+     1,
+     1,
+     0.25
+    ],
+    "n_lambda_zero": 0,
+    "overrides_K1": false,
+    "n_lambda_top": 0,
+    "grid_edge_top": false,
+    "edge_warnings": []
+   },
+   "K4": "Hip was singled out by Phase 5 on the same training folds: nested CV makes the score honest, but a positive hip result is weaker evidence than a pre-specified one.",
+   "verdict": "closes part of the hip gap",
+   "adopted": false
+  }
+ },
+ "rule_S": {
+  "phase6_model": "kernel+R-shrunk",
+  "kernel_adopted": true,
+  "threshold_rule": "R-shrunk",
+  "L1": "no detectable difference",
+  "L2": "R-shrunk helps",
+  "lever2": "closes part of the hip gap",
+  "S3_check": {
+   "diff": 0.024348060245423575,
+   "lo": 0.00896785253680419,
+   "hi": 0.03973776939045705,
+   "p_two_sided": 0.002,
+   "verdict": "kernel+R-shrunk helps"
+  }
+ },
+ "gate_G2_passed": true,
+ "n_boot": 2000,
+ "boot_seed": 0,
+ "date": "2026-11-22T01:17:53"
+}

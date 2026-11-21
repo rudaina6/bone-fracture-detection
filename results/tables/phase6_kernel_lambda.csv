@@ -1,0 +1,31 @@
+run,role,fold,C,gamma,lam,inner_pr_auc,outer_pr_auc,thr_tuned
+mtrbf_all__lam0,gate G2 (lambda fixed at 0),0,10,0.2,0.0,0.6041,0.5474,-0.8325
+mtrbf_all__lam0,gate G2 (lambda fixed at 0),1,10,0.05,0.0,0.5799,0.6164,-0.9159
+mtrbf_all__lam0,gate G2 (lambda fixed at 0),2,10,0.05,0.0,0.5712,0.6195,-0.97
+mtrbf_all__lam0,gate G2 (lambda fixed at 0),3,10,0.05,0.0,0.5864,0.639,-0.9346
+mtrbf_all__lam0,gate G2 (lambda fixed at 0),4,10,0.05,0.0,0.5861,0.5865,-0.8615
+mtrbf_all,primary,0,10,0.2,0.25,0.6174,0.5459,-0.7564
+mtrbf_all,primary,1,10,0.05,0.25,0.5864,0.6147,-0.9782
+mtrbf_all,primary,2,1,0.2,1.0,0.576,0.6296,-0.8543
+mtrbf_all,primary,3,10,0.05,0.25,0.5979,0.6209,-0.6009
+mtrbf_all,primary,4,1,0.2,4.0,0.5937,0.594,-0.7483
+mtrbf_hip,secondary,0,10,0.05,1.0,0.6092,0.5877,-0.8796
+mtrbf_hip,secondary,1,10,0.05,1.0,0.5914,0.6087,-0.9324
+mtrbf_hip,secondary,2,10,0.05,1.0,0.5748,0.6262,-0.9178
+mtrbf_hip,secondary,3,10,0.05,1.0,0.5869,0.6602,-0.8001
+mtrbf_hip,secondary,4,10,0.05,0.25,0.5864,0.5827,-0.87
+mtrbf_all__lam0.25,DIAGNOSTIC (lambda fixed at 0.25; never used to choose lambda),0,10,0.2,0.25,0.6174,0.5459,-0.7564
+mtrbf_all__lam0.25,DIAGNOSTIC (lambda fixed at 0.25; never used to choose lambda),1,10,0.05,0.25,0.5864,0.6147,-0.9782
+mtrbf_all__lam0.25,DIAGNOSTIC (lambda fixed at 0.25; never used to choose lambda),2,1,0.2,0.25,0.5717,0.6213,-0.935
+mtrbf_all__lam0.25,DIAGNOSTIC (lambda fixed at 0.25; never used to choose lambda),3,10,0.05,0.25,0.5979,0.6209,-0.6009
+mtrbf_all__lam0.25,DIAGNOSTIC (lambda fixed at 0.25; never used to choose lambda),4,10,0.2,0.25,0.5858,0.5959,-0.6083
+mtrbf_all__lam1,DIAGNOSTIC (lambda fixed at 1; never used to choose lambda),0,10,0.2,1.0,0.6171,0.5352,-0.7016
+mtrbf_all__lam1,DIAGNOSTIC (lambda fixed at 1; never used to choose lambda),1,1,0.2,1.0,0.5838,0.6456,-0.7714
+mtrbf_all__lam1,DIAGNOSTIC (lambda fixed at 1; never used to choose lambda),2,1,0.2,1.0,0.576,0.6296,-0.8543
+mtrbf_all__lam1,DIAGNOSTIC (lambda fixed at 1; never used to choose lambda),3,1,0.2,1.0,0.5979,0.6315,-0.7174
+mtrbf_all__lam1,DIAGNOSTIC (lambda fixed at 1; never used to choose lambda),4,1,0.2,1.0,0.5876,0.5929,-0.8373
+mtrbf_all__lam4,DIAGNOSTIC (lambda fixed at 4; never used to choose lambda),0,1,0.2,4.0,0.6155,0.5495,-0.6518
+mtrbf_all__lam4,DIAGNOSTIC (lambda fixed at 4; never used to choose lambda),1,1,0.05,4.0,0.5824,0.6363,-0.9297
+mtrbf_all__lam4,DIAGNOSTIC (lambda fixed at 4; never used to choose lambda),2,1,0.05,4.0,0.5759,0.6237,-0.8696
+mtrbf_all__lam4,DIAGNOSTIC (lambda fixed at 4; never used to choose lambda),3,1,0.05,4.0,0.5927,0.6171,-0.8431
+mtrbf_all__lam4,DIAGNOSTIC (lambda fixed at 4; never used to choose lambda),4,1,0.2,4.0,0.5937,0.594,-0.7483
