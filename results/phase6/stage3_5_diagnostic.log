@@ -1,0 +1,16 @@
+
+=== DIAGNOSTIC (lambda fixed at 0.25; never used to choose lambda): Multi-task RBF SVM (region term for every region) -> mtrbf_all__lam0.25 | grid={'C': [0.1, 1, 10, 100], 'gamma': [0.8, 0.2, 0.05, 0.0125], 'lam': [0.25]} ===
+    16 configs x 5 outer x 4 inner = 320 inner fits, then 5 outer refits
+    outer-fold PR-AUC 0.600 +- 0.032 | lambda per fold [0.25, 0.25, 0.25, 0.25, 0.25] | 3.2 min
+    chosen per fold: [{'C': 10, 'gamma': 0.2, 'lam': 0.25}, {'C': 10, 'gamma': 0.05, 'lam': 0.25}, {'C': 1, 'gamma': 0.2, 'lam': 0.25}, {'C': 10, 'gamma': 0.05, 'lam': 0.25}, {'C': 10, 'gamma': 0.2, 'lam': 0.25}]
+
+=== DIAGNOSTIC (lambda fixed at 1; never used to choose lambda): Multi-task RBF SVM (region term for every region) -> mtrbf_all__lam1 | grid={'C': [0.1, 1, 10, 100], 'gamma': [0.8, 0.2, 0.05, 0.0125], 'lam': [1]} ===
+    16 configs x 5 outer x 4 inner = 320 inner fits, then 5 outer refits
+    outer-fold PR-AUC 0.607 +- 0.045 | lambda per fold [1, 1, 1, 1, 1] | 2.7 min
+    chosen per fold: [{'C': 10, 'gamma': 0.2, 'lam': 1}, {'C': 1, 'gamma': 0.2, 'lam': 1}, {'C': 1, 'gamma': 0.2, 'lam': 1}, {'C': 1, 'gamma': 0.2, 'lam': 1}, {'C': 1, 'gamma': 0.2, 'lam': 1}]
+
+=== DIAGNOSTIC (lambda fixed at 4; never used to choose lambda): Multi-task RBF SVM (region term for every region) -> mtrbf_all__lam4 | grid={'C': [0.1, 1, 10, 100], 'gamma': [0.8, 0.2, 0.05, 0.0125], 'lam': [4]} ===
+    16 configs x 5 outer x 4 inner = 320 inner fits, then 5 outer refits
+    outer-fold PR-AUC 0.604 +- 0.034 | lambda per fold [4, 4, 4, 4, 4] | 3.3 min
+    chosen per fold: [{'C': 1, 'gamma': 0.2, 'lam': 4}, {'C': 1, 'gamma': 0.05, 'lam': 4}, {'C': 1, 'gamma': 0.05, 'lam': 4}, {'C': 1, 'gamma': 0.05, 'lam': 4}, {'C': 1, 'gamma': 0.2, 'lam': 4}]
+exit 0
