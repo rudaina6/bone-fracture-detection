@@ -1,0 +1,56 @@
+{
+ "same_params": true,
+ "params_baseline": [
+  {
+   "C": 10,
+   "gamma": 0.2
+  },
+  {
+   "C": 10,
+   "gamma": 0.05
+  },
+  {
+   "C": 10,
+   "gamma": 0.05
+  },
+  {
+   "C": 10,
+   "gamma": 0.05
+  },
+  {
+   "C": 10,
+   "gamma": 0.05
+  }
+ ],
+ "params_phase3": [
+  {
+   "C": 10,
+   "gamma": 0.2
+  },
+  {
+   "C": 10,
+   "gamma": 0.05
+  },
+  {
+   "C": 10,
+   "gamma": 0.05
+  },
+  {
+   "C": 10,
+   "gamma": 0.05
+  },
+  {
+   "C": 10,
+   "gamma": 0.05
+  }
+ ],
+ "max_score_diff": 0.0008833408355712891,
+ "max_thr_diff": 0.00029981136322021484,
+ "max_fold_pr_auc_diff": 8.088129531480526e-05,
+ "tolerances": {
+  "score": 0.002,
+  "thr": 0.001,
+  "fold_pr_auc": 0.0005
+ },
+ "passed": true
+}

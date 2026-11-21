@@ -1,0 +1,53 @@
+{
+ "L1": {
+  "diff": 0.015032463931115014,
+  "lo": -0.00046724122532694733,
+  "hi": 0.03147562657318747,
+  "p_two_sided": 0.06,
+  "folds_better": 5,
+  "n_folds": 5,
+  "verdict": "no detectable difference"
+ },
+ "L2": {
+  "diff": 0.014676119883983207,
+  "lo": 0.0011429300294581006,
+  "hi": 0.029102718532840657,
+  "p_two_sided": 0.034,
+  "folds_better": 5,
+  "n_folds": 5,
+  "verdict": "R-shrunk helps"
+ },
+ "L4": {
+  "hand": {
+   "sd_R": 0.0958620697400544,
+   "sd_R_shrunk": 0.08260705791241449,
+   "sd_G": 0.05556713841734373,
+   "noisy": true
+  },
+  "leg": {
+   "sd_R": 0.12831301343116425,
+   "sd_R_shrunk": 0.09915858356682408,
+   "sd_G": 0.05556713841734373,
+   "noisy": true
+  },
+  "hip": {
+   "sd_R": 0.32944199350248266,
+   "sd_R_shrunk": 0.18102356709614972,
+   "sd_G": 0.05556713841734373,
+   "noisy": true
+  },
+  "shoulder": {
+   "sd_R": 0.14547230209125278,
+   "sd_R_shrunk": 0.055798044447914245,
+   "sd_G": 0.05556713841734373,
+   "noisy": true
+  }
+ },
+ "rule_S2_threshold_rule": "R-shrunk",
+ "L5": "The bootstrap holds every threshold fixed and ignores the noise of choosing it, which is largest for hip and shoulder (36-39 fractured images per inner set).",
+ "n_boot": 2000,
+ "boot_seed": 0,
+ "shrink_k": 40,
+ "gate_G1_passed": true,
+ "date": "2026-11-22T00:24:22"
+}
