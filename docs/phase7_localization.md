@@ -177,7 +177,13 @@ D3. **Nothing is chosen from the test numbers.** The test reports the pre-regist
   reachability recomputed from the implementation equals the design table.
 - **Dense = naive:** for 500 random windows on training images, the dense slice features equal an independent
   per-window computation built to match (cropped from the level image with the margin the gradients and LBP need),
-  max difference <= 1e-5.
+  max difference <= 1e-5. *[Clarified in Stage 2, before any model: the first run failed on LBP (difference 0.10)
+  because skimage's LBP interpolates the diagonal neighbours with a rounding error that depends on the absolute pixel
+  position, so near-tie pixels can get a different code in a crop than in the full image. The naive LBP is therefore
+  computed at the window's own coordinates (the crop pasted into an otherwise empty level-sized image), which still
+  shows that a window's codes depend only on its neighbourhood and that the slicing is right. HOG and intensity stay
+  crop-based. Consequence: LBP codes are not exactly translation-invariant at near-ties, a negligible effect on
+  features but worth knowing.]*
 - **Folded linear scoring** equals `pipeline.decision_function` on the same windows, max difference <= 1e-6.
 - **IoU, NMS and AP** against hand-computed cases (no detections, duplicates, several boxes in one image, images
   without boxes); AP@50 = 1 for perfect detections; an independent naive AP implementation agrees.
@@ -198,15 +204,28 @@ T6. Report AP@50, AP@50:95, recall / precision / F1 at the threshold, recall at 
     image-level PR-AUC / ROC-AUC against the Phase 3 test scores (paired bootstrap); the hip and shoulder CI
     half-widths. No setting is changed after the test numbers are seen.
 
-## Code (planned)
+## Code
 
 | File | Role |
 |---|---|
 | `src/phase7_window_design.py` | The design analysis above (done; training boxes only). |
-| `src/phase7_windows.py` | Pyramid levels, dense HOG / LBP / intensity window features, window enumeration with the content filter, folded linear scoring. |
-| `src/phase7_detect.py` | Patch sampling, C tuning, training, mining, NMS, IoU, AP, the detection CV (and the threshold CV if needed), tables and figures. |
+| `src/phase7_windows.py` | Pyramid levels, per-image feature maps (HOG blocks, LBP per-cell code counts, intensity per-cell sums), window enumeration with the content filter, window features as slices of the maps, folded linear scoring as a correlation over the maps, IoU, NMS. |
+| `src/phase7_detect.py` | Gates, timing, the map cache, round-0 patches, C tuning, training, mining, matching and AP, the detection CV (and the threshold CV if needed), tables and figures. |
 | `src/phase7_final_test.py` | T1-T6 with its own lock. |
-| `tests/test_phase7.py` | The gates and self-tests above. |
+| `tests/test_phase7.py` | Unit and synthetic self-tests, an end-to-end debug CV on a few training images, and a mock final test (lock order, re-run refusal, T1 failure). The real-data gates are `phase7_detect.py --gates`. |
+
+*[Implementation note, Stage 2, before any model: windows sit on the 8 px cell grid, so a window's LBP quarters and
+intensity sums are sums of per-cell code counts and pixel sums (exact). The maps of each training image are computed
+once (about 1-1.7 s per image) and cached in `features/phase7/maps/` (about 5 MB per image, 17 GB in all; not
+committed). Every later scoring reads them and costs about 0.05-0.08 s per image instead of a fresh extraction. The
+cache does not change any feature; the gates compare it with independent computations.]*
+
+*[Timing, Stage 2 (`phase7_detect.py --timing`, `results/phase7/timing.json`; 10 training images): maps 1.7 s per
+image and scoring + NMS + selection 0.08 s per image in one process. Four workers do not scale 4x on this machine
+(measured 0.7-0.96 images/s for the maps, under 25-35% background load), so the realistic projections are: map cache
+about 1 h; detection CV about 30-40 min (five folds of two mining passes over about 2,600 images and one scoring of
+about 650, plus the LinearSVC fits on up to about 115,000 patches); the threshold CV, if needed, about the same; the
+summary 10-20 min; the final test about 30 min (maps of the 817 test images computed after the lock).]*
 | reused | `preprocess.py`, `model_zoo.build` (`linsvm`), `cv_protocol.tune_cv`, `evaluate.py`, `phase4_regional.fold_paired_bootstrap`, `expt_log.log_run`, `phase5_viz` |
 
 Outputs: `results/phase7/`, `results/tables/phase7_*.csv`, `results/figures/phase7_*.png`; long runs log their console
@@ -238,6 +257,10 @@ output to `results/phase7/<step>.log`. Every fitting run gets a row in `results/
 - **Threshold optimism** in CV (above).
 - **Small regions:** hip 49 / 11 and shoulder 50 / 14 training / test boxes; their test CIs will be wide.
 - **No patient ID**, as in every phase.
+- **The mining cap may bind everywhere.** *[Added in Stage 2, from the debug run on 90 training images, not a result:
+  the round-0 detector scored more than 20 eligible negative windows above 0 in every image, so each round added
+  exactly 20 per image. If that holds on the full data, mining is limited by the cap (as pre-registered), not by the
+  supply of false positives.]*
 
 ---
 

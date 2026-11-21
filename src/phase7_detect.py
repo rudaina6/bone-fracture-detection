@@ -523,6 +523,9 @@ def summarize(T, args):
     il = []
     for g in ["overall"] + REGIONS:
         d = j if g == "overall" else j[j.region == g]
+        if any(x.fractured.nunique() < 2 for _, x in d.groupby("fold")) or d.fold.nunique() < 5:
+            il.append(dict(group=g))                     # a fold without both classes (debug subsets only)
+            continue
         fb = fold_paired_bootstrap(d.fractured, d.score_det, d.score, d.fold, n_boot=args.n_boot, seed=args.boot_seed)
         per = lambda col, fn: np.mean([fn(x.fractured.to_numpy(), x[col].to_numpy()) for _, x in d.groupby("fold")])
         il.append(dict(group=g, det_pr_auc=per("score_det", _fast_ap), p3_pr_auc=per("score", _fast_ap),
@@ -846,8 +849,11 @@ def main(argv=None):
     args = ap.parse_args(argv)
     if args.debug_subset:
         args.no_log = True
-        if args.out_dir == REPO_ROOT / "results" / "phase7":
-            ap.error("--debug-subset needs its own --out-dir (debug runs never write into results/phase7)")
+        defaults = {REPO_ROOT / "results" / "phase7", REPO_ROOT / "results" / "tables", REPO_ROOT / "results" / "figures",
+                    REPO_ROOT / "features" / "phase7"}
+        if {args.out_dir, args.tables_dir, args.figures_dir, args.cache_dir} & defaults:
+            ap.error("--debug-subset needs its own --out-dir, --tables-dir, --figures-dir and --cache-dir "
+                     "(debug runs never write into results/ or features/phase7)")
     T = train_table(args.debug_subset or None)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     print(f"{len(T)} training images ({int(T.fractured.sum())} fractured, {int(T.boxes.map(len).sum())} boxes)",
