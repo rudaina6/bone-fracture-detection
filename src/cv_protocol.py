@@ -48,12 +48,16 @@ def _ap(y, s):
 
 
 def nested_cv(X, y, fold, model, imbalance, col_weights, grid=None, seed=42, n_jobs=4, beta=2.0, kbest="spec",
-              verbose=0):
+              verbose=0, return_inner=False):
     """Nested CV on the given rows (see module doc). Returns a dict:
         oof          outer out-of-fold score for every row
         thr_default  scalar default threshold of the model; thr_tuned  per-row threshold (its fold's tuned value)
         folds        list of per-outer-fold dicts: params, inner_pr_auc, thr_tuned, outer metrics
-        seconds      wall time"""
+        seconds      wall time
+    return_inner=True (Phase 6) adds one more key, kept out of "folds" because callers write "folds" to JSON:
+        inner        {outer fold k: (row indices, scores)}: the rows of the other folds, in the order the inner folds
+                     are concatenated, and the winning configuration's inner out-of-fold scores on them - exactly
+                     the scores fold k's thr_tuned was chosen on"""
     t0 = time.time()
     ks = sorted(set(fold))
     configs = expand_grid(model, grid)
@@ -66,7 +70,7 @@ def nested_cv(X, y, fold, model, imbalance, col_weights, grid=None, seed=42, n_j
                             (fold != k) & (fold != j), fold == j, kbest) for k, ci, j in jobs)
     inner = {(k, ci, j): s for (k, ci, j), s in zip(jobs, res)}
 
-    best = {}
+    best, inner_sel = {}, {}
     for k in ks:
         js = [j for j in ks if j != k]
         mean_ap = [np.mean([_ap(y[fold == j], inner[(k, ci, j)]) for j in js]) for ci in range(n_cfg)]
@@ -76,6 +80,8 @@ def nested_cv(X, y, fold, model, imbalance, col_weights, grid=None, seed=42, n_j
         thr, f_in = best_threshold(yy, ss, beta)
         best[k] = dict(ci=ci, params=configs[ci], inner_pr_auc=float(mean_ap[ci]), thr_tuned=thr, inner_f2=f_in,
                        inner_all=[float(m) for m in mean_ap])
+        if return_inner:
+            inner_sel[int(k)] = (np.concatenate([np.flatnonzero(fold == j) for j in js]), ss)
 
     outer = Parallel(n_jobs=min(n_jobs, len(ks)), verbose=verbose)(
         delayed(_fit_score)(model, imbalance, best[k]["params"], col_weights, seed, X, y, fold != k, fold == k, kbest)
@@ -95,8 +101,11 @@ def nested_cv(X, y, fold, model, imbalance, col_weights, grid=None, seed=42, n_j
                           roc_auc=float(roc_auc_score(y[va], s)),
                           **{f"def_{m}": m_def[m] for m in ("recall", "precision", "specificity", "f2")},
                           **{f"tuned_{m}": m_tun[m] for m in ("recall", "precision", "specificity", "f2")}))
-    return dict(oof=oof, thr_default=thr_def, thr_tuned=thr_tuned, folds=folds, configs=configs,
-                seconds=time.time() - t0)
+    out = dict(oof=oof, thr_default=thr_def, thr_tuned=thr_tuned, folds=folds, configs=configs,
+               seconds=time.time() - t0)
+    if return_inner:
+        out["inner"] = inner_sel
+    return out
 
 
 def tune_cv(X, y, fold, model, imbalance, col_weights, grid=None, seed=42, n_jobs=4, beta=2.0, kbest="spec",

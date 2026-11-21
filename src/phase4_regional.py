@@ -129,7 +129,11 @@ def _fold_pr_auc(df):
 
 def _fast_ap(y, s):
     """average_precision_score(y, s), same definition (ties handled the same way), ~17x faster for the bootstrap.
-    Checked against sklearn to 1e-12 on 300 random cases with ties."""
+    Checked against sklearn to 1e-12 on 300 random cases with ties. NaN if y holds a single class (as
+    evaluate.ranking_metrics) instead of dividing by zero; no caller of Phases 4-5 passes such a subset."""
+    n_pos = y.sum()
+    if n_pos == 0 or n_pos == len(y):
+        return float("nan")
     o = np.argsort(-s, kind="mergesort")
     y, s = y[o], s[o]
     last = np.r_[np.flatnonzero(np.diff(s)), len(s) - 1]          # last index of each distinct score
@@ -139,10 +143,13 @@ def _fast_ap(y, s):
 
 
 def _fast_auc(y, s):
-    """roc_auc_score(y, s) via the rank-sum (Mann-Whitney) formula, ties get average ranks."""
+    """roc_auc_score(y, s) via the rank-sum (Mann-Whitney) formula, ties get average ranks. NaN if y holds a single
+    class, instead of dividing by zero."""
     from scipy.stats import rankdata
-    r = rankdata(s)
     n1 = y.sum()
+    if n1 == 0 or n1 == len(y):
+        return float("nan")
+    r = rankdata(s)
     return float((r[y == 1].sum() - n1 * (n1 + 1) / 2) / (n1 * (len(y) - n1)))
 
 
