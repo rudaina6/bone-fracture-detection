@@ -678,7 +678,12 @@ def naive_window_features(img, w, h, i, j):
                 feature_vector=False)
     oy, ox = (y0 - ya) // 8, (x0 - xa) // 8
     f_hog = Hc[oy:oy + 3, ox:ox + 3].ravel()
-    codes = local_binary_pattern(_u8(crop), 8, 1, method="uniform")[y0 - ya:y0 - ya + 32, x0 - xa:x0 - xa + 32]
+    # skimage's LBP interpolates the diagonal neighbours with a rounding error that depends on the absolute pixel
+    # position, so near-tie pixels can code differently in a crop. The crop is therefore pasted at its own position
+    # into an otherwise empty level-sized image: the window still only sees its neighbourhood.
+    pasted = np.zeros(level.shape, np.uint8)
+    pasted[ya:yb, xa:xb] = _u8(crop)
+    codes = local_binary_pattern(pasted, 8, 1, method="uniform")[y0:y0 + 32, x0:x0 + 32]
     f_lbp = np.concatenate([np.bincount(codes[dy:dy + 16, dx:dx + 16].astype(int).ravel(), minlength=10) / 256
                             for dy in (0, 16) for dx in (0, 16)])
     patch = crop[y0 - ya:y0 - ya + 32, x0 - xa:x0 - xa + 32].astype(np.float64)

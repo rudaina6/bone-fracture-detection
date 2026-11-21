@@ -1,0 +1,55 @@
+{
+ "grid_equal_design": {
+  "passed": true,
+  "mismatched_shapes": []
+ },
+ "reachability_equal_design": {
+  "passed": true,
+  "implementation": {
+   "all": 0.9385026737967914,
+   "hand": 0.961439588688946,
+   "shoulder": 1.0,
+   "leg": 0.892,
+   "hip": 0.9183673469387755,
+   "other": 1.0
+  },
+  "design": {
+   "all": 0.9385,
+   "hand": 0.9614,
+   "leg": 0.892,
+   "hip": 0.9184,
+   "shoulder": 1.0,
+   "other": 1.0
+  }
+ },
+ "box_mapping_figure": {
+  "images": [
+   "IMG0002604.jpg",
+   "IMG0002491.jpg",
+   "IMG0003397.jpg",
+   "IMG0000466.jpg",
+   "IMG0001351.jpg",
+   "IMG0000479.jpg",
+   "IMG0002594.jpg",
+   "IMG0002541.jpg",
+   "IMG0003893.jpg",
+   "IMG0002621.jpg",
+   "IMG0002546.jpg",
+   "IMG0002580.jpg"
+  ],
+  "shapes_ok": true,
+  "boxes_inside_content": true,
+  "passed": true
+ },
+ "dense_equals_naive": {
+  "windows": 500,
+  "max_abs_diff": 2.9656803235411644e-08,
+  "passed": true
+ },
+ "folded_scoring": {
+  "max_abs_diff_vs_pipeline": 2.688821387764051e-16,
+  "max_abs_diff_maps_vs_features": 9.303224163259571e-09,
+  "passed": true
+ },
+ "all_passed": true
+}
