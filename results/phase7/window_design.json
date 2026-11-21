@@ -1,0 +1,91 @@
+{
+ "rule": "fewest base sizes with >= 90% of training boxes reachable at IoU 0.5 (stride window/4, content filter), then fewest windows per image",
+ "candidates": [
+  12,
+  16,
+  20,
+  24,
+  28,
+  32,
+  40,
+  48,
+  56,
+  64,
+  80,
+  96
+ ],
+ "aspects": [
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   1
+  ]
+ ],
+ "size": 448,
+ "mid": 448,
+ "chosen_sizes": [
+  16,
+  40
+ ],
+ "window_types": [
+  [
+   16,
+   16
+  ],
+  [
+   16,
+   32
+  ],
+  [
+   32,
+   16
+  ],
+  [
+   40,
+   40
+  ],
+  [
+   40,
+   80
+  ],
+  [
+   80,
+   40
+  ]
+ ],
+ "windows_per_image": 23109.85517452541,
+ "windows_per_image_by_type": {
+  "16x16": 10101.890385793018,
+  "16x32": 4962.140232700551,
+  "32x16": 5055.166564605021,
+  "40x40": 1513.572872014697,
+  "40x80": 720.9675443968157,
+  "80x40": 756.1175750153093
+ },
+ "reach_iou50": 0.929144385026738,
+ "reach_iou30": 0.9973262032085561,
+ "reach_by_region": {
+  "all": 0.929144385026738,
+  "hand": 0.961439588688946,
+  "leg": 0.88,
+  "hip": 0.8367346938775511,
+  "shoulder": 1.0,
+  "other": 1.0
+ },
+ "positives_total": 3192,
+ "n_boxes": 748,
+ "n_train_images": 3266,
+ "cheapest_any_size_count": {
+  "sizes": "16 40",
+  "reach": 0.929144385026738,
+  "windows_per_image": 23109.85517452541
+ },
+ "date": "2026-11-22T02:53:22"
+}
