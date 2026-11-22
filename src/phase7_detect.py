@@ -641,7 +641,7 @@ def fig_examples(T, det, gt, thr, figdir, n_good=4, n_bad=4):
     fp = sorted([(top.loc[i, "score"], i) for i in normal.image_id if i in top.index], reverse=True)
     picks = ([("good", i) for _, i in sorted(hit, reverse=True)[:n_good]]
              + [("missed", i) for _, i in sorted(miss)[:n_bad // 2]] + [("false alarm", i) for _, i in fp[:n_bad // 2]])
-    fig, axes = plt.subplots(2, 4, figsize=(12, 6.4))
+    fig, axes = plt.subplots(2, 4, figsize=(12, 7.2))       # tall enough that the bottom row's titles stay clear
     fp_of = dict(zip(T.image_id, T.file_path))
     reg = dict(zip(T.image_id, T.region))
     for ax, (kind, im) in zip(axes.ravel(), picks):
@@ -660,7 +660,7 @@ def fig_examples(T, det, gt, thr, figdir, n_good=4, n_bad=4):
         ax.axis("off")
     fig.suptitle("Phase 7 out-of-fold detections on training images (green: ground truth, orange: detections at the "
                  "operating threshold)", x=0.005, ha="left", fontsize=10, fontweight="bold")
-    fig.tight_layout(rect=(0, 0, 1, 0.95))
+    fig.tight_layout(rect=(0, 0, 1, 0.95), h_pad=2.0)
     save(fig, figdir / "phase7_cv_examples.png")
 
 
