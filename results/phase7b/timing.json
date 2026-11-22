@@ -1,0 +1,76 @@
+{
+ "stage1_fit_s": 7.93932032585144,
+ "proposals_s_per_image": 0.024555397033691407,
+ "features_s_per_image_1000": 0.03941712379455566,
+ "train_rows": 30352,
+ "train_rows_build_s": 18.430869340896606,
+ "grid": "revised",
+ "fits": [
+  {
+   "clf": "hgb",
+   "cfg": {
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 20
+   },
+   "feat": "wc",
+   "rows": 30352,
+   "inner_4fits_s": 152.27788710594177,
+   "refit_s": 63.468236207962036
+  },
+  {
+   "clf": "hgb",
+   "cfg": {
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 20
+   },
+   "feat": "wc",
+   "rows": 30352,
+   "inner_4fits_s": 260.40251898765564,
+   "refit_s": 98.78955602645874
+  },
+  {
+   "clf": "hgb",
+   "cfg": {
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 20
+   },
+   "feat": "w",
+   "rows": 30352,
+   "inner_4fits_s": 101.58276295661926,
+   "refit_s": 41.25339365005493
+  },
+  {
+   "clf": "hgb",
+   "cfg": {
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 20
+   },
+   "feat": "w",
+   "rows": 30352,
+   "inner_4fits_s": 169.03628134727478,
+   "refit_s": 63.112231969833374
+  }
+ ],
+ "stage2_fits_hours": 1.134182165728675,
+ "other_cv_hours": 0.6379590826025037,
+ "cv_total_hours": 1.7721412483311787,
+ "final_params_hours": 0.28354554143216876,
+ "n_jobs": 3,
+ "threads": {
+  "hgb_single": 3,
+  "inner_workers": 3,
+  "inner_threads": 2,
+  "rf_jobs": 6
+ },
+ "determinism": {
+  "hgb": {
+   "cfg": {
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 20
+   },
+   "max_abs_pred_diff": 0.0
+  }
+ },
+ "keep_awake": true,
+ "date": "2026-11-23T04:27:40"
+}

@@ -260,7 +260,10 @@ throttles desktop programs: 34%, 9%, 86% and 37% of the four timing runs were sp
 506 / 507), with power-source changes during them; the 86% run ended in an unclean shutdown. Awake, one HGB fit on the
 full-size set takes 110 s (CPU at 93-158% of base clock, no throttling). Long runs now ask Windows to keep the system
 and display awake. (3) The random-forest drop and the two-configuration HGB grid above (STOP 2 revision) then cut the
-remaining stage-2 cost; the re-timing on the revised grid is in `results/phase7b/timing.json`.]*
+remaining stage-2 cost. Re-timing on the revised grid (`results/phase7b/timing.json`, `stage2_timing.log`;
+`--n-jobs 3`; no standby or power event during the run): 4 inner fits 102-260 s and one refit 41-99 s per
+configuration; CV-path predictions equal a single-threaded fit (max difference 0). **Projected CV: 1.8 h** (stage-2
+fits 1.1 h, other steps 0.6 h), plus 0.3 h for the final hyperparameters.]*
 
 ## Final test (only if B6 passes; run once, after approval; post-hoc follow-up)
 
