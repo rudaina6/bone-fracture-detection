@@ -1,0 +1,6 @@
+3266 training images (576 fractured, 748 boxes)
+    4 configs x 4 folds = 16 fits
+    fold 3 (cv): round 1 mined 52260 hard negatives -> 63448 patches
+    fold 3 (cv): round 2 mined 52260 hard negatives -> 115708 patches
+fold 3 (cv): C=0.1, 2797 positives, hard negatives [52260, 52260], 7.7 min
+exit 0
