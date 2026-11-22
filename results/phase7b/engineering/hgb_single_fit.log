@@ -1,0 +1,51 @@
+{
+ "cfg": {
+  "max_leaf_nodes": 15,
+  "min_samples_leaf": 20
+ },
+ "rows": 30352,
+ "features": 564,
+ "positives": 2752,
+ "fit_s": 110.02526354789734,
+ "n_iter": 300,
+ "max_iter": 300,
+ "early_stopping": false,
+ "n_bins": 256,
+ "threads": [
+  [
+   "openblas",
+   8
+  ],
+  [
+   "openblas",
+   8
+  ],
+  [
+   "openmp",
+   4
+  ]
+ ],
+ "cpu_freq_psutil": {
+  "current": 2419.0,
+  "min": 0.0,
+  "max": 2419.0
+ },
+ "idle": {
+  "n": 3,
+  "perf_pct_mean": 63.18152733333333,
+  "perf_pct_min": 61.52556,
+  "freq_mhz_mean": 2419.0,
+  "freq_mhz_min": 2419.0,
+  "cpu_time_pct_mean": 10.329236333333334
+ },
+ "during_fit": {
+  "n": 27,
+  "perf_pct_mean": 131.59615603703705,
+  "perf_pct_min": 92.501494,
+  "freq_mhz_mean": 2407.740740740741,
+  "freq_mhz_min": 2267.0,
+  "cpu_time_pct_mean": 37.88665014814814
+ },
+ "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)"
+}
+exit 0

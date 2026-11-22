@@ -1,0 +1,16 @@
+3266 training images (576 fractured, 748 boxes); stage-2 threads {'hgb_single': 3, 'inner_workers': 3, 'inner_threads': 2, 'rf_jobs': 6}
+    4 configs x 4 folds = 16 fits
+  hgb {'max_leaf_nodes': 15, 'min_samples_leaf': 20} wc: 4 inner fits 2540.8 s, refit 287.8 s
+  hgb {'max_leaf_nodes': 15, 'min_samples_leaf': 100} wc: 4 inner fits 206.4 s, refit 99.9 s
+  hgb {'max_leaf_nodes': 63, 'min_samples_leaf': 20} wc: 4 inner fits 655.0 s, refit 366.0 s
+  hgb {'max_leaf_nodes': 63, 'min_samples_leaf': 100} wc: 4 inner fits 826.3 s, refit 374.4 s
+  hgb {'max_leaf_nodes': 15, 'min_samples_leaf': 20} w: 4 inner fits 409.5 s, refit 73.1 s
+  hgb {'max_leaf_nodes': 15, 'min_samples_leaf': 100} w: 4 inner fits 137.0 s, refit 57.1 s
+  hgb {'max_leaf_nodes': 63, 'min_samples_leaf': 20} w: 4 inner fits 211.4 s, refit 85.8 s
+  hgb {'max_leaf_nodes': 63, 'min_samples_leaf': 100} w: 4 inner fits 442.5 s, refit 480.0 s
+  rf {'max_features': 'sqrt', 'min_samples_leaf': 1} wc: 4 inner fits 86.0 s, refit 34.0 s
+  rf {'max_features': 'sqrt', 'min_samples_leaf': 10} wc: 4 inner fits 79.9 s, refit 26.4 s
+  rf {'max_features': 0.2, 'min_samples_leaf': 1} wc: 4 inner fits 523.7 s, refit 143.7 s
+  rf {'max_features': 0.2, 'min_samples_leaf': 10} wc: 4 inner fits 405.8 s, refit 120.9 s
+  rf {'max_features': 'sqrt', 'min_samples_leaf': 1} w: 4 inner fits 75.8 s, refit 24.8 s
+  rf {'max_features': 'sqrt', 'min_samples_leaf': 10} w: 4 inner fits 97.4 s, refit 37.2 s

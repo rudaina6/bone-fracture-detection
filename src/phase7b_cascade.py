@@ -46,11 +46,14 @@ VAL_NEG = 100                         # non-positive proposals sampled per image
 N_WIN, N_CTX, N_TYPES = W.N_FEAT, 188, len(W.WINDOW_TYPES)
 N_ALL = N_WIN + N_CTX + N_TYPES + 1   # 564
 FEAT_COLS = {"wc": np.arange(N_ALL), "w": np.r_[np.arange(N_WIN), np.arange(N_WIN + N_CTX, N_ALL)]}
-GRIDS = {"full": {"hgb": [dict(max_leaf_nodes=a, min_samples_leaf=b) for a in (15, 63) for b in (20, 100)],
+# Grids. "revised" (STOP 2 review, 2026-11-23, for runtime, before any CV run): HGB only, max_leaf_nodes {15, 63} with
+# min_samples_leaf 20. "full" and "fallback" are the earlier grids, kept for the record (timing_v1.json).
+GRIDS = {"revised": {"hgb": [dict(max_leaf_nodes=a, min_samples_leaf=20) for a in (15, 63)]},
+         "full": {"hgb": [dict(max_leaf_nodes=a, min_samples_leaf=b) for a in (15, 63) for b in (20, 100)],
                   "rf": [dict(max_features=a, min_samples_leaf=b) for a in ("sqrt", 0.2) for b in (1, 10)]},
          "fallback": {"hgb": [dict(max_leaf_nodes=a, min_samples_leaf=20) for a in (15, 63)],
                       "rf": [dict(max_features=a, min_samples_leaf=1) for a in ("sqrt", 0.2)]}}
-CLFS, FEATS = ("hgb", "rf"), ("wc", "w")
+CLFS, FEATS = ("hgb",), ("wc", "w")          # random forest dropped at the STOP 2 review (runtime)
 LETTER = {"hgb": "H", "rf": "R"}
 VARIANTS = [f"{LETTER[c]}-{f}{cal}" for cal in ("", "-cal") for f in FEATS for c in CLFS]
 REGIONS = P.REGIONS
@@ -61,6 +64,17 @@ FALLBACK_HOURS = 6.0
 # fits run 4 at a time in loky workers with 2 threads each (4 x 2 = 8 logical cores); RF fits run one at a time on
 # all 8 logical cores.
 HGB_THREADS, INNER_WORKERS, INNER_THREADS, RF_JOBS = 4, 4, 2, 8
+
+
+def keep_awake():
+    """Ask Windows to keep the system and display on while this process runs (ES_CONTINUOUS | ES_SYSTEM_REQUIRED |
+    ES_DISPLAY_REQUIRED): in Modern Standby desktop programs are throttled, which made earlier timings 10-35x too slow
+    (results/phase7b/engineering/). No effect on any result; no-op elsewhere."""
+    try:
+        import ctypes
+        return bool(ctypes.windll.kernel32.SetThreadExecutionState(0x80000003))
+    except Exception:
+        return False
 
 
 def configure_threads(n_jobs):
@@ -657,12 +671,7 @@ def detect_heldout(T, args, k, scorers, batch=64):
 # ----------------------------------------------------------------------------- one outer fold
 
 def grid_choice(args):
-    if args.grid in ("full", "fallback"):
-        return args.grid
-    p = args.out_dir / "timing.json"
-    if p.exists():
-        return "fallback" if json.loads(p.read_text()).get("use_fallback") else "full"
-    return "full"
+    return "revised" if args.grid == "auto" else args.grid
 
 
 def run_cv_fold(T, R0, k, args):
@@ -766,9 +775,9 @@ def paired(res, a, b, g="overall", metric="ap50"):
 def decide(res):
     """B1-B3 on fold-mean AP@50 (paired bootstrap differences)."""
     out = {}
-    d1 = paired(res, "H-wc", "R-wc")
-    clf = "hgb" if (d1["lo"] <= 0 <= d1["hi"]) else ("hgb" if d1["diff"] > 0 else "rf")
-    out["B1"] = dict(compare="H-wc - R-wc", **d1, choice=clf)
+    clf = "hgb"                     # B1 revised at the STOP 2 review: random forest dropped for runtime, HGB fixed
+    out["B1"] = dict(compare="none (random forest dropped at the STOP 2 review)", diff=np.nan, lo=np.nan, hi=np.nan,
+                     choice=clf)
     L = LETTER[clf]
     d2 = paired(res, f"{L}-wc", f"{L}-w")
     feat = "wc" if (d2["diff"] > 0 and d2["lo"] > 0) else "w"
@@ -1217,7 +1226,7 @@ def run_timing(T, R0, args):
     for clf in CLFS:
         for feat in FEATS:
             cols = FEAT_COLS[feat]
-            for cfg in GRIDS["full"][clf]:
+            for cfg in GRIDS["revised"][clf]:
                 t1 = time.time()
                 inner_predictions(clf, [cfg], tsets, cols, args.seed)
                 ti = time.time() - t1
@@ -1229,7 +1238,7 @@ def run_timing(T, R0, args):
     # the thread setting must not change any fitted model: CV-path predictions = single-threaded fits (real data)
     det_check = {}
     for clf in CLFS:
-        cfg, cols = GRIDS["fallback"][clf][0], FEAT_COLS["wc"]
+        cfg, cols = GRIDS["revised"][clf][0], FEAT_COLS["wc"]
         par = inner_predictions(clf, [cfg], tsets, cols, args.seed)[(0, 0)]
         m0 = fake != 0
         ref = predict(fit_clf(clf, cfg, X[m0][:, cols], y[m0], args.seed, n_jobs=1, threads=1), Xv[:, cols])
@@ -1246,20 +1255,19 @@ def run_timing(T, R0, args):
         return 5 * tot / 3600
     per_img_prop, per_img_feat = float(np.mean(t_prop)), float(np.mean(t_feat))
     eff = max(1.0, args.n_jobs * 0.6)                                  # Phase 7: 4 workers gave about 2.5x
-    h_stage2_full, h_stage2_fb = stage2_hours(GRIDS["full"]), stage2_hours(GRIDS["fallback"])
+    h_stage2 = stage2_hours(GRIDS["revised"])
     other_h = (15 * t_stage1 + 16330 * per_img_prop / eff + 5 * t_rows * (len(T) * 0.8 / n_jobs_rows)
-               + len(T) * per_img_feat / eff + 4 * len(T) * K_PROP / 65000 * 4.0) / 3600   # predict: ~4 s / 65k rows
-    use_fb = h_stage2_full > FALLBACK_HOURS
+               + len(T) * per_img_feat / eff + 2 * len(T) * K_PROP / 65000 * 4.0) / 3600 + 0.3   # + selection / summary
     est = dict(stage1_fit_s=t_stage1, proposals_s_per_image=per_img_prop, features_s_per_image_1000=per_img_feat,
-               train_rows=int(len(y)), train_rows_build_s=t_rows, fits=fits, stage2_fits_hours_full=h_stage2_full,
-               stage2_fits_hours_fallback=h_stage2_fb, other_cv_hours=other_h,
-               cv_total_hours_full=h_stage2_full + other_h, cv_total_hours_fallback=h_stage2_fb + other_h,
-               fallback_rule=f"fallback grids if the stage-2 fits of the CV project more than {FALLBACK_HOURS} h",
-               use_fallback=bool(use_fb), n_jobs=args.n_jobs, threads=dict(hgb_single=HGB_THREADS, inner_workers=INNER_WORKERS,
-               inner_threads=INNER_THREADS, rf_jobs=RF_JOBS), determinism=det_check, date=pd.Timestamp.now().isoformat(timespec="seconds"))
+               train_rows=int(len(y)), train_rows_build_s=t_rows, grid="revised", fits=fits,
+               stage2_fits_hours=h_stage2, other_cv_hours=other_h, cv_total_hours=h_stage2 + other_h,
+               final_params_hours=h_stage2 / 5 * 1.25, n_jobs=args.n_jobs,
+               threads=dict(hgb_single=HGB_THREADS, inner_workers=INNER_WORKERS, inner_threads=INNER_THREADS,
+                            rf_jobs=RF_JOBS), determinism=det_check, keep_awake=True,
+               date=pd.Timestamp.now().isoformat(timespec="seconds"))
     (args.out_dir / "timing.json").write_text(json.dumps(est, indent=1, default=str))
-    print(f"projection: stage-2 fits {h_stage2_full:.1f} h (full grids) / {h_stage2_fb:.1f} h (fallback); other CV "
-          f"steps {other_h:.1f} h -> {'FALLBACK grids' if use_fb else 'full grids'}", flush=True)
+    print(f"projection (revised grid): stage-2 fits {h_stage2:.1f} h; other CV steps {other_h:.1f} h; total CV "
+          f"{h_stage2 + other_h:.1f} h (+ final hyperparameters {est['final_params_hours']:.1f} h)", flush=True)
     return est
 
 
@@ -1271,7 +1279,7 @@ def main(argv=None):
         ap.add_argument(flag, action="store_true")
     ap.add_argument("--cv-fold", type=int, nargs="+", default=None)
     ap.add_argument("--threshold-cv", type=int, nargs="+", default=None)
-    ap.add_argument("--grid", choices=["auto", "full", "fallback"], default="auto")
+    ap.add_argument("--grid", choices=["auto", "revised", "full", "fallback"], default="auto")
     ap.add_argument("--n-jobs", type=int, default=4)
     ap.add_argument("--n-boot", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=42)
@@ -1285,6 +1293,8 @@ def main(argv=None):
     ap.add_argument("--p7-dir", type=Path, default=REPO_ROOT / "results" / "phase7")
     args = ap.parse_args(argv)
     threads = configure_threads(args.n_jobs)
+    if any([args.gates, args.timing, args.stage1, args.cv_fold, args.final_params, args.threshold_cv]):
+        keep_awake()
     if args.debug_subset:
         args.no_log = True
         defaults = {REPO_ROOT / "results" / "phase7b", REPO_ROOT / "results" / "tables", REPO_ROOT / "results" / "figures",

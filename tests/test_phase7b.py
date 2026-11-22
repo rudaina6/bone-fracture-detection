@@ -160,7 +160,7 @@ def end_to_end_debug_cv_and_mock_final_test():
         D.main(c7 + ["--cv-fold", "0", "1", "2", "3", "4", "--final-c"])
         c7b = ["--debug-subset", "90", "--out-dir", str(d["out"]), "--tables-dir", str(d["tables"]), "--figures-dir",
                str(d["figs"]), "--cache-dir", str(d["cache"]), "--work-dir", str(d["work"]), "--p7-dir", str(d["p7"]),
-               "--n-jobs", "1", "--n-boot", "30", "--grid", "fallback"]
+               "--n-jobs", "1", "--n-boot", "30", "--grid", "revised"]
         T = D.train_table(90)
         R0 = D.load_round0(d["cache"], T)
         ids = set(T.image_id)

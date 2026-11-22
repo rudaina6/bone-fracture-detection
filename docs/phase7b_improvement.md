@@ -42,7 +42,7 @@ image (448 px, Phase 7 preprocessing)
   -> 24,213 windows (Phase 7 window set {16, 40, 64} px x {1:1, 1:2, 2:1}; Phase 7 map cache)
   -> stage 1: Phase 7 round-0 linear detector (no mining)       -> top 1,000 windows per image = proposals
   -> features: window (366) + context (188) + window type (9) + stage-1 score (1)
-  -> stage 2: HistGradientBoosting or random forest            -> score per proposal
+  -> stage 2: HistGradientBoosting (random forest dropped at STOP 2) -> score per proposal
   -> optional per-window-type calibration
   -> NMS 0.3 across window types, at most 10 boxes per image   -> box-score threshold from CV
 ```
@@ -91,9 +91,22 @@ image (448 px, Phase 7 preprocessing)
 - **Class weights:** balanced (sample weights), as in every phase.
 
 ### Stage 2: classifiers and their inner tuning
+
+*[Revised at the STOP 2 review, 2026-11-23, for runtime only, before any CV run and before any result: **random forest
+is dropped** and the **HGB grid is `max_leaf_nodes` {15, 63} with `min_samples_leaf` 20** (the two fallback HGB
+configurations). Why these two: tree size is the capacity setting that matters most for this task (stage 2 has to
+combine window and context features to tell a fracture from the bone and joints it is confused with, which needs
+interactions), and 15 and 63 leaves span a shallow and a rich model; `min_samples_leaf` 20 is scikit-learn's default
+and keeps leaves small enough to isolate small groups of fracture windows (about 2,100 positives per inner training
+set, against 21,000 negatives), where 100 would tend to merge them with the confusers. Learning rate 0.1 and 300
+iterations are unchanged. Nothing was chosen from a CV result: none exists. The CV time is dominated by stage-2 fits,
+and RF's configurations were about 40% of the measured fit time (`results/phase7b/timing_v1.json`). Everything else
+in this protocol is unchanged. The original text follows.]*
+
 - **HistGradientBoostingClassifier:** learning rate 0.1, 300 iterations, no early stopping (its internal split would mix
-  windows of one image), l2 0; grid `max_leaf_nodes` {15, 63} x `min_samples_leaf` {20, 100}.
-- **RandomForestClassifier:** 300 trees; grid `max_features` {"sqrt", 0.2} x `min_samples_leaf` {1, 10}.
+  windows of one image), l2 0; grid `max_leaf_nodes` {15, 63} x `min_samples_leaf` {20, 100} *(revised: {15, 63} with
+  20)*.
+- ~~**RandomForestClassifier:** 300 trees; grid `max_features` {"sqrt", 0.2} x `min_samples_leaf` {1, 10}.~~ *(dropped)*
 - Seed 42; scikit-learn classes as installed in the repo's `.venv`.
 - **Inner tuning** (per outer fold, per classifier, per feature set): 4-fold inner CV over the outer training folds.
   Inner validation fold j: train on the other three folds' training set, score fold j's proposals. Metric:
@@ -105,7 +118,7 @@ image (448 px, Phase 7 preprocessing)
   proposals) and uses every positive.*
 - **Fallback grids** (only if the Stage 2 timing projects more than 6 h for the stage-2 fits of the CV, decided before
   the CV): HGB `max_leaf_nodes` {15, 63} with `min_samples_leaf` 20; RF `max_features` {"sqrt", 0.2} with
-  `min_samples_leaf` 1.
+  `min_samples_leaf` 1. *(Superseded by the STOP 2 revision above.)*
 
 ### Per-window-type calibration
 For each window type t, a logistic regression of "proposal is a positive (IoU >= 0.5)" on the logit of the stage-2
@@ -124,10 +137,12 @@ most 10 boxes per image. The image-level score is the top box's score.
 |---|---|---|---|---|
 | P7 | none (Phase 7 detector: linear, 2 mining rounds) | window | no | reference (saved Phase 7 CV detections) |
 | S1 | none (stage 1 alone = Phase 7 round 0, NMS, top 10) | window | no | baseline (saved Phase 7 round-0 detections) |
-| H-wc | HGB | window + context | no | B1 |
-| R-wc | RF | window + context | no | B1 |
-| H-w, R-w | HGB / RF | window only | no | B2 |
-| H-wc-cal, R-wc-cal, H-w-cal, R-w-cal | HGB / RF | as named | per type | B3 |
+| H-wc | HGB | window + context | no | B2 |
+| H-w | HGB | window only | no | B2 |
+| H-wc-cal, H-w-cal | HGB | as named | per type | B3 |
+
+*[STOP 2 revision: the RF variants R-wc, R-w, R-wc-cal and R-w-cal are dropped; the 4 HGB variants (context x
+calibration) stay.]*
 
 Every variant is evaluated and reported; rules B1-B3 pick one. Fixed for all variants, not chosen from results: the
 window set, K = 1,000, the 10:1 negative ratio, the training IoU thresholds (0.5 / 0.1), the grids above, NMS 0.3,
@@ -140,10 +155,11 @@ For each outer fold k = 0..4:
    fold k's images -> held-out proposals. For each training fold j != k, M(not j, not k) (tune_cv over its three
    folds) scores fold j's images -> cross-fitted training proposals.
 2. **Stage-2 training sets** from the four training folds (positives, 10:1 proposal negatives).
-3. **Inner tuning** of each classifier x feature set (4-fold, metric above); refit at the chosen configuration.
+3. **Inner tuning** of each feature set (HGB; 4-fold, metric above); refit at the chosen configuration.
 4. **Calibration** fitted on the inner out-of-fold scores of the chosen configuration (for the -cal variants).
-5. **Held-out scoring:** fold k's proposals scored by each of the 4 refitted models, raw and calibrated; NMS 0.3; top
-   10 -> out-of-fold detections of 8 variants.
+5. **Held-out scoring:** fold k's proposals scored by each of the 2 refitted models (window + context, window only),
+   raw and calibrated; NMS 0.3; top 10 -> out-of-fold detections of 4 variants. *(STOP 2 revision; previously 4 models
+   and 8 variants.)*
 
 Fold k's images are never used in steps 1-4 of fold k, so every out-of-fold number is honest. *Accepted
 approximation:* inside outer fold k, the training proposals of fold j' come from M(not j', not k), which saw the inner
@@ -175,8 +191,9 @@ As Phase 7, on the same folds and images:
 
 Each comparison is the paired fold-mean AP@50 difference with its 95% fold-stratified bootstrap CI.
 
-B1. **Classifier.** H-wc against R-wc: the higher fold-mean AP@50 wins; if the CI of the difference includes 0, HGB
-    (much cheaper to score 1,000 proposals per image).
+B1. **Classifier: HGB.** *[Revised at the STOP 2 review, 2026-11-23, before any CV run: random forest is dropped for
+    runtime, so there is no comparison. The original rule was: H-wc against R-wc, the higher fold-mean AP@50 wins; if
+    the CI of the difference includes 0, HGB.]*
 B2. **Context.** With B1's classifier, uncalibrated: window + context is kept only if its AP@50 is higher than window
     only with a CI excluding 0; otherwise window only (fewer features).
 B3. **Calibration.** On the B1-B2 configuration: per-type calibration is kept only if it raises AP@50 with a CI
@@ -233,6 +250,17 @@ part of it is contention on this machine). Projected stage-2 fits of the CV: 24.
 the fallback grids; other CV steps 0.6 h. The rule (more than 6 h) therefore selects the **fallback grids**, which
 `--grid auto` reads from `timing.json`. The projection with the fallback grids is still above 6 h; how to proceed
 was put to the STOP 2 review before any CV run.]*
+
+*[Engineering check, 2026-11-22/23, before any CV run; no protocol change (`results/phase7b/engineering/`): (1) thread
+settings: fitted models are identical in every setting (max prediction difference 0); one HGB fit at a time is faster
+with 4 OpenMP threads than with 8 (4 physical cores), HGB inner fits run fastest 4 (or `--n-jobs`) at a time with
+2 threads each, RF fastest one at a time on all cores. (2) The very slow and erratic timings (an identical block of 4
+HGB fits took 177 s in one run and 2,541 s in another) were mostly the laptop in **Modern Standby**, where Windows
+throttles desktop programs: 34%, 9%, 86% and 37% of the four timing runs were spent in standby (Kernel-Power events
+506 / 507), with power-source changes during them; the 86% run ended in an unclean shutdown. Awake, one HGB fit on the
+full-size set takes 110 s (CPU at 93-158% of base clock, no throttling). Long runs now ask Windows to keep the system
+and display awake. (3) The random-forest drop and the two-configuration HGB grid above (STOP 2 revision) then cut the
+remaining stage-2 cost; the re-timing on the revised grid is in `results/phase7b/timing.json`.]*
 
 ## Final test (only if B6 passes; run once, after approval; post-hoc follow-up)
 

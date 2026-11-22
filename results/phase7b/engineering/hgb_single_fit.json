@@ -1,0 +1,700 @@
+{
+ "cfg": {
+  "max_leaf_nodes": 15,
+  "min_samples_leaf": 20
+ },
+ "rows": 30352,
+ "features": 564,
+ "positives": 2752,
+ "fit_s": 110.02526354789734,
+ "n_iter": 300,
+ "max_iter": 300,
+ "early_stopping": false,
+ "n_bins": 256,
+ "threads": [
+  [
+   "openblas",
+   8
+  ],
+  [
+   "openblas",
+   8
+  ],
+  [
+   "openmp",
+   4
+  ]
+ ],
+ "cpu_freq_psutil": {
+  "current": 2419.0,
+  "min": 0.0,
+  "max": 2419.0
+ },
+ "idle": {
+  "n": 3,
+  "perf_pct_mean": 63.18152733333333,
+  "perf_pct_min": 61.52556,
+  "freq_mhz_mean": 2419.0,
+  "freq_mhz_min": 2419.0,
+  "cpu_time_pct_mean": 10.329236333333334
+ },
+ "during_fit": {
+  "n": 27,
+  "perf_pct_mean": 131.59615603703705,
+  "perf_pct_min": 92.501494,
+  "freq_mhz_mean": 2407.740740740741,
+  "freq_mhz_min": 2267.0,
+  "cpu_time_pct_mean": 37.88665014814814
+ },
+ "samples_during_fit": [
+  {
+   "t": 1795388516.1223629,
+   "perf_pct": 97.753087,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 29.923127,
+   "top_procs": [
+    [
+     "System Idle Process",
+     612.4
+    ],
+    [
+     "Code.exe",
+     18.3
+    ],
+    [
+     "Code.exe",
+     13.5
+    ],
+    [
+     "dwm.exe",
+     7.0
+    ]
+   ]
+  },
+  {
+   "t": 1795388520.5358577,
+   "perf_pct": 94.783736,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 27.0491,
+   "top_procs": [
+    [
+     "System Idle Process",
+     556.2
+    ],
+    [
+     "chrome.exe",
+     24.8
+    ],
+    [
+     "Code.exe",
+     22.0
+    ],
+    [
+     "Code.exe",
+     16.6
+    ]
+   ]
+  },
+  {
+   "t": 1795388524.8214567,
+   "perf_pct": 94.74379,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 28.589826,
+   "top_procs": [
+    [
+     "System Idle Process",
+     500.0
+    ],
+    [
+     "MemCompression",
+     36.3
+    ],
+    [
+     "svchost.exe",
+     18.9
+    ],
+    [
+     "Code.exe",
+     15.0
+    ]
+   ]
+  },
+  {
+   "t": 1795388529.099164,
+   "perf_pct": 94.666557,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 35.875189,
+   "top_procs": [
+    [
+     "System Idle Process",
+     553.8
+    ],
+    [
+     "Code.exe",
+     14.6
+    ],
+    [
+     "Code.exe",
+     13.1
+    ],
+    [
+     "chrome.exe",
+     9.5
+    ]
+   ]
+  },
+  {
+   "t": 1795388533.3833628,
+   "perf_pct": 92.501494,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 29.366784,
+   "top_procs": [
+    [
+     "System Idle Process",
+     532.3
+    ],
+    [
+     "Code.exe",
+     17.9
+    ],
+    [
+     "Code.exe",
+     16.1
+    ],
+    [
+     "Code.exe",
+     14.2
+    ]
+   ]
+  },
+  {
+   "t": 1795388537.6799061,
+   "perf_pct": 93.642539,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 27.745459,
+   "top_procs": [
+    [
+     "System Idle Process",
+     568.9
+    ],
+    [
+     "Code.exe",
+     14.2
+    ],
+    [
+     "Code.exe",
+     13.8
+    ],
+    [
+     "chrome.exe",
+     12.0
+    ]
+   ]
+  },
+  {
+   "t": 1795388542.0024168,
+   "perf_pct": 109.65289,
+   "freq_mhz": 2267.0,
+   "cpu_time_pct": 33.516671,
+   "top_procs": [
+    [
+     "System Idle Process",
+     536.3
+    ],
+    [
+     "Code.exe",
+     18.7
+    ],
+    [
+     "Code.exe",
+     16.5
+    ],
+    [
+     "Code.exe",
+     13.0
+    ]
+   ]
+  },
+  {
+   "t": 1795388545.952209,
+   "perf_pct": 157.216493,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 29.29115,
+   "top_procs": [
+    [
+     "System Idle Process",
+     513.4
+    ],
+    [
+     "Code.exe",
+     20.9
+    ],
+    [
+     "dwm.exe",
+     8.4
+    ],
+    [
+     "MsMpEng.exe",
+     5.5
+    ]
+   ]
+  },
+  {
+   "t": 1795388549.888582,
+   "perf_pct": 157.626199,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 32.123643,
+   "top_procs": [
+    [
+     "System Idle Process",
+     555.4
+    ],
+    [
+     "Code.exe",
+     23.9
+    ],
+    [
+     "dwm.exe",
+     13.1
+    ],
+    [
+     "Code.exe",
+     6.4
+    ]
+   ]
+  },
+  {
+   "t": 1795388553.8740168,
+   "perf_pct": 157.42701,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 28.126228,
+   "top_procs": [
+    [
+     "System Idle Process",
+     564.0
+    ],
+    [
+     "Code.exe",
+     30.2
+    ],
+    [
+     "dwm.exe",
+     13.4
+    ],
+    [
+     "Code.exe",
+     11.0
+    ]
+   ]
+  },
+  {
+   "t": 1795388557.8455853,
+   "perf_pct": 128.605832,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 27.719656,
+   "top_procs": [
+    [
+     "System Idle Process",
+     492.9
+    ],
+    [
+     "msedgewebview2.exe",
+     54.5
+    ],
+    [
+     "Code.exe",
+     34.9
+    ],
+    [
+     "dwm.exe",
+     12.6
+    ]
+   ]
+  },
+  {
+   "t": 1795388561.8962657,
+   "perf_pct": 113.033694,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 33.739426,
+   "top_procs": [
+    [
+     "System Idle Process",
+     506.6
+    ],
+    [
+     "Code.exe",
+     20.8
+    ],
+    [
+     "Code.exe",
+     19.2
+    ],
+    [
+     "dwm.exe",
+     12.3
+    ]
+   ]
+  },
+  {
+   "t": 1795388565.9358442,
+   "perf_pct": 117.866526,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 28.322822,
+   "top_procs": [
+    [
+     "System Idle Process",
+     574.3
+    ],
+    [
+     "Code.exe",
+     20.5
+    ],
+    [
+     "dwm.exe",
+     13.6
+    ],
+    [
+     "Code.exe",
+     12.8
+    ]
+   ]
+  },
+  {
+   "t": 1795388570.0274146,
+   "perf_pct": 119.128037,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 28.12154,
+   "top_procs": [
+    [
+     "System Idle Process",
+     556.7
+    ],
+    [
+     "Code.exe",
+     13.1
+    ],
+    [
+     "dwm.exe",
+     12.7
+    ],
+    [
+     "Code.exe",
+     12.6
+    ]
+   ]
+  },
+  {
+   "t": 1795388573.944025,
+   "perf_pct": 156.676129,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 32.728379,
+   "top_procs": [
+    [
+     "System Idle Process",
+     552.1
+    ],
+    [
+     "Code.exe",
+     15.7
+    ],
+    [
+     "Code.exe",
+     15.7
+    ],
+    [
+     "dwm.exe",
+     12.5
+    ]
+   ]
+  },
+  {
+   "t": 1795388577.8368506,
+   "perf_pct": 157.567918,
+   "freq_mhz": 2267.0,
+   "cpu_time_pct": 37.22597,
+   "top_procs": [
+    [
+     "System Idle Process",
+     520.4
+    ],
+    [
+     "Code.exe",
+     16.5
+    ],
+    [
+     "Code.exe",
+     12.1
+    ],
+    [
+     "dwm.exe",
+     12.0
+    ]
+   ]
+  },
+  {
+   "t": 1795388581.7569158,
+   "perf_pct": 157.533913,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 32.521897,
+   "top_procs": [
+    [
+     "System Idle Process",
+     547.7
+    ],
+    [
+     "Code.exe",
+     18.7
+    ],
+    [
+     "dwm.exe",
+     12.4
+    ],
+    [
+     "Code.exe",
+     11.2
+    ]
+   ]
+  },
+  {
+   "t": 1795388585.7022064,
+   "perf_pct": 157.615729,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 30.975862,
+   "top_procs": [
+    [
+     "System Idle Process",
+     568.5
+    ],
+    [
+     "Code.exe",
+     19.4
+    ],
+    [
+     "dwm.exe",
+     13.1
+    ],
+    [
+     "Code.exe",
+     9.9
+    ]
+   ]
+  },
+  {
+   "t": 1795388589.6344347,
+   "perf_pct": 157.081608,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 26.939049,
+   "top_procs": [
+    [
+     "System Idle Process",
+     571.6
+    ],
+    [
+     "Code.exe",
+     22.7
+    ],
+    [
+     "Code.exe",
+     12.3
+    ],
+    [
+     "dwm.exe",
+     10.8
+    ]
+   ]
+  },
+  {
+   "t": 1795388593.5670943,
+   "perf_pct": 157.40453,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 28.619189,
+   "top_procs": [
+    [
+     "System Idle Process",
+     533.1
+    ],
+    [
+     "MemCompression",
+     25.7
+    ],
+    [
+     "Code.exe",
+     25.0
+    ],
+    [
+     "Code.exe",
+     11.9
+    ]
+   ]
+  },
+  {
+   "t": 1795388597.4999378,
+   "perf_pct": 156.661988,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 28.517567,
+   "top_procs": [
+    [
+     "System Idle Process",
+     581.4
+    ],
+    [
+     "Code.exe",
+     24.3
+    ],
+    [
+     "dwm.exe",
+     8.8
+    ],
+    [
+     "Code.exe",
+     7.5
+    ]
+   ]
+  },
+  {
+   "t": 1795388601.5432522,
+   "perf_pct": 157.389446,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 46.329912,
+   "top_procs": [
+    [
+     "System Idle Process",
+     543.8
+    ],
+    [
+     "Code.exe",
+     20.1
+    ],
+    [
+     "chrome.exe",
+     16.6
+    ],
+    [
+     "MsMpEng.exe",
+     11.2
+    ]
+   ]
+  },
+  {
+   "t": 1795388605.5321505,
+   "perf_pct": 157.026272,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 61.323721,
+   "top_procs": [
+    [
+     "System Idle Process",
+     253.3
+    ],
+    [
+     "chrome.exe",
+     33.7
+    ],
+    [
+     "Code.exe",
+     19.9
+    ],
+    [
+     "Code.exe",
+     19.6
+    ]
+   ]
+  },
+  {
+   "t": 1795388610.1560552,
+   "perf_pct": 132.473676,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 62.677323,
+   "top_procs": [
+    [
+     "System Idle Process",
+     301.5
+    ],
+    [
+     "chrome.exe",
+     35.9
+    ],
+    [
+     "Code.exe",
+     24.2
+    ],
+    [
+     "dwm.exe",
+     15.7
+    ]
+   ]
+  },
+  {
+   "t": 1795388614.3349533,
+   "perf_pct": 116.879006,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 69.198446,
+   "top_procs": [
+    [
+     "System Idle Process",
+     162.8
+    ],
+    [
+     "Code.exe",
+     40.1
+    ],
+    [
+     "Code.exe",
+     25.3
+    ],
+    [
+     "dwm.exe",
+     24.8
+    ]
+   ]
+  },
+  {
+   "t": 1795388618.8111002,
+   "perf_pct": 122.564206,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 88.780256,
+   "top_procs": [
+    [
+     "System Idle Process",
+     100.0
+    ],
+    [
+     "MsMpEng.exe",
+     39.8
+    ],
+    [
+     "Code.exe",
+     35.3
+    ],
+    [
+     "svchost.exe",
+     34.4
+    ]
+   ]
+  },
+  {
+   "t": 1795388622.8483539,
+   "perf_pct": 137.573908,
+   "freq_mhz": 2419.0,
+   "cpu_time_pct": 57.591362,
+   "top_procs": [
+    [
+     "System Idle Process",
+     230.2
+    ],
+    [
+     "Code.exe",
+     27.0
+    ],
+    [
+     "msedge.exe",
+     25.1
+    ],
+    [
+     "System",
+     15.5
+    ]
+   ]
+  }
+ ],
+ "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)"
+}
