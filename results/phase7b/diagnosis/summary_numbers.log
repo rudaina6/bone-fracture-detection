@@ -1,0 +1,48 @@
+== 1. patch level, round 0, held-out per outer fold (a_patch_metrics.csv)
+ fold  train_roc_auc  pr_auc_13  roc_auc_pool  tpr_at_fpr_0.01  tpr_at_fpr_0.001  tpr_at_fpr_0.0001  pool_neg_score_gt0
+    0         0.9648     0.8655        0.9634           0.3939            0.1318             0.0356              0.1360
+    1         0.9650     0.8652        0.9548           0.3545            0.0634             0.0098              0.1373
+    2         0.9648     0.8556        0.9599           0.3220            0.0890             0.0297              0.1347
+    3         0.9666     0.8748        0.9575           0.3838            0.1162             0.0154              0.1368
+    4         0.9644     0.8621        0.9595           0.3497            0.0783             0.0168              0.1386
+min: {'train_roc_auc': 0.9644, 'pr_auc_13': 0.8556, 'roc_auc_pool': 0.9548, 'tpr_at_fpr_0.01': 0.322, 'tpr_at_fpr_0.001': 0.0634, 'tpr_at_fpr_0.0001': 0.0098, 'pool_neg_score_gt0': 0.1347}
+max: {'train_roc_auc': 0.9666, 'pr_auc_13': 0.8748, 'roc_auc_pool': 0.9634, 'tpr_at_fpr_0.01': 0.3939, 'tpr_at_fpr_0.001': 0.1318, 'tpr_at_fpr_0.0001': 0.0356, 'pool_neg_score_gt0': 0.1386}
+mean: {'train_roc_auc': 0.9651, 'pr_auc_13': 0.8646, 'roc_auc_pool': 0.959, 'tpr_at_fpr_0.01': 0.3608, 'tpr_at_fpr_0.001': 0.0957, 'tpr_at_fpr_0.0001': 0.0214, 'pool_neg_score_gt0': 0.1367}
+
+== 2. rank of each box's best positive window among the image's windows, round 0 (a_ranks.csv)
+all boxes 748: median 124.5, quartiles 28.0 / 413.25
+per region median: {'hand': 79.5, 'hip': 302.0, 'leg': 128.0, 'other': 512.0, 'shoulder': 436.0}
+per box side median: {'<20': 248.0, '20-28': 161.5, '28-40': 64.0, '>=40': 56.5}
+share of all boxes with best positive window in the top K (= proposal recall at IoU 0.5): {100: 0.44, 250: 0.596, 500: 0.731, 1000: 0.814, 2000: 0.884}
+within-type percentile (median) per type: [0.0084, 0.0093, 0.007, 0.0066, 0.0142, 0.0154, 0.0183, 0.0296, 0.0436]
+
+== 3. appearance, mask-free (c_windows.csv.gz)
+                 group     n  clahe_median  edge_density_median  no_edge_pixel  touches_padding  any_saturated  on_hardware_image
+      fracture windows  3511         0.521                0.106          0.001            0.003          0.011              0.124
+round-0 negatives used 10533         0.186                0.000          0.609            0.073          0.002              0.021
+ round-0 top false box  3246         0.607                0.095          0.007            0.002          0.014              0.024
+   round-0 false boxes 32573         0.595                0.100          0.011            0.003          0.010              0.024
+   round-1 false boxes 32660         0.299                0.052          0.209            0.000          0.019              0.024
+     mined r1 (fold 0) 52240         0.575                0.101          0.012            0.003          0.009              0.024
+     mined r2 (fold 0) 52240         0.316                0.059          0.215            0.001          0.015              0.024
+univariate ROC-AUC, fracture windows vs round-0 negatives used: {'clahe': 0.882, 'edges': 0.909, 'grad': 0.894}
+univariate ROC-AUC, fracture windows vs round-0 top false box: {'clahe': 0.315, 'edges': 0.576, 'grad': 0.491}
+
+== 4. visual counts (one rater; visual_counts.csv) with exact binomial 95% CIs
+round0_negatives_used (n=40): air 27 [50.9%, 81.4%], soft tissue 10 [12.7%, 41.2%], bone 2 [0.6%, 16.9%], border 1 [0.1%, 13.2%]
+round0_false_boxes_random (n=40): joint 17 [27.0%, 59.1%], bone shaft or cortex 11 [14.6%, 43.9%], other bone 7 [7.3%, 32.8%], soft tissue 3 [1.6%, 20.4%], spine or ribs 1 [0.1%, 13.2%], border or artifact 1 [0.1%, 13.2%]
+round0_top24_false_on_normal (n=24): joint or growth plate 10 [22.1%, 63.4%], bone shaft or metaphysis 6 [9.8%, 46.7%], vertebrae 3 [2.7%, 32.4%], overexposed strip or collimator edge 3 [2.7%, 32.4%], soft tissue or bowel gas 2 [1.0%, 27.0%]
+fracture_windows_random (n=24): bone 13 [32.8%, 74.4%], bone, near joint 8 [15.6%, 55.3%], bone, hardware 3 [2.7%, 32.4%]
+round-0 false boxes on bone (any): 36/40 [76.3%, 97.2%]
+
+== 5. mining, fold 0 (b_rounds.csv)
+ round  n_pos  n_neg  heldout_roc_auc_pool  heldout_tpr_at_fpr_0.001  heldout_pool_neg_score_gt0  train_r0neg_score_gt0  cos_prev_w  repro_max_diff
+     0   2752   8256                0.9634                    0.1318                      0.1360                 0.1392         NaN             0.0
+     1   2752  60496                0.6786                    0.0000                      0.4195                 0.4182     -0.6419             0.0
+     2   2752 112736                0.9330                    0.0329                      0.1073                 0.1129     -0.3353             0.0
+median rank per round: {0: 130.0, 1: 4346.0, 2: 199.0} | top-10 NMS hits per round: {0: 26, 1: 0, 2: 7}
+
+== 6. oracle image gating on the saved Phase 7 CV detections (boxes on normal images removed)
+round 0: fold-mean AP@50 0.00106 -> oracle gating 0.00417
+round 2: fold-mean AP@50 0.00015 -> oracle gating 0.00073
+exit 0

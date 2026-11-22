@@ -1,0 +1,129 @@
+sample,figure,tile,class
+round0_negatives_used,m_neg.png,1,air
+round0_negatives_used,m_neg.png,2,air
+round0_negatives_used,m_neg.png,3,air
+round0_negatives_used,m_neg.png,4,air
+round0_negatives_used,m_neg.png,5,border
+round0_negatives_used,m_neg.png,6,air
+round0_negatives_used,m_neg.png,7,soft tissue
+round0_negatives_used,m_neg.png,8,soft tissue
+round0_negatives_used,m_neg.png,9,soft tissue
+round0_negatives_used,m_neg.png,10,air
+round0_negatives_used,m_neg.png,11,air
+round0_negatives_used,m_neg.png,12,air
+round0_negatives_used,m_neg.png,13,air
+round0_negatives_used,m_neg.png,14,air
+round0_negatives_used,m_neg.png,15,air
+round0_negatives_used,m_neg.png,16,air
+round0_negatives_used,m_neg.png,17,bone
+round0_negatives_used,m_neg.png,18,air
+round0_negatives_used,m_neg.png,19,soft tissue
+round0_negatives_used,m_neg.png,20,air
+round0_negatives_used,m_neg.png,21,air
+round0_negatives_used,m_neg.png,22,air
+round0_negatives_used,m_neg.png,23,soft tissue
+round0_negatives_used,m_neg.png,24,soft tissue
+round0_negatives_used,m_neg.png,25,bone
+round0_negatives_used,m_neg.png,26,air
+round0_negatives_used,m_neg.png,27,soft tissue
+round0_negatives_used,m_neg.png,28,air
+round0_negatives_used,m_neg.png,29,air
+round0_negatives_used,m_neg.png,30,air
+round0_negatives_used,m_neg.png,31,air
+round0_negatives_used,m_neg.png,32,air
+round0_negatives_used,m_neg.png,33,air
+round0_negatives_used,m_neg.png,34,soft tissue
+round0_negatives_used,m_neg.png,35,air
+round0_negatives_used,m_neg.png,36,soft tissue
+round0_negatives_used,m_neg.png,37,soft tissue
+round0_negatives_used,m_neg.png,38,air
+round0_negatives_used,m_neg.png,39,air
+round0_negatives_used,m_neg.png,40,air
+round0_false_boxes_random,m_fp0.png,1,joint
+round0_false_boxes_random,m_fp0.png,2,other bone
+round0_false_boxes_random,m_fp0.png,3,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,4,other bone
+round0_false_boxes_random,m_fp0.png,5,soft tissue
+round0_false_boxes_random,m_fp0.png,6,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,7,joint
+round0_false_boxes_random,m_fp0.png,8,joint
+round0_false_boxes_random,m_fp0.png,9,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,10,other bone
+round0_false_boxes_random,m_fp0.png,11,joint
+round0_false_boxes_random,m_fp0.png,12,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,13,joint
+round0_false_boxes_random,m_fp0.png,14,joint
+round0_false_boxes_random,m_fp0.png,15,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,16,soft tissue
+round0_false_boxes_random,m_fp0.png,17,joint
+round0_false_boxes_random,m_fp0.png,18,other bone
+round0_false_boxes_random,m_fp0.png,19,spine or ribs
+round0_false_boxes_random,m_fp0.png,20,joint
+round0_false_boxes_random,m_fp0.png,21,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,22,joint
+round0_false_boxes_random,m_fp0.png,23,joint
+round0_false_boxes_random,m_fp0.png,24,joint
+round0_false_boxes_random,m_fp0.png,25,joint
+round0_false_boxes_random,m_fp0.png,26,joint
+round0_false_boxes_random,m_fp0.png,27,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,28,other bone
+round0_false_boxes_random,m_fp0.png,29,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,30,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,31,joint
+round0_false_boxes_random,m_fp0.png,32,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,33,other bone
+round0_false_boxes_random,m_fp0.png,34,joint
+round0_false_boxes_random,m_fp0.png,35,other bone
+round0_false_boxes_random,m_fp0.png,36,joint
+round0_false_boxes_random,m_fp0.png,37,border or artifact
+round0_false_boxes_random,m_fp0.png,38,soft tissue
+round0_false_boxes_random,m_fp0.png,39,bone shaft or cortex
+round0_false_boxes_random,m_fp0.png,40,joint
+round0_top24_false_on_normal,r_top_fp_round0.png,1,bone shaft or metaphysis
+round0_top24_false_on_normal,r_top_fp_round0.png,2,vertebrae
+round0_top24_false_on_normal,r_top_fp_round0.png,3,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,4,bone shaft or metaphysis
+round0_top24_false_on_normal,r_top_fp_round0.png,5,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,6,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,7,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,8,bone shaft or metaphysis
+round0_top24_false_on_normal,r_top_fp_round0.png,9,bone shaft or metaphysis
+round0_top24_false_on_normal,r_top_fp_round0.png,10,overexposed strip or collimator edge
+round0_top24_false_on_normal,r_top_fp_round0.png,11,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,12,overexposed strip or collimator edge
+round0_top24_false_on_normal,r_top_fp_round0.png,13,vertebrae
+round0_top24_false_on_normal,r_top_fp_round0.png,14,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,15,overexposed strip or collimator edge
+round0_top24_false_on_normal,r_top_fp_round0.png,16,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,17,soft tissue or bowel gas
+round0_top24_false_on_normal,r_top_fp_round0.png,18,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,19,bone shaft or metaphysis
+round0_top24_false_on_normal,r_top_fp_round0.png,20,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,21,vertebrae
+round0_top24_false_on_normal,r_top_fp_round0.png,22,joint or growth plate
+round0_top24_false_on_normal,r_top_fp_round0.png,23,soft tissue or bowel gas
+round0_top24_false_on_normal,r_top_fp_round0.png,24,bone shaft or metaphysis
+fracture_windows_random,m_pos.png,1,"bone, near joint"
+fracture_windows_random,m_pos.png,2,"bone"
+fracture_windows_random,m_pos.png,3,"bone, hardware"
+fracture_windows_random,m_pos.png,4,"bone, hardware"
+fracture_windows_random,m_pos.png,5,"bone"
+fracture_windows_random,m_pos.png,6,"bone, near joint"
+fracture_windows_random,m_pos.png,7,"bone, near joint"
+fracture_windows_random,m_pos.png,8,"bone, near joint"
+fracture_windows_random,m_pos.png,9,"bone"
+fracture_windows_random,m_pos.png,10,"bone"
+fracture_windows_random,m_pos.png,11,"bone"
+fracture_windows_random,m_pos.png,12,"bone"
+fracture_windows_random,m_pos.png,13,"bone"
+fracture_windows_random,m_pos.png,14,"bone"
+fracture_windows_random,m_pos.png,15,"bone"
+fracture_windows_random,m_pos.png,16,"bone"
+fracture_windows_random,m_pos.png,17,"bone, near joint"
+fracture_windows_random,m_pos.png,18,"bone"
+fracture_windows_random,m_pos.png,19,"bone"
+fracture_windows_random,m_pos.png,20,"bone, near joint"
+fracture_windows_random,m_pos.png,21,"bone, near joint"
+fracture_windows_random,m_pos.png,22,"bone"
+fracture_windows_random,m_pos.png,23,"bone, hardware"
+fracture_windows_random,m_pos.png,24,"bone, near joint"

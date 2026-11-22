@@ -1,0 +1,6 @@
+fold 0: held-out patch PR-AUC 1:3 0.866, ROC-AUC pool 0.9634, TPR@FPR1e-3 0.132; median rank 130 (13 s)
+fold 1: held-out patch PR-AUC 1:3 0.865, ROC-AUC pool 0.9548, TPR@FPR1e-3 0.063; median rank 115 (6 s)
+fold 2: held-out patch PR-AUC 1:3 0.856, ROC-AUC pool 0.9599, TPR@FPR1e-3 0.089; median rank 116 (6 s)
+fold 3: held-out patch PR-AUC 1:3 0.875, ROC-AUC pool 0.9575, TPR@FPR1e-3 0.116; median rank 106 (6 s)
+fold 4: held-out patch PR-AUC 1:3 0.862, ROC-AUC pool 0.9595, TPR@FPR1e-3 0.078; median rank 159 (6 s)
+exit 0

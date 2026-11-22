@@ -1,0 +1,7 @@
+round 1: mined 52240 (89 s); eligible windows with score > 0 per image: median 2719
+round 2: mined 52240 (141 s); eligible windows with score > 0 per image: median 9182
+round 0: 2752 pos / 8256 neg, held-out ROC-AUC pool 0.9634, median rank 130
+round 1: 2752 pos / 60496 neg, held-out ROC-AUC pool 0.6786, median rank 4346
+round 2: 2752 pos / 112736 neg, held-out ROC-AUC pool 0.9330, median rank 199
+reproduction of the saved fold-0 detections, rounds 0-2: max |score difference| = 0.00e+00
+exit 0
