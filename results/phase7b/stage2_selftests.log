@@ -1,0 +1,176 @@
+... context_ring_hand_cases
+PASS context_ring_hand_cases (0.0 s)
+... context_equals_naive_on_synthetic_image
+PASS context_equals_naive_on_synthetic_image (6.0 s)
+... weighted_ap_equals_duplicated_rows
+PASS weighted_ap_equals_duplicated_rows (0.0 s)
+... calibration_monotone_per_type
+PASS calibration_monotone_per_type (0.1 s)
+... plan_and_sources
+PASS plan_and_sources (0.0 s)
+... end_to_end_debug_cv_and_mock_final_test
+90 training images (15 fractured, 18 boxes)
+cache: 90 images in 0.8 min, 0.5 GB; fractured images whose loaded shape differs from master: 0; boxes outside the content rectangle: 0
+round-0 patches: 93 positive windows {'leg': 44, 'hand': 36, 'shoulder': 13}; negative pools of 40 per image (3600 windows); 1 s
+90 training images (15 fractured, 18 boxes)
+    4 configs x 4 folds = 16 fits
+    fold 0 (cv): round 1 mined 1440 hard negatives -> 1764 patches
+    fold 0 (cv): round 2 mined 1440 hard negatives -> 3204 patches
+fold 0 (cv): C=0.01, 81 positives, hard negatives [1440, 1440], 0.1 min
+    4 configs x 4 folds = 16 fits
+    fold 1 (cv): round 1 mined 1440 hard negatives -> 1740 patches
+    fold 1 (cv): round 2 mined 1440 hard negatives -> 3180 patches
+fold 1 (cv): C=1, 75 positives, hard negatives [1440, 1440], 0.1 min
+    4 configs x 4 folds = 16 fits
+    fold 2 (cv): round 1 mined 1440 hard negatives -> 1740 patches
+    fold 2 (cv): round 2 mined 1440 hard negatives -> 3180 patches
+fold 2 (cv): C=1, 75 positives, hard negatives [1440, 1440], 0.1 min
+    4 configs x 4 folds = 16 fits
+    fold 3 (cv): round 1 mined 1440 hard negatives -> 1732 patches
+    fold 3 (cv): round 2 mined 1440 hard negatives -> 3172 patches
+fold 3 (cv): C=1, 73 positives, hard negatives [1440, 1440], 0.1 min
+    4 configs x 4 folds = 16 fits
+    fold 4 (cv): round 1 mined 1440 hard negatives -> 1712 patches
+    fold 4 (cv): round 2 mined 1440 hard negatives -> 3152 patches
+fold 4 (cv): C=0.1, 68 positives, hard negatives [1440, 1440], 0.1 min
+    4 configs x 5 folds = 20 fits
+final C = 1 (patch PR-AUC per C: {'0.001': 0.6919896494762869, '0.01': 0.6972115412965944, '0.1': 0.7224383105992235, '1': 0.7247340729223086})
+90 training images (15 fractured, 18 boxes)
+    4 configs x 4 folds = 16 fits
+  stage 1 not0: trained on folds [1, 2, 3, 4], C=0.01, scored folds [np.int64(0)] (18 images)
+    4 configs x 4 folds = 16 fits
+  stage 1 not1: trained on folds [0, 2, 3, 4], C=1, scored folds [np.int64(1)] (18 images)
+    4 configs x 4 folds = 16 fits
+  stage 1 not2: trained on folds [0, 1, 3, 4], C=1, scored folds [np.int64(2)] (18 images)
+    4 configs x 4 folds = 16 fits
+  stage 1 not3: trained on folds [0, 1, 2, 4], C=1, scored folds [np.int64(3)] (18 images)
+    4 configs x 4 folds = 16 fits
+  stage 1 not4: trained on folds [0, 1, 2, 3], C=0.1, scored folds [np.int64(4)] (18 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not01: trained on folds [2, 3, 4], C=1, scored folds [np.int64(0), np.int64(1)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not02: trained on folds [1, 3, 4], C=0.001, scored folds [np.int64(0), np.int64(2)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not03: trained on folds [1, 2, 4], C=0.001, scored folds [np.int64(0), np.int64(3)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not04: trained on folds [1, 2, 3], C=0.1, scored folds [np.int64(0), np.int64(4)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not12: trained on folds [0, 3, 4], C=0.1, scored folds [np.int64(1), np.int64(2)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not13: trained on folds [0, 2, 4], C=1, scored folds [np.int64(1), np.int64(3)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not14: trained on folds [0, 2, 3], C=1, scored folds [np.int64(1), np.int64(4)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not23: trained on folds [0, 1, 4], C=0.001, scored folds [np.int64(2), np.int64(3)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not24: trained on folds [0, 1, 3], C=0.1, scored folds [np.int64(2), np.int64(4)] (36 images)
+    4 configs x 3 folds = 12 fits
+  stage 1 not34: trained on folds [0, 1, 2], C=0.001, scored folds [np.int64(3), np.int64(4)] (36 images)
+stage 1 done in 0.4 min; held-out proposal recall (IoU 0.5 / 0.3): 0.722 / 0.889
+90 training images (15 fractured, 18 boxes)
+    fold 0: hgb-wc cfg {'max_leaf_nodes': 63, 'min_samples_leaf': 20} inner weighted AP [0.0024 0.0036] (407 s)
+    fold 0: hgb-w cfg {'max_leaf_nodes': 63, 'min_samples_leaf': 20} inner weighted AP [0.0019 0.0023] (267 s)
+    fold 0: rf-wc cfg {'max_features': 'sqrt', 'min_samples_leaf': 1} inner weighted AP [0.0051 0.0047] (19 s)
+    fold 0: rf-w cfg {'max_features': 0.2, 'min_samples_leaf': 1} inner weighted AP [0.0013 0.0013] (16 s)
+fold 0: 1440 detections over 8 variants, 12.0 min
+    fold 1: hgb-wc cfg {'max_leaf_nodes': 15, 'min_samples_leaf': 20} inner weighted AP [0.0016 0.0016] (1153 s)
+    fold 1: hgb-w cfg {'max_leaf_nodes': 15, 'min_samples_leaf': 20} inner weighted AP [0.0035 0.0028] (812 s)
+    fold 1: rf-wc cfg {'max_features': 'sqrt', 'min_samples_leaf': 1} inner weighted AP [0.0042 0.0029] (73 s)
+    fold 1: rf-w cfg {'max_features': 0.2, 'min_samples_leaf': 1} inner weighted AP [0.0048 0.0052] (69 s)
+fold 1: 1440 detections over 8 variants, 35.4 min
+    fold 2: hgb-wc cfg {'max_leaf_nodes': 63, 'min_samples_leaf': 20} inner weighted AP [0.0014 0.0014] (1547 s)
+    fold 2: hgb-w cfg {'max_leaf_nodes': 63, 'min_samples_leaf': 20} inner weighted AP [0.0008 0.0008] (985 s)
+    fold 2: rf-wc cfg {'max_features': 'sqrt', 'min_samples_leaf': 1} inner weighted AP [0.0058 0.0028] (69 s)
+    fold 2: rf-w cfg {'max_features': 'sqrt', 'min_samples_leaf': 1} inner weighted AP [0.0013 0.0009] (57 s)
+fold 2: 1440 detections over 8 variants, 44.7 min
+    fold 3: hgb-wc cfg {'max_leaf_nodes': 15, 'min_samples_leaf': 20} inner weighted AP [0.0007 0.0006] (1367 s)
+    fold 3: hgb-w cfg {'max_leaf_nodes': 63, 'min_samples_leaf': 20} inner weighted AP [0.0007 0.0007] (1340 s)
+    fold 3: rf-wc cfg {'max_features': 'sqrt', 'min_samples_leaf': 1} inner weighted AP [0.0007 0.0006] (24 s)
+    fold 3: rf-w cfg {'max_features': 'sqrt', 'min_samples_leaf': 1} inner weighted AP [0.0009 0.0007] (19 s)
+fold 3: 1440 detections over 8 variants, 46.2 min
+    fold 4: hgb-wc cfg {'max_leaf_nodes': 63, 'min_samples_leaf': 20} inner weighted AP [0.0051 0.0075] (1575 s)
+    fold 4: hgb-w cfg {'max_leaf_nodes': 15, 'min_samples_leaf': 20} inner weighted AP [0.0047 0.004 ] (298 s)
+    fold 4: rf-wc cfg {'max_features': 'sqrt', 'min_samples_leaf': 1} inner weighted AP [0.0028 0.0019] (18 s)
+    fold 4: rf-w cfg {'max_features': 0.2, 'min_samples_leaf': 1} inner weighted AP [0.0013 0.0018] (17 s)
+fold 4: 1440 detections over 8 variants, 32.0 min
+ variant    ap50  ap50_lo  ap50_hi  ap50_95
+    H-wc 0.00219      0.0  0.00867  0.00098
+    R-wc 0.00000      0.0  0.00000  0.00000
+     H-w 0.00318      0.0  0.02216  0.00041
+     R-w 0.00148      0.0  0.00949  0.00025
+H-wc-cal 0.00000      0.0  0.00000  0.00000
+R-wc-cal 0.00139      0.0  0.00708  0.00083
+ H-w-cal 0.00182      0.0  0.01515  0.00032
+ R-w-cal 0.00086      0.0  0.00398  0.00026
+      S1 0.00000      0.0  0.00000  0.00000
+      P7 0.00000      0.0  0.00000  0.00000
+B1: H-wc - R-wc = +0.00219 [+0.00000, +0.00867] -> hgb
+B2: H-wc - H-w = -0.00098 [-0.01979, +0.00552] -> w
+B3: H-w-cal - H-w = -0.00136 [-0.01616, +0.00707] -> False
+selected: H-w
+final stage-2 hyperparameters (hgb-w): {'max_leaf_nodes': 63, 'min_samples_leaf': 20} (inner weighted AP [0.0009 0.0011])
+90 training images (15 fractured, 18 boxes)
+threshold CV fold 0: 180 detections
+threshold CV fold 1: 180 detections
+threshold CV fold 2: 180 detections
+threshold CV fold 3: 180 detections
+threshold CV fold 4: 180 detections
+90 training images (15 fractured, 18 boxes)
+D:\bone-fracture-detection\src\phase7b_cascade.py:719: RuntimeWarning: Mean of empty slice
+  out.setdefault(key, []).append(float(np.nanmean(v)))
+D:\bone-fracture-detection\src\phase7b_cascade.py:852: RuntimeWarning: Mean of empty slice
+  out.setdefault(key, []).append(float(np.nanmean(v)))
+    figure -> C:\Users\TECHPL~1\AppData\Local\Temp\tmpixd7unxz\figs\phase7b_cv_variants.png
+    figure -> C:\Users\TECHPL~1\AppData\Local\Temp\tmpixd7unxz\figs\phase7b_cv_examples.png
+usage: test_phase7b.py [-h] [--gates] [--timing] [--stage1] [--select]
+                       [--final-params] [--summarize] [--force] [--no-log]
+                       [--cv-fold CV_FOLD [CV_FOLD ...]]
+                       [--threshold-cv THRESHOLD_CV [THRESHOLD_CV ...]]
+                       [--grid {auto,full,fallback}] [--n-jobs N_JOBS]
+                       [--n-boot N_BOOT] [--seed SEED] [--boot-seed BOOT_SEED]
+                       [--debug-subset DEBUG_SUBSET] [--out-dir OUT_DIR]
+                       [--tables-dir TABLES_DIR] [--figures-dir FIGURES_DIR]
+                       [--cache-dir CACHE_DIR] [--work-dir WORK_DIR]
+                       [--p7-dir P7_DIR]
+test_phase7b.py: error: --debug-subset needs its own output, work, cache and Phase 7 folders
+   group  n_images  reach_iou50  proposal_recall50  proposal_recall50_lo  proposal_recall50_hi  proposal_recall30  H-w_ap50  H-w_ap50_lo  H-w_ap50_hi  S1_ap50  S1_ap50_lo  S1_ap50_hi  P7_ap50  P7_ap50_lo  P7_ap50_hi  ap50_95  ap50_95_lo  ap50_95_hi  recall  recall_lo  recall_hi  precision  precision_lo  precision_hi     f1  f1_lo  f1_hi  recall_iou30  recall_iou30_lo  recall_iou30_hi   d_S1  d_S1_lo  d_S1_hi   d_P7  d_P7_lo  d_P7_hi
+ overall        90       0.9385             0.7167                0.5000                0.8958             0.8833    0.0032          0.0       0.0222      0.0         0.0         0.0      0.0         0.0         0.0   0.0004         0.0      0.0026  0.1111        0.0     0.2727     0.0039           0.0        0.0103 0.0075    0.0 0.0197        0.2222           0.0453           0.3589 0.0032      0.0   0.0222 0.0032      0.0   0.0222
+    hand        25       0.9614             0.7500                0.5000                0.9396             0.8750    0.0057          0.0       0.0286      0.0         0.0         0.0      0.0         0.0         0.0   0.0011         0.0      0.0057  0.1111        0.0     0.3333     0.0071           0.0        0.0258 0.0133    0.0 0.0478        0.3333           0.0000           0.6667 0.0057      0.0   0.0286 0.0057      0.0   0.0286
+     leg        48       0.8920             0.7500                0.3625                1.0000             0.8750    0.0147          0.0       0.0538      0.0         0.0         0.0      0.0         0.0         0.0   0.0015         0.0      0.0054  0.1429        0.0     0.5196     0.0037           0.0        0.0111 0.0072    0.0 0.0216        0.1429           0.0000           0.5196 0.0147      0.0   0.0538 0.0147      0.0   0.0538
+     hip        12       0.9184                NaN                   NaN                   NaN                NaN       NaN          NaN          NaN      NaN         NaN         NaN      NaN         NaN         NaN      NaN         NaN         NaN     NaN        NaN        NaN     0.0000           0.0        0.0000 0.0000    0.0 0.0000           NaN              NaN              NaN    NaN      NaN      NaN    NaN      NaN      NaN
+shoulder         5       1.0000             1.0000                1.0000                1.0000             1.0000    0.0000          0.0       0.0000      0.0         0.0         0.0      0.0         0.0         0.0   0.0000         0.0      0.0000  0.0000        0.0     0.0000     0.0000           0.0        0.0000 0.0000    0.0 0.0000        0.0000           0.0000           0.0000 0.0000      0.0   0.0000 0.0000      0.0   0.0000
+   group  det_pr_auc  p3_pr_auc  d_pr_auc  d_pr_auc_lo  d_pr_auc_hi  det_roc_auc  p3_roc_auc  d_roc_auc  d_roc_auc_lo  d_roc_auc_hi
+ overall       0.289      0.679    -0.391       -0.516       -0.148        0.556         0.8     -0.244        -0.357        -0.079
+    hand         NaN        NaN       NaN          NaN          NaN          NaN         NaN        NaN           NaN           NaN
+     leg         NaN        NaN       NaN          NaN          NaN          NaN         NaN        NaN           NaN           NaN
+     hip         NaN        NaN       NaN          NaN          NaN          NaN         NaN        NaN           NaN           NaN
+shoulder         NaN        NaN       NaN          NaN          NaN          NaN         NaN        NaN           NaN           NaN
+threshold 0.09926505095339351 (threshold CV with the final hyperparameters ({'fold_cfgs': [{'max_leaf_nodes': 63, 'min_samples_leaf': 20}, {'max_leaf_nodes': 15, 'min_samples_leaf': 20}, {'max_leaf_nodes': 63, 'min_samples_leaf': 20}, {'max_leaf_nodes': 63, 'min_samples_leaf': 20}, {'max_leaf_nodes': 15, 'min_samples_leaf': 20}], 'final_cfg': {'max_leaf_nodes': 63, 'min_samples_leaf': 20}, 'fold_C': [0.01, 1, 1, 1, 0.1], 'final_C': 1})); vs S1 {'diff': 0.003176043557168784, 'lo': np.float64(0.0), 'hi': np.float64(0.02216435185185184)}; vs P7 {'diff': 0.003176043557168784, 'lo': np.float64(0.0), 'hi': np.float64(0.02216435185185184)}; B6 FAILED
+    4 configs x 5 folds = 20 fits
+T1: stage-1 C=1 (Phase 7 final_c.json: 1)
+T2: stage 2 H-w {'max_leaf_nodes': 63, 'min_samples_leaf': 20} on 1023 rows (93 positives)
+T4: lock written -> C:\Users\TECHPL~1\AppData\Local\Temp\tmpixd7unxz\out\TEST_EVALUATED.json
+D:\bone-fracture-detection\src\phase7b_cascade.py:719: RuntimeWarning: Mean of empty slice
+  out.setdefault(key, []).append(float(np.nanmean(v)))
+
+=== TEST (second use, post-hoc follow-up), Phase 7b localizer ===
+   group  n_images  n_boxes  reach_iou50  proposal_recall50  proposal_recall30  proposal_recall50_lo  proposal_recall50_hi  ap50  ap50_lo  ap50_hi  ap50_half_width  ap50_95  ap50_95_lo  ap50_95_hi  ap50_95_half_width  recall  recall_lo  recall_hi  recall_half_width  precision  precision_lo  precision_hi  precision_half_width  f1  f1_lo  f1_hi  f1_half_width  recall_iou30  recall_iou30_lo  recall_iou30_hi  recall_iou30_half_width  p7_ap50  d_p7  d_p7_lo  d_p7_hi
+ overall        12        2          1.0                1.0                1.0                   1.0                   1.0   0.0      0.0      0.0              0.0      0.0         0.0         0.0                 0.0     0.0        0.0        0.0                0.0        0.0           0.0           0.0                   0.0 0.0    0.0    0.0            0.0           0.5              0.0              1.0                      0.5      0.0   0.0      0.0      0.0
+    hand         4        1          1.0                1.0                1.0                   1.0                   1.0   0.0      0.0      0.0              0.0      0.0         0.0         0.0                 0.0     0.0        0.0        0.0                0.0        0.0           0.0           0.0                   0.0 0.0    0.0    0.0            0.0           0.0              0.0              0.0                      0.0      0.0   0.0      0.0      0.0
+     leg         3        0          NaN                NaN                NaN                   NaN                   NaN   NaN      NaN      NaN              NaN      NaN         NaN         NaN                 NaN     NaN        NaN        NaN                NaN        0.0           0.0           0.0                   0.0 0.0    0.0    0.0            0.0           NaN              NaN              NaN                      NaN      NaN   NaN      NaN      NaN
+     hip         2        0          NaN                NaN                NaN                   NaN                   NaN   NaN      NaN      NaN              NaN      NaN         NaN         NaN                 NaN     NaN        NaN        NaN                NaN        0.0           0.0           0.0                   0.0 0.0    0.0    0.0            0.0           NaN              NaN              NaN                      NaN      NaN   NaN      NaN      NaN
+shoulder         3        1          1.0                1.0                1.0                   1.0                   1.0   0.0      0.0      0.0              0.0      0.0         0.0         0.0                 0.0     0.0        0.0        0.0                0.0        0.0           0.0           0.0                   0.0 0.0    0.0    0.0            0.0           1.0              1.0              1.0                      0.0      0.0   0.0      0.0      0.0
+   group  det_pr_auc  p3_pr_auc  det_roc_auc  p3_roc_auc  d_pr_auc  d_pr_auc_lo  d_pr_auc_hi  d_roc_auc  d_roc_auc_lo  d_roc_auc_hi
+ overall       0.243      0.361         0.55       0.600    -0.118          NaN          NaN     -0.050           NaN           NaN
+    hand       0.250      0.333         0.00       0.333    -0.083          NaN          NaN     -0.333           NaN           NaN
+     leg         NaN        NaN          NaN         NaN       NaN          NaN          NaN        NaN           NaN           NaN
+     hip         NaN        NaN          NaN         NaN       NaN          NaN          NaN        NaN           NaN           NaN
+shoulder       1.000      1.000         1.00       1.000     0.000          NaN          NaN      0.000           NaN           NaN
+
+Done in 0.9 min.
+    4 configs x 5 folds = 20 fits
+T1: stage-1 C=1 (Phase 7 final_c.json: -1)
+PASS end_to_end_debug_cv_and_mock_final_test (10957.0 s)
+
+All 6 Phase 7b self-tests passed in 10963 s.
+exit 0
