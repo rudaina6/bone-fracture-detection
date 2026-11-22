@@ -63,6 +63,14 @@ FALLBACK_HOURS = 6.0
 HGB_THREADS, INNER_WORKERS, INNER_THREADS, RF_JOBS = 4, 4, 2, 8
 
 
+def configure_threads(n_jobs):
+    """Stage-2 parallelism from --n-jobs (4 = the setting of the engineering check; 3 = lighter load: 3 HGB inner
+    workers x 2 threads, 3 HGB threads for single fits, RF on 6 cores). Fitted models do not depend on it."""
+    global HGB_THREADS, INNER_WORKERS, RF_JOBS
+    HGB_THREADS, INNER_WORKERS, RF_JOBS = min(4, n_jobs), n_jobs, 2 * n_jobs
+    return dict(hgb_single=HGB_THREADS, inner_workers=INNER_WORKERS, inner_threads=INNER_THREADS, rf_jobs=RF_JOBS)
+
+
 def vname(clf, feat, cal):
     return f"{LETTER[clf]}-{feat}{'-cal' if cal else ''}"
 
@@ -509,8 +517,8 @@ def fit_clf(name, cfg, X, y, seed, n_jobs=None, threads=None):
     return m
 
 
-def _inner_job(name, cfg, X, y, Xv, seed):
-    return predict(fit_clf(name, cfg, X, y, seed, n_jobs=1, threads=INNER_THREADS), Xv)
+def _inner_job(name, cfg, X, y, Xv, seed, threads):
+    return predict(fit_clf(name, cfg, X, y, seed, n_jobs=1, threads=threads), Xv)
 
 
 def inner_predictions(name, cfgs, sets, cols, seed):
@@ -525,7 +533,7 @@ def inner_predictions(name, cfgs, sets, cols, seed):
         return name, cfgs[ci], tr["X"][m][:, cols], tr["y"][m], val[j]["X"][:, cols], seed
     if name == "hgb":
         out = Parallel(n_jobs=INNER_WORKERS, backend="loky", inner_max_num_threads=INNER_THREADS)(
-            delayed(_inner_job)(*job(ci, j)) for ci, j in jobs)
+            delayed(_inner_job)(*job(ci, j), INNER_THREADS) for ci, j in jobs)
     else:
         out = []
         for ci, j in jobs:
@@ -1218,6 +1226,16 @@ def run_timing(T, R0, args):
                 fits.append(dict(clf=clf, cfg=cfg, feat=feat, rows=len(y), inner_4fits_s=ti, refit_s=time.time() - t1))
                 print(f"  {clf} {cfg} {feat}: 4 inner fits {ti:.1f} s, refit {fits[-1]['refit_s']:.1f} s", flush=True)
     F = pd.DataFrame(fits)
+    # the thread setting must not change any fitted model: CV-path predictions = single-threaded fits (real data)
+    det_check = {}
+    for clf in CLFS:
+        cfg, cols = GRIDS["fallback"][clf][0], FEAT_COLS["wc"]
+        par = inner_predictions(clf, [cfg], tsets, cols, args.seed)[(0, 0)]
+        m0 = fake != 0
+        ref = predict(fit_clf(clf, cfg, X[m0][:, cols], y[m0], args.seed, n_jobs=1, threads=1), Xv[:, cols])
+        det_check[clf] = dict(cfg=cfg, max_abs_pred_diff=float(np.abs(par - ref).max()))
+        print(f"  determinism {clf} {cfg}: CV path vs single-threaded fit, max |diff| = "
+              f"{det_check[clf]['max_abs_pred_diff']:.2e}", flush=True)
 
     def stage2_hours(grid):
         tot = 0.0
@@ -1238,7 +1256,7 @@ def run_timing(T, R0, args):
                cv_total_hours_full=h_stage2_full + other_h, cv_total_hours_fallback=h_stage2_fb + other_h,
                fallback_rule=f"fallback grids if the stage-2 fits of the CV project more than {FALLBACK_HOURS} h",
                use_fallback=bool(use_fb), n_jobs=args.n_jobs, threads=dict(hgb_single=HGB_THREADS, inner_workers=INNER_WORKERS,
-               inner_threads=INNER_THREADS, rf_jobs=RF_JOBS), date=pd.Timestamp.now().isoformat(timespec="seconds"))
+               inner_threads=INNER_THREADS, rf_jobs=RF_JOBS), determinism=det_check, date=pd.Timestamp.now().isoformat(timespec="seconds"))
     (args.out_dir / "timing.json").write_text(json.dumps(est, indent=1, default=str))
     print(f"projection: stage-2 fits {h_stage2_full:.1f} h (full grids) / {h_stage2_fb:.1f} h (fallback); other CV "
           f"steps {other_h:.1f} h -> {'FALLBACK grids' if use_fb else 'full grids'}", flush=True)
@@ -1266,6 +1284,7 @@ def main(argv=None):
     ap.add_argument("--work-dir", type=Path, default=REPO_ROOT / "features" / "phase7b")
     ap.add_argument("--p7-dir", type=Path, default=REPO_ROOT / "results" / "phase7")
     args = ap.parse_args(argv)
+    threads = configure_threads(args.n_jobs)
     if args.debug_subset:
         args.no_log = True
         defaults = {REPO_ROOT / "results" / "phase7b", REPO_ROOT / "results" / "tables", REPO_ROOT / "results" / "figures",
@@ -1275,7 +1294,8 @@ def main(argv=None):
     T = P.train_table(args.debug_subset or None)
     R0 = P.load_round0(args.cache_dir, T)
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"{len(T)} training images ({int(T.fractured.sum())} fractured, {int(T.boxes.map(len).sum())} boxes)", flush=True)
+    print(f"{len(T)} training images ({int(T.fractured.sum())} fractured, {int(T.boxes.map(len).sum())} boxes); "
+          f"stage-2 threads {threads}", flush=True)
     if args.gates:
         run_gates(T, R0, args)
     if args.timing:

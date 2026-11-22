@@ -77,6 +77,7 @@ def main(argv=None):
                 REPO_ROOT / "results" / "phase7b", REPO_ROOT / "results" / "tables", REPO_ROOT / "features" / "phase7",
                 REPO_ROOT / "features" / "phase7b", REPO_ROOT / "results" / "phase7"}:
             ap.error("--debug-subset (mock runs) needs its own folders")
+    C.configure_threads(args.n_jobs)
     lock = args.out_dir / "TEST_EVALUATED.json"
     if lock.exists() and not args.allow_rerun:
         raise SystemExit(f"The Phase 7b test set was already evaluated ({lock.read_text()[:300]}...).\n"
