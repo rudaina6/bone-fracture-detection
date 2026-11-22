@@ -267,7 +267,8 @@ output to `results/phase7/<step>.log`. Every fitting run gets a row in `results/
 ## Results
 
 Detection CV on the 3,266 training images, out of fold (Stage 3, 2026-11-22). Everything above was fixed before
-these numbers existed; nothing in the protocol was changed after them. No test image has been loaded. Fold means with
+these numbers existed; nothing in the protocol was changed after them. No test image was loaded for the CV results;
+the test was run once afterwards, under its lock (see "Final test" below). Fold means with
 95% CIs from 2,000 fold-stratified image bootstrap resamples (seed 0). Files: `results/tables/phase7_cv_detection.csv`,
 `phase7_cv_rounds.csv`, `phase7_cv_image_level.csv`; `results/phase7/cv_summary.json`;
 `results/figures/phase7_cv_rounds.png`, `phase7_cv_examples.png`; log `results/phase7/stage3_6_summarize.log`.
@@ -352,7 +353,8 @@ CV was run. Final test configuration (T1-T3): window set {16, 40, 64} px, C 0.1,
 "good" images (the highest-scoring images with a hit) each carry several false boxes along the bone shafts and joints
 next to the hit. The two "missed" images (lowest top score among images without a hit) have no box above the
 threshold. The two "false alarms" (normal images with the highest top score) are covered in boxes along the long
-bones and the pelvis.
+bones and the pelvis. *[Layout fixed after STOP 3: the figure is taller so that the bottom row's titles no longer
+overlap the top row; same images, boxes and threshold.]*
 
 ### Checks run after the results (diagnostic, not pre-registered; nothing was chosen from them)
 
@@ -376,6 +378,73 @@ and with HOG/LBP/intensity features a linear model scores bone edges, cortex and
 Hard-negative mining with 20 windows per image did not fix that: the first round lost every hit and the second
 recovered a few. This is the "linear patch model" threat listed above at its worst; the test (T1-T6) will measure it
 once.
+
+### Final test (run once, 2026-11-22)
+
+**The CV failure was known before the test, and nothing was changed.** The detection CV results above (AP@50 0.0001,
+image-level ROC-AUC 0.511) were written into this file and committed (`d9176d4`) before the test was run. The test
+then ran the detector exactly as pre-registered and approved at STOP 3: window set {16, 40, 64} px (nine types), C 0.1,
+2 mining rounds, box-score threshold 0.7414, NMS 0.3, at most 10 boxes per image. No setting was changed after the CV
+numbers or after the test numbers were seen (D3).
+
+- **T1:** `tune_cv` on the round-0 patches of all 3,266 training images gave C 0.1, equal to
+  `results/phase7/final_c.json`.
+- **T2:** 2 mining rounds on all training images, 65,320 hard negatives each (20 per image: the cap binds), 144,684
+  patches in the final fit.
+- **T4, lock before any test image:** `results/phase7/TEST_EVALUATED.json` was written at 15:39:59. The script writes
+  it before it first reads the test rows, and the log prints `T4: lock written` before any test output. Independently,
+  all 817 test images were last accessed between 15:39:59 and 15:45:57, with NTFS last-access updates enabled. NTFS
+  skips an update when the previous access is under an hour old, so an access earlier in this 11-minute run would
+  have left an earlier time.
+- **T5:** 817 test images scored once (maps computed after the lock); `results/phase7/test_detections.csv`. Run: 10.8
+  min, exit 0; stdout and stderr in `results/phase7/stage4_final_test.log`; `results/phase7/test_run.json`.
+
+**T6, detection** (`results/tables/phase7_test_detection.csv`; 95% CIs from 2,000 image bootstrap resamples, seed 0;
+recall, precision and F1 at IoU 0.5 and the threshold 0.7414, which was fixed on training data, so these are honest):
+
+| Group | Images | Boxes | Reachable | AP@50 | AP@50:95 | Recall | Precision | F1 | Recall, IoU >= 0.3 |
+|---|---|---|---|---|---|---|---|---|---|
+| **All** | 817 | 176 | 93.8% | **0.0003** [0.0001, 0.0009] | 0.0000 [0.0000, 0.0002] | 3.4% [1.1, 6.3] | 0.26% [0.09, 0.50] | 0.0049 [0.0016, 0.0092] | 8.0% [4.2, 12.0] |
+| Hand | 256 | 95 | 98.9% | 0.0007 [0.0001, 0.0037] | 0.0002 [0.0000, 0.0011] | 3.2% [0.0, 7.4] | 0.63% [0.00, 1.43] | 0.0105 [0.0000, 0.0236] | 5.3% [1.1, 10.5] |
+| Leg | 425 | 53 | 83.0% | 0.0002 [0.0000, 0.0009] | 0.0000 [0.0000, 0.0001] | 3.8% [0.0, 9.8] | 0.16% [0.00, 0.42] | 0.0031 [0.0000, 0.0080] | 7.5% [1.8, 15.4] |
+| Hip | 64 | 11 | 100% | 0.0023 [0.0000, 0.0227] | 0.0002 [0.0000, 0.0023] | 9.1% [0.0, 30.0] | 0.30% [0.00, 1.03] | 0.0059 [0.0000, 0.0197] | 18.2% [0.0, 44.4] |
+| Shoulder | 67 | 14 | 92.9% | 0.0000 [0.0000, 0.0000] | 0.0000 [0.0000, 0.0000] | 0% | 0% | 0 | 21.4% [0.0, 44.4] |
+
+The detector keeps 2,267 boxes on the 817 test images (2.8 per image; at least one on 78.0% of the images) and hits 6
+of the 176 test boxes at IoU 0.5 (hand 3, leg 2, hip 1, shoulder 0) and 14 at IoU 0.3. The 3 "other" boxes count in
+"All" only. Test and CV agree: AP@50 0.0003 on test against 0.0001 in CV, both essentially zero.
+
+**T6, image level** (`results/tables/phase7_test_image_level.csv`): best-window score against the Phase 3 unified
+classifier's test scores (`results/phase3/test_scores.csv`), paired image bootstrap per group. Prevalence (chance
+PR-AUC): all 0.175, hand 0.297, leg 0.099, hip 0.172, shoulder 0.179.
+
+| Group | PR-AUC detector | PR-AUC Phase 3 | Difference | ROC-AUC detector | ROC-AUC Phase 3 | Difference |
+|---|---|---|---|---|---|---|
+| **All** | 0.242 | 0.626 | **-0.385** [-0.474, -0.293] | 0.546 | 0.834 | **-0.289** [-0.355, -0.220] |
+| Hand | 0.352 | 0.641 | -0.289 [-0.414, -0.152] | 0.526 | 0.777 | -0.250 [-0.351, -0.145] |
+| Leg | 0.255 | 0.623 | -0.368 [-0.515, -0.204] | 0.673 | 0.844 | -0.172 [-0.279, -0.059] |
+| Hip | 0.198 | 0.724 | -0.526 [-0.733, -0.229] | 0.408 | 0.834 | -0.425 [-0.682, -0.162] |
+| Shoulder | 0.262 | 0.651 | -0.388 [-0.628, -0.029] | 0.648 | 0.820 | -0.171 [-0.381, +0.076] |
+
+Phase 3 is better on every test comparison whose CI excludes 0, which is every one except the shoulder ROC-AUC
+difference.
+
+**Hip and shoulder: CI half-widths (smallest detectable effect).**
+
+| Region | AP@50 | AP@50:95 | Recall | Precision | F1 | Recall, IoU >= 0.3 | PR-AUC difference | ROC-AUC difference |
+|---|---|---|---|---|---|---|---|---|
+| Hip (11 boxes, 11 fractured images) | 0.011 | 0.001 | 0.150 | 0.005 | 0.010 | 0.222 | 0.252 | 0.260 |
+| Shoulder (14 boxes, 12 fractured images) | 0 * | 0 * | 0 * | 0 * | 0 * | 0.222 | 0.300 | 0.229 |
+
+\* Not precision: the detector hits no shoulder test box at IoU 0.5, so every bootstrap resample is 0 and the CI
+collapses to [0, 0]. Shoulder's IoU 0.5 metrics are "not resolvable with this test set" (for scale, not
+pre-registered: the exact binomial 95% upper bound on recall with 0 of 14 hits is 23%). The shoulder ROC-AUC
+difference (CI includes 0) is likewise not resolvable. Hip's AP@50 CI (0.000-0.023) and recall CI (0-30%, 1 hit of
+11) are too wide to say more than "near zero".
+
+**Verdict.** The pre-registered sliding-window detector does not localize fractures, in CV or on the test (test
+AP@50 0.0003; 6 of 176 boxes found at IoU 0.5 although 93.8% are reachable), and its best-window score is a much worse
+image classifier than Phase 3 (test ROC-AUC 0.546 against 0.834). This is the Phase 7 result.
 
 *Run note: the first `--summarize` run (started 05:25) stopped with exit code 4 after printing its first line, with no
 traceback (stderr was not logged), no exit line and no outputs. No code path in the summary exits with 4 (an exception
