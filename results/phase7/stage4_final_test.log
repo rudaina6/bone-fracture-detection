@@ -1,0 +1,24 @@
+    4 configs x 5 folds = 20 fits
+T1: tune_cv on all training round-0 patches -> C=0.1 (final_c.json: 0.1)
+T2: mining round 1: 65320 hard negatives -> 79364 patches
+T2: mining round 2: 65320 hard negatives -> 144684 patches
+T4: lock written -> D:\bone-fracture-detection\results\phase7\TEST_EVALUATED.json
+
+=== TEST, Phase 7 detector (used once) ===
+   group  n_images  n_boxes  reach_iou50  ap50  ap50_lo  ap50_hi  ap50_half_width  ap50_95  ap50_95_lo  ap50_95_hi  ap50_95_half_width  recall  recall_lo  recall_hi  recall_half_width  precision  precision_lo  precision_hi  precision_half_width    f1  f1_lo  f1_hi  f1_half_width  recall_iou30  recall_iou30_lo  recall_iou30_hi  recall_iou30_half_width
+ overall       817      176        0.938 0.000      0.0    0.001            0.000      0.0         0.0       0.000               0.000   0.034      0.011      0.063              0.026      0.003         0.001         0.005                 0.002 0.005  0.002  0.009          0.004         0.080            0.042            0.120                    0.039
+    hand       256       95        0.989 0.001      0.0    0.004            0.002      0.0         0.0       0.001               0.001   0.032      0.000      0.074              0.037      0.006         0.000         0.014                 0.007 0.011  0.000  0.024          0.012         0.053            0.011            0.105                    0.047
+     leg       425       53        0.830 0.000      0.0    0.001            0.000      0.0         0.0       0.000               0.000   0.038      0.000      0.098              0.049      0.002         0.000         0.004                 0.002 0.003  0.000  0.008          0.004         0.075            0.018            0.154                    0.068
+     hip        64       11        1.000 0.002      0.0    0.023            0.011      0.0         0.0       0.002               0.001   0.091      0.000      0.300              0.150      0.003         0.000         0.010                 0.005 0.006  0.000  0.020          0.010         0.182            0.000            0.444                    0.222
+shoulder        67       14        0.929 0.000      0.0    0.000            0.000      0.0         0.0       0.000               0.000   0.000      0.000      0.000              0.000      0.000         0.000         0.000                 0.000 0.000  0.000  0.000          0.000         0.214            0.000            0.444                    0.222
+
+=== TEST, image level: best-window score vs Phase 3 test scores (paired) ===
+   group  det_pr_auc  p3_pr_auc  det_roc_auc  p3_roc_auc  d_pr_auc  d_pr_auc_lo  d_pr_auc_hi  d_roc_auc  d_roc_auc_lo  d_roc_auc_hi
+ overall       0.242      0.626        0.546       0.834    -0.385       -0.474       -0.293     -0.289        -0.355        -0.220
+    hand       0.352      0.641        0.526       0.777    -0.289       -0.414       -0.152     -0.250        -0.351        -0.145
+     leg       0.255      0.623        0.673       0.844    -0.368       -0.515       -0.204     -0.172        -0.279        -0.059
+     hip       0.198      0.724        0.408       0.834    -0.526       -0.733       -0.229     -0.425        -0.682        -0.162
+shoulder       0.262      0.651        0.648       0.820    -0.388       -0.628       -0.029     -0.171        -0.381         0.076
+
+Done in 10.8 min.
+exit 0

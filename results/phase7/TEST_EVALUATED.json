@@ -1,0 +1,52 @@
+{
+ "window_types": [
+  [
+   16,
+   16
+  ],
+  [
+   16,
+   32
+  ],
+  [
+   32,
+   16
+  ],
+  [
+   40,
+   40
+  ],
+  [
+   40,
+   80
+  ],
+  [
+   80,
+   40
+  ],
+  [
+   64,
+   64
+  ],
+  [
+   64,
+   128
+  ],
+  [
+   128,
+   64
+  ]
+ ],
+ "C": 0.1,
+ "rounds": 2,
+ "hard_negatives": [
+  65320,
+  65320
+ ],
+ "threshold": 0.7413978697954893,
+ "threshold_source": "detection CV (every outer fold chose the final C)",
+ "nms_iou": 0.3,
+ "keep_per_image": 10,
+ "n_patches": 144684,
+ "date": "2026-11-22T15:39:59"
+}
