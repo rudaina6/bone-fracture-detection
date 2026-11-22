@@ -1,0 +1,4 @@
+3266 training images (576 fractured, 748 boxes)
+    4 configs x 5 folds = 20 fits
+final C = 0.1 (patch PR-AUC per C: {'0.001': 0.8045419596626205, '0.01': 0.8550595590972596, '0.1': 0.8680242233800268, '1': 0.8667654455322534})
+exit 0
