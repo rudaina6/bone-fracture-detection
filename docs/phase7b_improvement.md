@@ -226,6 +226,14 @@ B6. **The test runs only if the CV-selected localizer beats BOTH S1 (stage 1 alo
 
 Storage: proposal indices (16,330 x 1,000, about 65 MB) in `features/phase7b/` (not committed).
 
+*[Stage 2 timing, 2026-11-22, before the CV (`results/phase7b/timing.json`, `stage2_timing.log`): one fit of every
+configuration on a full-size training set (30,352 rows) took 151-1,245 s for HGB and 82-579 s for RF, much more and
+much more variable than the 20 s / 60 s assumed above (the same HGB configuration took 56 s in a fresh process, so
+part of it is contention on this machine). Projected stage-2 fits of the CV: 24.2 h with the full grids, 12.0 h with
+the fallback grids; other CV steps 0.6 h. The rule (more than 6 h) therefore selects the **fallback grids**, which
+`--grid auto` reads from `timing.json`. The projection with the fallback grids is still above 6 h; how to proceed
+was put to the STOP 2 review before any CV run.]*
+
 ## Final test (only if B6 passes; run once, after approval; post-hoc follow-up)
 
 T0. `results/phase7b/cv_summary.json` must record that B6 passed (the selected localizer beats S1 and P7 on fold-mean

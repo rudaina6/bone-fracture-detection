@@ -1,0 +1,20 @@
+3266 training images (576 fractured, 748 boxes)
+    4 configs x 4 folds = 16 fits
+  hgb {'max_leaf_nodes': 15, 'min_samples_leaf': 20} wc: fit 549.3 s on 30352 rows, predict 65k 2.2 s
+  hgb {'max_leaf_nodes': 15, 'min_samples_leaf': 20} w: fit 151.1 s on 30352 rows, predict 65k 1.6 s
+  hgb {'max_leaf_nodes': 15, 'min_samples_leaf': 100} wc: fit 267.8 s on 30352 rows, predict 65k 2.1 s
+  hgb {'max_leaf_nodes': 15, 'min_samples_leaf': 100} w: fit 181.4 s on 30352 rows, predict 65k 1.8 s
+  hgb {'max_leaf_nodes': 63, 'min_samples_leaf': 20} wc: fit 352.2 s on 30352 rows, predict 65k 3.9 s
+  hgb {'max_leaf_nodes': 63, 'min_samples_leaf': 20} w: fit 208.8 s on 30352 rows, predict 65k 1.9 s
+  hgb {'max_leaf_nodes': 63, 'min_samples_leaf': 100} wc: fit 204.3 s on 30352 rows, predict 65k 2.5 s
+  hgb {'max_leaf_nodes': 63, 'min_samples_leaf': 100} w: fit 1244.5 s on 30352 rows, predict 65k 3.8 s
+  rf {'max_features': 'sqrt', 'min_samples_leaf': 1} wc: fit 118.1 s on 30352 rows, predict 65k 4.8 s
+  rf {'max_features': 'sqrt', 'min_samples_leaf': 1} w: fit 95.4 s on 30352 rows, predict 65k 4.6 s
+  rf {'max_features': 'sqrt', 'min_samples_leaf': 10} wc: fit 97.4 s on 30352 rows, predict 65k 4.2 s
+  rf {'max_features': 'sqrt', 'min_samples_leaf': 10} w: fit 82.1 s on 30352 rows, predict 65k 3.9 s
+  rf {'max_features': 0.2, 'min_samples_leaf': 1} wc: fit 578.9 s on 30352 rows, predict 65k 4.5 s
+  rf {'max_features': 0.2, 'min_samples_leaf': 1} w: fit 373.4 s on 30352 rows, predict 65k 4.6 s
+  rf {'max_features': 0.2, 'min_samples_leaf': 10} wc: fit 485.8 s on 30352 rows, predict 65k 3.9 s
+  rf {'max_features': 0.2, 'min_samples_leaf': 10} w: fit 298.3 s on 30352 rows, predict 65k 3.5 s
+projection: stage-2 fits 24.2 h (full grids) / 12.0 h (fallback); other CV steps 0.6 h -> FALLBACK grids
+exit 0
