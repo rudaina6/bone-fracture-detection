@@ -1,0 +1,42 @@
+3266 training images (576 fractured, 748 boxes)
+    figure -> D:\bone-fracture-detection\results\figures\phase7_cv_rounds.png
+    figure -> D:\bone-fracture-detection\results\figures\phase7_cv_examples.png
+
+=== Detection CV (training images, out of fold), D1 round = 2 ===
+   group  n_images  n_boxes  reach_iou50  ap50  ap50_lo  ap50_hi  ap50_95  ap50_95_lo  ap50_95_hi  ap50_pooled  recall  recall_lo  recall_hi  precision  precision_lo  precision_hi    f1  f1_lo  f1_hi  recall_iou30  recall_iou30_lo  recall_iou30_hi
+ overall      3266      748        0.938 0.000      0.0    0.001      0.0         0.0       0.000          0.0   0.024      0.014      0.035      0.002         0.001         0.003 0.004  0.002  0.006         0.096            0.076            0.119
+    hand      1025      389        0.961 0.001      0.0    0.004      0.0         0.0       0.001          0.0   0.013      0.003      0.025      0.003         0.001         0.005 0.005  0.001  0.009         0.067            0.043            0.092
+     leg      1699      250        0.892 0.000      0.0    0.001      0.0         0.0       0.000          0.0   0.040      0.018      0.066      0.002         0.001         0.004 0.004  0.002  0.007         0.140            0.098            0.185
+     hip       256       49        0.918 0.000      0.0    0.002      0.0         0.0       0.000          0.0   0.061      0.000      0.140      0.002         0.000         0.005 0.004  0.000  0.010         0.184            0.071            0.314
+shoulder       267       50        1.000 0.000      0.0    0.000      0.0         0.0       0.000          0.0   0.000      0.000      0.000      0.000         0.000         0.000 0.000  0.000  0.000         0.040            0.000            0.100
+
+=== AP@50 per mining round (fold mean, 95% CI) ===
+round    group  ap50  ap50_lo  ap50_hi
+    0  overall 0.001    0.001    0.002
+    0     hand 0.003    0.002    0.010
+    0      leg 0.002    0.001    0.005
+    0      hip 0.000    0.000    0.003
+    0 shoulder 0.000    0.000    0.000
+    1  overall 0.000    0.000    0.000
+    1     hand 0.000    0.000    0.000
+    1      leg 0.000    0.000    0.000
+    1      hip 0.000    0.000    0.000
+    1 shoulder 0.000    0.000    0.000
+    2  overall 0.000    0.000    0.001
+    2     hand 0.001    0.000    0.004
+    2      leg 0.000    0.000    0.001
+    2      hip 0.000    0.000    0.002
+    2 shoulder 0.000    0.000    0.000
+2 - 1  overall 0.000    0.000    0.001
+D1: round 2 - round 1 = +0.000 [+0.000, +0.001] -> 2 rounds (plan)
+
+=== Image level: best-window score vs Phase 3 (fold-mean, paired) ===
+   group  det_pr_auc  p3_pr_auc  d_pr_auc  d_pr_auc_lo  d_pr_auc_hi  det_roc_auc  p3_roc_auc  d_roc_auc  d_roc_auc_lo  d_roc_auc_hi
+ overall       0.196      0.602    -0.405       -0.438       -0.364        0.511       0.822     -0.311        -0.341        -0.279
+    hand       0.356      0.637    -0.280       -0.327       -0.220        0.545       0.759     -0.213        -0.261        -0.165
+     leg       0.151      0.584    -0.434       -0.495       -0.346        0.542       0.845     -0.303        -0.359        -0.246
+     hip       0.218      0.531    -0.313       -0.416       -0.181        0.423       0.766     -0.343        -0.447        -0.236
+shoulder       0.311      0.636    -0.325       -0.422       -0.189        0.611       0.801     -0.190        -0.289        -0.097
+
+C per outer fold [0.1, 0.1, 0.1, 0.1, 0.1]; final C 0.1; box-score threshold 0.7413978697954893 (detection CV (every outer fold chose the final C))
+exit 0
