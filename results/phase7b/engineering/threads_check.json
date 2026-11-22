@@ -1,0 +1,226 @@
+{
+ "rows": 30352,
+ "features": 564,
+ "logical_cores": 8,
+ "physical_cores": 4,
+ "cfg": {
+  "hgb": {
+   "max_leaf_nodes": 63,
+   "min_samples_leaf": 20
+  },
+  "rf": {
+   "max_features": "sqrt",
+   "min_samples_leaf": 1
+  }
+ },
+ "main_threadpools": [
+  [
+   "openblas",
+   8
+  ],
+  [
+   "openblas",
+   8
+  ],
+  [
+   "openmp",
+   8
+  ]
+ ],
+ "runs": {
+  "hgb: (a) fresh process": {
+   "wall_s": 217.83215641975403,
+   "system_cpu_pct": 35.330697674418595,
+   "own_cpu_pct": 28.454302325581395,
+   "others_cpu_pct": 6.8763953488372,
+   "fit_s": 214.5425899028778
+  },
+  "hgb: (b) in pipeline, as now": {
+   "wall_s": 328.8004319667816,
+   "system_cpu_pct": 40.66459627329193,
+   "own_cpu_pct": 28.329619565217392,
+   "others_cpu_pct": 12.334976708074535
+  },
+  "hgb: (c) in pipeline, OpenMP threads=1": {
+   "wall_s": 554.242285490036,
+   "system_cpu_pct": 30.036715867158673,
+   "own_cpu_pct": 11.865959409594097,
+   "others_cpu_pct": 18.170756457564575
+  },
+  "hgb: (c) in pipeline, OpenMP threads=2": {
+   "wall_s": 396.64986968040466,
+   "system_cpu_pct": 37.3208762886598,
+   "own_cpu_pct": 18.300740979381445,
+   "others_cpu_pct": 19.020135309278352
+  },
+  "hgb: (c) in pipeline, OpenMP threads=4": {
+   "wall_s": 192.3401038646698,
+   "system_cpu_pct": 46.952105263157904,
+   "own_cpu_pct": 30.257894736842104,
+   "others_cpu_pct": 16.6942105263158
+  },
+  "hgb: (c) 4 concurrent fits, 1 thread(s) each": {
+   "wall_s": 325.72090101242065,
+   "system_cpu_pct": 92.20911949685535,
+   "own_cpu_pct": 70.84748427672956,
+   "others_cpu_pct": 21.36163522012579,
+   "per_fit_s": [
+    319.8,
+    320.0,
+    320.1,
+    321.0
+   ],
+   "effective_s_per_fit": 81.43022525310516,
+   "worker_threadpools": [
+    [
+     "openblas",
+     2
+    ],
+    [
+     "openblas",
+     2
+    ],
+    [
+     "openmp",
+     2
+    ]
+   ],
+   "workers_x_threads": 4,
+   "max_diff_between_workers": 0.0
+  },
+  "hgb: (c) 4 concurrent fits, 2 thread(s) each": {
+   "wall_s": 323.41496181488037,
+   "system_cpu_pct": 90.04794952681388,
+   "own_cpu_pct": 72.85717665615142,
+   "others_cpu_pct": 17.190772870662457,
+   "per_fit_s": [
+    316.0,
+    317.1,
+    316.9,
+    317.0
+   ],
+   "effective_s_per_fit": 80.85374045372009,
+   "worker_threadpools": [
+    [
+     "openblas",
+     2
+    ],
+    [
+     "openblas",
+     2
+    ],
+    [
+     "openmp",
+     2
+    ]
+   ],
+   "workers_x_threads": 8,
+   "max_diff_between_workers": 0.0
+  },
+  "rf: (a) fresh process": {
+   "wall_s": 70.7797634601593,
+   "system_cpu_pct": 60.16428571428571,
+   "own_cpu_pct": 45.43821428571428,
+   "others_cpu_pct": 14.72607142857143,
+   "fit_s": 68.90332102775574
+  },
+  "rf: (b) in pipeline, as now": {
+   "wall_s": 56.61289668083191,
+   "system_cpu_pct": 62.08749999999999,
+   "own_cpu_pct": 47.316964285714285,
+   "others_cpu_pct": 14.770535714285707
+  },
+  "rf: (c) in pipeline, n_jobs=1": {
+   "wall_s": 185.809396982193,
+   "system_cpu_pct": 22.035519125683063,
+   "own_cpu_pct": 12.413592896174864,
+   "others_cpu_pct": 9.6219262295082
+  },
+  "rf: (c) in pipeline, n_jobs=2": {
+   "wall_s": 106.39389181137085,
+   "system_cpu_pct": 37.73714285714286,
+   "own_cpu_pct": 24.413095238095238,
+   "others_cpu_pct": 13.324047619047619
+  },
+  "rf: (c) in pipeline, n_jobs=8": {
+   "wall_s": 29.571552991867065,
+   "system_cpu_pct": 98.8103448275862,
+   "own_cpu_pct": 85.00517241379308,
+   "others_cpu_pct": 13.80517241379313
+  },
+  "rf: (c) 4 concurrent fits, 1 thread(s) each": {
+   "wall_s": 231.25992465019226,
+   "system_cpu_pct": 58.391266375545854,
+   "own_cpu_pct": 48.24781659388646,
+   "others_cpu_pct": 10.143449781659392,
+   "per_fit_s": [
+    225.8,
+    227.3,
+    225.5,
+    225.1
+   ],
+   "effective_s_per_fit": 57.814981162548065,
+   "worker_threadpools": [
+    [
+     "openblas",
+     2
+    ],
+    [
+     "openblas",
+     2
+    ],
+    [
+     "openmp",
+     2
+    ]
+   ],
+   "workers_x_threads": 4,
+   "max_diff_between_workers": 0.0
+  },
+  "rf: (c) 4 concurrent fits, 2 thread(s) each": {
+   "wall_s": 176.51454710960388,
+   "system_cpu_pct": 98.01929824561402,
+   "own_cpu_pct": 86.46834795321637,
+   "others_cpu_pct": 11.550950292397658,
+   "per_fit_s": [
+    171.6,
+    172.6,
+    171.0,
+    171.6
+   ],
+   "effective_s_per_fit": 44.12863677740097,
+   "worker_threadpools": [
+    [
+     "openblas",
+     2
+    ],
+    [
+     "openblas",
+     2
+    ],
+    [
+     "openmp",
+     2
+    ]
+   ],
+   "workers_x_threads": 8,
+   "max_diff_between_workers": 0.0
+  }
+ },
+ "max_abs_pred_diff_vs_as_now": {
+  "hgb_fresh": 0.0,
+  "hgb_now": 0.0,
+  "hgb_lim1": 0.0,
+  "hgb_lim2": 0.0,
+  "hgb_lim4": 0.0,
+  "hgb_conc1": 0.0,
+  "hgb_conc2": 0.0,
+  "rf_fresh": 0.0,
+  "rf_now": 0.0,
+  "rf_lim1": 0.0,
+  "rf_lim2": 0.0,
+  "rf_lim8": 0.0,
+  "rf_conc1": 0.0,
+  "rf_conc2": 0.0
+ }
+}

@@ -117,6 +117,21 @@ def calibration_monotone_per_type():
 
 
 @check
+def inner_parallel_equals_sequential():
+    rng = np.random.default_rng(3)
+    X = rng.random((600, 40)).astype(np.float32)
+    y = (X[:, 0] + 0.3 * rng.random(600) > 0.9).astype(int)
+    sets = dict(train=dict(X=X, y=y, fold=np.arange(600) % 4), val={j: dict(X=X[:50]) for j in range(4)})
+    cols = np.arange(40)
+    for name, cfgs in (("hgb", C.GRIDS["fallback"]["hgb"]), ("rf", C.GRIDS["fallback"]["rf"][:1])):
+        got = C.inner_predictions(name, cfgs, sets, cols, 42)
+        for (ci, j), p in got.items():
+            m = sets["train"]["fold"] != j
+            ref = C.predict(C.fit_clf(name, cfgs[ci], X[m], y[m], 42, n_jobs=1, threads=1), X[:50])
+            assert np.abs(p - ref).max() == 0, (name, ci, j)
+
+
+@check
 def plan_and_sources():
     plan = C.stage1_plan(range(5))
     assert len(plan) == 15

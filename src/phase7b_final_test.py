@@ -104,7 +104,7 @@ def main(argv=None):
     sets = C.stage2_sets(T, R0, args, None, want_val=False)
     C.check_sets(sets, T, None)
     cols = C.FEAT_COLS[sel["feat"]]
-    model = C.fit_clf(sel["clf"], fp["cfg"], sets["train"]["X"][:, cols], sets["train"]["y"], args.seed, args.n_jobs)
+    model = C.fit_clf(sel["clf"], fp["cfg"], sets["train"]["X"][:, cols], sets["train"]["y"], args.seed)
     cal = fp["calibration"] if sel["cal"] else None
     print(f"T2: stage 2 {sel['variant']} {fp['cfg']} on {len(sets['train']['y'])} rows "
           f"({int(sets['train']['y'].sum())} positives)", flush=True)

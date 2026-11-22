@@ -56,6 +56,11 @@ VARIANTS = [f"{LETTER[c]}-{f}{cal}" for cal in ("", "-cal") for f in FEATS for c
 REGIONS = P.REGIONS
 GROUPS = ["overall"] + REGIONS
 FALLBACK_HOURS = 6.0
+# Thread settings (engineering check, results/phase7b/engineering/threads_check.json; predictions are identical in
+# every setting): one HGB fit at a time uses 4 OpenMP threads (8 threads on 4 physical cores were slower); HGB inner
+# fits run 4 at a time in loky workers with 2 threads each (4 x 2 = 8 logical cores); RF fits run one at a time on
+# all 8 logical cores.
+HGB_THREADS, INNER_WORKERS, INNER_THREADS, RF_JOBS = 4, 4, 2, 8
 
 
 def vname(clf, feat, cal):
@@ -493,10 +498,40 @@ def balanced_weights(y):
     return np.where(y == 1, n / (2 * max(npos, 1)), n / (2 * max(n - npos, 1)))
 
 
-def fit_clf(name, cfg, X, y, seed, n_jobs):
-    m = make_clf(name, cfg, seed, n_jobs)
-    m.fit(X, y, sample_weight=balanced_weights(y))
+def fit_clf(name, cfg, X, y, seed, n_jobs=None, threads=None):
+    from threadpoolctl import threadpool_limits
+    m = make_clf(name, cfg, seed, RF_JOBS if n_jobs is None else n_jobs)
+    if name == "hgb":
+        with threadpool_limits(threads or HGB_THREADS, user_api="openmp"):
+            m.fit(X, y, sample_weight=balanced_weights(y))
+    else:
+        m.fit(X, y, sample_weight=balanced_weights(y))
     return m
+
+
+def _inner_job(name, cfg, X, y, Xv, seed):
+    return predict(fit_clf(name, cfg, X, y, seed, n_jobs=1, threads=INNER_THREADS), Xv)
+
+
+def inner_predictions(name, cfgs, sets, cols, seed):
+    """Inner-fold fits of every config: {(config index, inner fold): validation predictions}. HGB fits run
+    INNER_WORKERS at a time with INNER_THREADS threads each; RF fits run one at a time on RF_JOBS cores."""
+    tr, val = sets["train"], sets["val"]
+    jobs = [(ci, j) for ci in range(len(cfgs)) for j in val]
+
+    def job(ci, j):
+        m = tr["fold"] != j
+        assert j not in set(tr["fold"][m])
+        return name, cfgs[ci], tr["X"][m][:, cols], tr["y"][m], val[j]["X"][:, cols], seed
+    if name == "hgb":
+        out = Parallel(n_jobs=INNER_WORKERS, backend="loky", inner_max_num_threads=INNER_THREADS)(
+            delayed(_inner_job)(*job(ci, j)) for ci, j in jobs)
+    else:
+        out = []
+        for ci, j in jobs:
+            a = job(ci, j)
+            out.append(predict(fit_clf(name, a[1], a[2], a[3], seed), a[4]))
+    return dict(zip(jobs, out))
 
 
 def predict(m, X):
@@ -515,34 +550,27 @@ def tune(name, feat, sets, grid, args):
     scores and the best config's inner out-of-fold validation scores (for calibration)."""
     cols = FEAT_COLS[feat]
     tr, val = sets["train"], sets["val"]
+    pred = inner_predictions(name, grid, sets, cols, args.seed)
     scores, oof = [], []
-    for cfg in grid:
-        aps, o = [], {}
-        for j, v in val.items():
-            m = tr["fold"] != j
-            assert j not in set(tr["fold"][m])
-            mdl = fit_clf(name, cfg, tr["X"][m][:, cols], tr["y"][m], args.seed, args.n_jobs)
-            s = predict(mdl, v["X"][:, cols])
-            o[j] = s
-            aps.append(weighted_ap(s, v["y"], v["w"]))
+    for ci in range(len(grid)):
+        o = {j: pred[(ci, j)] for j in val}
+        aps = [weighted_ap(o[j], val[j]["y"], val[j]["w"]) for j in val]
         scores.append(float(np.nanmean(aps)) if np.isfinite(aps).any() else np.nan)
         oof.append(o)
     best = int(np.nanargmax(scores)) if np.isfinite(scores).any() else 0
-    model = fit_clf(name, grid[best], tr["X"][:, cols], tr["y"], args.seed, args.n_jobs)
+    model = fit_clf(name, grid[best], tr["X"][:, cols], tr["y"], args.seed)
     return dict(model=model, cfg=grid[best], cfg_index=best, inner_scores=scores, oof=oof[best])
 
 
 def fit_fixed(name, feat, cfg, sets, args, want_oof=True):
     """Fixed config (threshold CV / final): refit on the whole training set, inner out-of-fold scores if needed."""
     cols = FEAT_COLS[feat]
-    tr, val = sets["train"], sets["val"]
+    tr = sets["train"]
     oof = {}
     if want_oof:
-        for j, v in val.items():
-            m = tr["fold"] != j
-            oof[j] = predict(fit_clf(name, cfg, tr["X"][m][:, cols], tr["y"][m], args.seed, args.n_jobs),
-                             v["X"][:, cols])
-    model = fit_clf(name, cfg, tr["X"][:, cols], tr["y"], args.seed, args.n_jobs)
+        pred = inner_predictions(name, [cfg], sets, cols, args.seed)
+        oof = {j: pred[(0, j)] for j in sets["val"]}
+    model = fit_clf(name, cfg, tr["X"][:, cols], tr["y"], args.seed)
     return dict(model=model, cfg=cfg, oof=oof)
 
 
@@ -1123,27 +1151,11 @@ def leakage_gates(T, R0, args, log):
     return out
 
 
-def run_timing(T, R0, args):
-    """Timing on real data: proposals + features + scoring for 10 training images; each stage-2 config fitted once on
-    a full-size training set; projection of the CV runtime and the fallback-grid decision."""
-    from sklearn.ensemble import HistGradientBoostingClassifier  # noqa: F401  (import cost outside the timings)
+def timing_set(T, R0, args, m=None):
+    """A full-size stage-2 training set for timing (not used for any result): positives of folds 1-4 and 10:1 negatives
+    from the stage-1 proposals of 600 of their images; plus a 65k-row validation-like block."""
     rng = np.random.default_rng(1)
-    t0 = time.time()
-    m = fit_stage1(T, R0, [1, 2, 3, 4], args.seed, args.n_jobs)
-    t_stage1 = time.time() - t0
-    picks = rng.choice(np.flatnonzero(T.fold.to_numpy() != 0), 10, replace=False)
-    t_prop, t_feat = [], []
-    for n in picks:
-        t1 = time.time()
-        r = _prop_chunk([(n, T.image_id[n], T.boxes[n])], args.cache_dir, m["w"], m["b"], K_PROP)[0]
-        t2 = time.time()
-        maps, geom = W.load_maps(P.map_path(args.cache_dir, T.image_id[n]))
-        idx = W.window_index(geom["content"])
-        B, Tt = W.index_boxes(idx)
-        window_rows(maps, idx, Tt, r["prop"], r["s1"])
-        t_prop.append(t2 - t1)
-        t_feat.append(time.time() - t2)
-    # a full-size stage-2 training set: positives of folds 1-4, 10:1 negatives from proposals of 600 of their images
+    m = m or fit_stage1(T, R0, [1, 2, 3, 4], args.seed, args.n_jobs)
     use = np.flatnonzero(T.fold.to_numpy() != 0)
     frac = [n for n in use if T.boxes[n]]
     normal = [n for n in use if not T.boxes[n]]
@@ -1165,19 +1177,46 @@ def run_timing(T, R0, args):
     y = np.r_[np.ones(sum(len(r["pos"]) for r in rows if "pos" in r), int), np.zeros(sum(len(r["neg"]) for r in rows), int)]
     Xv = np.concatenate([r["val"] for r in rows])
     Xv = np.concatenate([Xv] * int(np.ceil(65000 / len(Xv))))[:65000]
+    return X, y, Xv, t_rows, len(jobs)
+
+
+def run_timing(T, R0, args):
+    """Timing on real data: proposals + features + scoring for 10 training images; each stage-2 config fitted once on
+    a full-size training set; projection of the CV runtime and the fallback-grid decision."""
+    from sklearn.ensemble import HistGradientBoostingClassifier  # noqa: F401  (import cost outside the timings)
+    rng = np.random.default_rng(1)
+    t0 = time.time()
+    m = fit_stage1(T, R0, [1, 2, 3, 4], args.seed, args.n_jobs)
+    t_stage1 = time.time() - t0
+    picks = rng.choice(np.flatnonzero(T.fold.to_numpy() != 0), 10, replace=False)
+    t_prop, t_feat = [], []
+    for n in picks:
+        t1 = time.time()
+        r = _prop_chunk([(n, T.image_id[n], T.boxes[n])], args.cache_dir, m["w"], m["b"], K_PROP)[0]
+        t2 = time.time()
+        maps, geom = W.load_maps(P.map_path(args.cache_dir, T.image_id[n]))
+        idx = W.window_index(geom["content"])
+        B, Tt = W.index_boxes(idx)
+        window_rows(maps, idx, Tt, r["prop"], r["s1"])
+        t_prop.append(t2 - t1)
+        t_feat.append(time.time() - t2)
+    X, y, Xv, t_rows, n_jobs_rows = timing_set(T, R0, args, m)
+    # stage-2 cost, measured on the code path the CV uses: per configuration, the 4 inner fits (each on 3/4 of the rows,
+    # predicting a 65k-row validation block) through inner_predictions, then one refit on all rows
+    fake = rng.integers(0, 4, len(y))
+    tsets = dict(train=dict(X=X, y=y, fold=fake), val={j: dict(X=Xv) for j in range(4)})
     fits = []
     for clf in CLFS:
-        for cfg in GRIDS["full"][clf]:
-            for feat in FEATS:
-                cols = FEAT_COLS[feat]
+        for feat in FEATS:
+            cols = FEAT_COLS[feat]
+            for cfg in GRIDS["full"][clf]:
                 t1 = time.time()
-                mdl = fit_clf(clf, cfg, X[:, cols], y, args.seed, args.n_jobs)
-                tf = time.time() - t1
+                inner_predictions(clf, [cfg], tsets, cols, args.seed)
+                ti = time.time() - t1
                 t1 = time.time()
-                predict(mdl, Xv[:, cols])
-                fits.append(dict(clf=clf, cfg=cfg, feat=feat, rows=len(y), fit_s=tf, predict_65k_s=time.time() - t1))
-                print(f"  {clf} {cfg} {feat}: fit {tf:.1f} s on {len(y)} rows, predict 65k {fits[-1]['predict_65k_s']:.1f} s",
-                      flush=True)
+                fit_clf(clf, cfg, X[:, cols], y, args.seed)
+                fits.append(dict(clf=clf, cfg=cfg, feat=feat, rows=len(y), inner_4fits_s=ti, refit_s=time.time() - t1))
+                print(f"  {clf} {cfg} {feat}: 4 inner fits {ti:.1f} s, refit {fits[-1]['refit_s']:.1f} s", flush=True)
     F = pd.DataFrame(fits)
 
     def stage2_hours(grid):
@@ -1185,22 +1224,21 @@ def run_timing(T, R0, args):
         for clf in CLFS:
             for feat in FEATS:
                 g = F[(F.clf == clf) & (F.feat == feat) & F.cfg.map(lambda c: c in grid[clf])]
-                inner = (4 * 0.75 * g.fit_s + 4 * g.predict_65k_s).sum()       # 4 inner fits at 3/4 size + validation
-                refit = g.fit_s.mean()
-                tot += inner + refit
+                tot += g.inner_4fits_s.sum() + g.refit_s.mean()                 # inner tuning + one refit
         return 5 * tot / 3600
     per_img_prop, per_img_feat = float(np.mean(t_prop)), float(np.mean(t_feat))
     eff = max(1.0, args.n_jobs * 0.6)                                  # Phase 7: 4 workers gave about 2.5x
     h_stage2_full, h_stage2_fb = stage2_hours(GRIDS["full"]), stage2_hours(GRIDS["fallback"])
-    other_h = (15 * t_stage1 + 16330 * per_img_prop / eff + 5 * t_rows * (len(T) * 0.8 / len(jobs))
-               + len(T) * per_img_feat / eff + 4 * len(T) * K_PROP / 65000 * F.predict_65k_s.mean() / 4) / 3600
+    other_h = (15 * t_stage1 + 16330 * per_img_prop / eff + 5 * t_rows * (len(T) * 0.8 / n_jobs_rows)
+               + len(T) * per_img_feat / eff + 4 * len(T) * K_PROP / 65000 * 4.0) / 3600   # predict: ~4 s / 65k rows
     use_fb = h_stage2_full > FALLBACK_HOURS
     est = dict(stage1_fit_s=t_stage1, proposals_s_per_image=per_img_prop, features_s_per_image_1000=per_img_feat,
                train_rows=int(len(y)), train_rows_build_s=t_rows, fits=fits, stage2_fits_hours_full=h_stage2_full,
                stage2_fits_hours_fallback=h_stage2_fb, other_cv_hours=other_h,
                cv_total_hours_full=h_stage2_full + other_h, cv_total_hours_fallback=h_stage2_fb + other_h,
                fallback_rule=f"fallback grids if the stage-2 fits of the CV project more than {FALLBACK_HOURS} h",
-               use_fallback=bool(use_fb), n_jobs=args.n_jobs, date=pd.Timestamp.now().isoformat(timespec="seconds"))
+               use_fallback=bool(use_fb), n_jobs=args.n_jobs, threads=dict(hgb_single=HGB_THREADS, inner_workers=INNER_WORKERS,
+               inner_threads=INNER_THREADS, rf_jobs=RF_JOBS), date=pd.Timestamp.now().isoformat(timespec="seconds"))
     (args.out_dir / "timing.json").write_text(json.dumps(est, indent=1, default=str))
     print(f"projection: stage-2 fits {h_stage2_full:.1f} h (full grids) / {h_stage2_fb:.1f} h (fallback); other CV "
           f"steps {other_h:.1f} h -> {'FALLBACK grids' if use_fb else 'full grids'}", flush=True)
