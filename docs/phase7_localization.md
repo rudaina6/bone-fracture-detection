@@ -266,14 +266,134 @@ output to `results/phase7/<step>.log`. Every fitting run gets a row in `results/
 
 ## Results
 
-*(Empty until the runs. The protocol above was fixed before any model was trained.)*
+Detection CV on the 3,266 training images, out of fold (Stage 3, 2026-11-22). Everything above was fixed before
+these numbers existed; nothing in the protocol was changed after them. No test image has been loaded. Fold means with
+95% CIs from 2,000 fold-stratified image bootstrap resamples (seed 0). Files: `results/tables/phase7_cv_detection.csv`,
+`phase7_cv_rounds.csv`, `phase7_cv_image_level.csv`; `results/phase7/cv_summary.json`;
+`results/figures/phase7_cv_rounds.png`, `phase7_cv_examples.png`; log `results/phase7/stage3_6_summarize.log`.
 
-### Reproduce (planned)
+**Headline: the sliding-window detector does not localize fractures.** AP@50 is 0.0001 (95% CI 0.0001-0.0005)
+although 93.9% of the boxes are reachable, and its best-window score does not separate fractured from normal images
+(ROC-AUC 0.511; PR-AUC 0.196 at 17.6% prevalence), far below Phase 3's image classifier on the same images (ROC-AUC
+0.822, PR-AUC 0.602).
+
+### Run facts
+
+| Step | Result |
+|---|---|
+| Map cache | 3,266 training images, 50.8 min, 16.5 GB; 0 fractured images with a shape mismatch, 0 boxes outside the content rectangle (16 normal hip/shoulder images are EXIF-rotated relative to master's height/width; they have no boxes, and `train_geometry.csv` holds the loaded shape) |
+| Round-0 patches | 3,511 positive windows (= the design table, per region); negative pools of 40 per image |
+| C per outer fold | 0.1 in all five (patch PR-AUC at C 0.1: 0.863-0.865) |
+| Final detector's C (T1) | 0.1 (`tune_cv` on all training round-0 patches; patch PR-AUC 0.868, against 0.867 at C 1) |
+| Threshold CV | not needed: every outer fold chose the final C (rule D2) |
+| Hard negatives per round | 52,240-52,260 in every fold and both rounds, i.e. 20 per image: the mining cap binds everywhere, as the Stage 2 debug run suggested |
+| Fold runtimes | 4.9, 23.5, 4.6, 7.7 and 7.8 min (folds 0-4) |
+
+### Detection CV (D1 round: 2 mining rounds)
+
+AP is the fold mean. Recall, precision and F1 are at the box-score threshold 0.7414, at IoU 0.5, with counts pooled
+over the folds, and are **optimistic**: the threshold was chosen on these detections. Reachability (IoU >= 0.5) is the
+ceiling on recall.
+
+| Group | Images | Boxes | Reachable | AP@50 | AP@50:95 | Recall | Precision | F1 | Recall, IoU >= 0.3 |
+|---|---|---|---|---|---|---|---|---|---|
+| **All** | 3,266 | 748 | 93.9% | **0.0001** [0.0001, 0.0005] | 0.0000 [0.0000, 0.0001] | 2.4% [1.4, 3.5] | 0.21% [0.12, 0.30] | 0.0038 [0.0021, 0.0056] | 9.6% [7.6, 11.9] |
+| Hand | 1,025 | 389 | 96.1% | 0.0006 [0.0002, 0.0035] | 0.0001 [0.0000, 0.0010] | 1.3% [0.3, 2.5] | 0.28% [0.06, 0.55] | 0.0047 [0.0010, 0.0090] | 6.7% [4.3, 9.2] |
+| Leg | 1,699 | 250 | 89.2% | 0.0002 [0.0001, 0.0007] | 0.0000 [0.0000, 0.0001] | 4.0% [1.8, 6.6] | 0.21% [0.09, 0.36] | 0.0040 [0.0017, 0.0067] | 14.0% [9.8, 18.5] |
+| Hip | 256 | 49 | 91.8% | 0.0004 [0.0000, 0.0020] | 0.0000 [0.0000, 0.0003] | 6.1% [0.0, 14.0] | 0.21% [0.00, 0.49] | 0.0041 [0.0000, 0.0095] | 18.4% [7.1, 31.4] |
+| Shoulder | 267 | 50 | 100% | 0.0000 [0.0000, 0.0004] | 0.0000 [0.0000, 0.0000] | 0.0% | 0.00% | 0.0000 | 4.0% [0.0, 10.0] |
+
+The 19 "other" images (10 boxes) count in "All" only, as in earlier phases. At the threshold the detector keeps 8,767
+boxes on the 3,266 images (2.7 per image; at least one box on 79.5% of the images, normal ones included), and 18 of the
+748 boxes are hit at IoU 0.5 (hand 5, leg 10, hip 3, shoulder 0); 72 at IoU 0.3. Pooled AP@50 over all out-of-fold
+detections (reference only): all 0.0001, hand 0.0003, leg 0.0001, hip 0.0001, shoulder 0.0000.
+
+### Mining rounds and D1
+
+Fold-mean AP@50 after each round (`results/figures/phase7_cv_rounds.png`):
+
+| Round | All | Hand | Leg | Hip | Shoulder |
+|---|---|---|---|---|---|
+| 0 | 0.0011 [0.0007, 0.0023] | 0.0034 [0.0017, 0.0103] | 0.0016 [0.0008, 0.0051] | 0.0003 [0.0000, 0.0026] | 0.0001 [0.0000, 0.0005] |
+| 1 | 0 (no hit) | 0 | 0 | 0 | 0 |
+| 2 | 0.0001 [0.0001, 0.0005] | 0.0006 [0.0002, 0.0035] | 0.0002 [0.0001, 0.0007] | 0.0004 [0.0000, 0.0020] | 0.0000 [0.0000, 0.0004] |
+
+**D1: round 2 minus round 1 = +0.00015 [+0.00008, +0.00052].** Round 2 is not lower than round 1, so **the final
+detector uses 2 mining rounds (plan)**. Round 1 is exactly 0: none of the 10 boxes of any training image hits a box at
+IoU 0.5. Round 0 scored higher than both mined rounds (0.0011), but D1 compares rounds 2 and 1 only and "no other
+choice is made from CV results", so nothing is changed for that; it goes into the report as a finding.
+
+### Image level: best-window score against Phase 3
+
+Fold means on the same 3,266 images and folds; difference = detector minus Phase 3 unified RBF SVM
+(`results/phase3/oof_rbfsvm__none.csv`), `fold_paired_bootstrap`. Chance PR-AUC is the prevalence: all 0.176, hand
+0.298, leg 0.100, hip 0.180, shoulder 0.180.
+
+| Group | PR-AUC detector | PR-AUC Phase 3 | Difference | ROC-AUC detector | ROC-AUC Phase 3 | Difference |
+|---|---|---|---|---|---|---|
+| **All** | 0.196 | 0.602 | **-0.405** [-0.438, -0.364] | 0.511 | 0.822 | **-0.311** [-0.341, -0.279] |
+| Hand | 0.356 | 0.637 | -0.280 [-0.327, -0.220] | 0.545 | 0.759 | -0.213 [-0.261, -0.165] |
+| Leg | 0.151 | 0.584 | -0.434 [-0.495, -0.346] | 0.542 | 0.845 | -0.303 [-0.359, -0.246] |
+| Hip | 0.218 | 0.531 | -0.313 [-0.416, -0.181] | 0.423 | 0.766 | -0.343 [-0.447, -0.236] |
+| Shoulder | 0.311 | 0.636 | -0.325 [-0.422, -0.189] | 0.611 | 0.801 | -0.190 [-0.289, -0.097] |
+
+The detector's best window is close to chance as an image classifier in every region (hip's ROC-AUC is below 0.5),
+and Phase 3 is better everywhere, with every CI excluding 0.
+
+### Operating box-score threshold (D2)
+
+**0.7414**, the F1-optimal score at IoU 0.5 on the pooled round-2 out-of-fold detections (pooled F1 0.0038). Every
+outer fold chose C 0.1 = the final detector's C, so these detections share the final configuration and no threshold
+CV was run. Final test configuration (T1-T3): window set {16, 40, 64} px, C 0.1, 2 mining rounds, threshold 0.7414.
+
+### Example detections
+
+`results/figures/phase7_cv_examples.png`: out-of-fold detections at the threshold on 8 training images. The four
+"good" images (the highest-scoring images with a hit) each carry several false boxes along the bone shafts and joints
+next to the hit. The two "missed" images (lowest top score among images without a hit) have no box above the
+threshold. The two "false alarms" (normal images with the highest top score) are covered in boxes along the long
+bones and the pelvis.
+
+### Checks run after the results (diagnostic, not pre-registered; nothing was chosen from them)
+
+- **Evaluation:** an independent re-implementation (plain-loop IoU, greedy matching and all-point AP; sklearn for the
+  image-level AUCs) reproduces the fold-mean AP@50 of rounds 0 / 1 / 2 (0.00106 / 0 / 0.00015) and the image-level
+  PR-AUC / ROC-AUC (0.196 / 0.511).
+- **Saved CV outputs:** refitting fold 0's round-0 detector from the same patches (C 0.1, seed 42) reproduces its
+  saved detections on 80 fold-0 training images exactly (largest difference 0, scores and boxes).
+- **Geometry:** no round's top box lies in the black padding; ground-truth boxes overlay the fractures in the
+  example figure.
+- **Why AP is near zero:** on 59 fractured fold-0 images, the round-0 detector ranks the image's best positive window
+  (IoU >= 0.5 with a box) 76th of about 24,000 windows (median; quartiles 10th and 275th); it is in the top 0.1% for
+  32% of the images. After NMS keeps 10 boxes, the other high-scoring bone windows win. The share of training boxes
+  hit by any of an image's 10 boxes, at any score, is 11.6% after round 0, 0.0% after round 1 and 5.5% after round 2.
+  After round 1 the top boxes shift towards the 16 x 16 and 16 x 32 windows (46% of top boxes, against 23% after
+  round 0).
+
+**Reading.** The patch classifier separates fracture patches from random patches (patch PR-AUC 0.87 at one positive per
+three negatives), but at detection time an image has about 24,000 windows against about 4 positive windows per box,
+and with HOG/LBP/intensity features a linear model scores bone edges, cortex and joints as high as fracture lines.
+Hard-negative mining with 20 windows per image did not fix that: the first round lost every hit and the second
+recovered a few. This is the "linear patch model" threat listed above at its worst; the test (T1-T6) will measure it
+once.
+
+*Run note: the first `--summarize` run (started 05:25) stopped with exit code 4 after printing its first line, with no
+traceback (stderr was not logged), no exit line and no outputs. No code path in the summary exits with 4 (an exception
+or a failed gate exits with 1 and a message), and the same code on the same CV files completes, so the process was
+terminated from outside. It was rerun unchanged with stderr logged (exit 0, about 10 min); no code, CV output or
+setting was changed.*
+
+### Reproduce
 
 Run with the repository's `.venv` Python.
 ```
-python src/phase7_window_design.py      # window set (done), training boxes only
-python tests/test_phase7.py             # gates and self-tests
-python src/phase7_detect.py ...         # detection CV (training images only), step by step
-python src/phase7_final_test.py         # test set, ONCE, after approval (lock: results/phase7/TEST_EVALUATED.json)
+python src/phase7_window_design.py --sizes 16 40 64   # window set, training boxes only
+python tests/test_phase7.py                           # unit and synthetic self-tests
+python src/phase7_detect.py --gates                   # real-data gates (training images)
+python src/phase7_detect.py --cache                   # map cache: about 50 min, 16.5 GB (not committed)
+python src/phase7_detect.py --patches                 # round-0 patches
+python src/phase7_detect.py --cv-fold 0 1 2 3 4       # detection CV, 5-25 min per fold
+python src/phase7_detect.py --final-c                 # final detector's C (T1)
+python src/phase7_detect.py --summarize               # metrics, D1, threshold, tables, figures: about 10 min
+python src/phase7_final_test.py                       # test set, ONCE, after approval (lock: results/phase7/TEST_EVALUATED.json)
 ```
