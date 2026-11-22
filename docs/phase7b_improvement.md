@@ -186,8 +186,12 @@ B4. **Box-score threshold** (CV only): the F1-optimal score at IoU 0.5 on the po
     a **threshold CV** re-runs steps 3-5 of every outer fold with the hyperparameters fixed at the final detector's, and
     the threshold comes from its pooled out-of-fold detections.
 B5. **Nothing else is chosen from CV results**, and nothing at all from test numbers.
-B6. **The test runs once** after the CV results and the B1-B4 outcomes are written here and approved, whatever they
-    show. If the selected localizer is not better than S1 with a CI excluding 0, that is stated here before the test.
+B6. **The test runs only if the CV-selected localizer beats BOTH S1 (stage 1 alone) AND P7 (the Phase 7 detector)** on
+    fold-mean AP@50, each paired difference with a 95% CI excluding 0. Then it runs once, after the CV results and the
+    B1-B4 outcomes are written here and approved. Otherwise Phase 7b is reported on CV only and **the test set is not
+    used again**. *[Changed at the STOP 1 review, 2026-11-22, before any 7b model was trained; the first draft ran the
+    test whatever CV showed.]* The final test script checks this verdict in `results/phase7b/cv_summary.json` and
+    refuses to run without it.
 
 ## Gates and self-tests (training data or synthetic only, before the CV)
 
@@ -222,7 +226,10 @@ B6. **The test runs once** after the CV results and the B1-B4 outcomes are writt
 
 Storage: proposal indices (16,330 x 1,000, about 65 MB) in `features/phase7b/` (not committed).
 
-## Final test (run once, after approval; post-hoc follow-up)
+## Final test (only if B6 passes; run once, after approval; post-hoc follow-up)
+
+T0. `results/phase7b/cv_summary.json` must record that B6 passed (the selected localizer beats S1 and P7 on fold-mean
+    AP@50, each with a 95% CI excluding 0); otherwise the script stops before anything is fitted or read.
 
 T1. Stage 1: `tune_cv` on all training round-0 patches; must equal `results/phase7/final_c.json` (C 0.1), else stop
     before the lock.
@@ -261,7 +268,8 @@ Outputs: `results/phase7b/` (JSON, CSV, and a log of stdout and stderr for every
    fallback grids are triggered.
 3. **Stage 3:** stage-1 models and proposals (commit); outer folds 0-4 (one commit each); final hyperparameters
    (commit); threshold CV if B4 needs it; summary, B1-B4 outcomes (commit); results written here (commit). **STOP 3.**
-4. **Stage 4:** the final test after approval (commit); test results written here (commit).
+4. **Stage 4 (only if B6 passes):** the final test after approval (commit); test results written here (commit).
+   If B6 fails, Phase 7b ends at STOP 3 with CV results only.
 
 ## Known threats (carry into the report)
 
