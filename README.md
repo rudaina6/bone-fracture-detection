@@ -82,6 +82,29 @@ The kernel is `model_zoo.RegionKernelSVC` (`mtrbf_all`, `mtrbf_hip`); the region
 the thresholds are chosen on. Run everything with the same `--n-jobs` (G2 compares runs bit for bit). Outputs go to
 `results/phase6/`, `results/tables/phase6_*.csv` and `results/figures/phase6_*.png`, never to `results/phase3|4/`.
 
+## Phase 7b (localization improvement, two-stage cascade) - complete, see `docs/phase7b_improvement.md`
+```
+python tests/test_phase7b.py                          # unit tests, debug CV, mock final test (~1.8 h), must pass first
+python src/phase7b_cascade.py --gates                 # real-data gates incl. leakage gates L1-L4 (training images)
+python src/phase7b_cascade.py --timing                # timing and runtime projection
+python src/phase7b_cascade.py --stage1 --n-jobs 3     # stage-1 models and cross-fitted proposals, ~8 min
+python src/phase7b_cascade.py --cv-fold 0 --n-jobs 3  # one outer fold per call (0 .. 4), ~20-28 min each
+python src/phase7b_cascade.py --select                # variant selection B1-B3
+python src/phase7b_cascade.py --final-params --n-jobs 3   # final detector's stage-2 hyperparameters, ~21 min
+python src/phase7b_cascade.py --threshold-cv 0 1 2 3 4    # only if B4 needs it (not needed in the recorded run)
+python src/phase7b_cascade.py --summarize             # B4 threshold, tables, figures, B6 verdict
+python results/phase7b/post_cv/near_duplicates.py     # post-CV observation: near-duplicate training images
+python results/phase7b/post_cv/dup_sensitivity.py     # CV AP@50 without near-duplicate images (descriptive)
+python src/phase7b_final_test.py --n-jobs 3           # test set, ONCE, only if B6 passed (lock: results/phase7b/TEST_EVALUATED.json), ~36 min
+```
+`results/phase7b/run_cv.sh` runs the CV steps (stage 1 to summarize) in order, with one log and one commit per step.
+Stage 1 is Phase 7's round-0 detector; stage 2 is `HistGradientBoostingClassifier` on window + context features.
+Long steps keep the machine awake (`phase7b_cascade.keep_awake`); `--n-jobs` sets the stage-2 threads and gives the
+same predictions at any setting. Test images are read only by `phase7b_final_test.py`, after its lock; it also scans
+the test images for near-duplicates in training and reports the test metrics on all and on deduplicated images.
+Outputs go to `results/phase7b/`, `results/tables/phase7b_*.csv` and `results/figures/phase7b_*.png`; work files to
+`features/phase7b/` (not committed).
+
 ## Layout
 | Folder | Purpose |
 |---|---|
