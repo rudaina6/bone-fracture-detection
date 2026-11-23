@@ -272,6 +272,7 @@ def end_to_end_debug_cv_and_mock_final_test():
 
 
 def main():
+    C.keep_awake()                       # Modern Standby throttles long runs (results/phase7b/engineering/)
     t_all = time.time()
     for fn in CHECKS:
         t0 = time.time()
