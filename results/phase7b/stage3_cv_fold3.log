@@ -1,0 +1,5 @@
+3266 training images (576 fractured, 748 boxes); stage-2 threads {'hgb_single': 3, 'inner_workers': 3, 'inner_threads': 2, 'rf_jobs': 6}
+    fold 3: hgb-wc cfg {'max_leaf_nodes': 63, 'min_samples_leaf': 20} inner weighted AP [0.0222 0.0411] (689 s)
+    fold 3: hgb-w cfg {'max_leaf_nodes': 63, 'min_samples_leaf': 20} inner weighted AP [0.0083 0.0136] (418 s)
+fold 3: 26120 detections over 4 variants, 21.4 min
+exit 0
