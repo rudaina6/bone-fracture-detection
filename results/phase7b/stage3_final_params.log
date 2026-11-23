@@ -1,0 +1,3 @@
+3266 training images (576 fractured, 748 boxes); stage-2 threads {'hgb_single': 3, 'inner_workers': 3, 'inner_threads': 2, 'rf_jobs': 6}
+final stage-2 hyperparameters (hgb-wc): {'max_leaf_nodes': 63, 'min_samples_leaf': 20} (inner weighted AP [0.0217 0.0405])
+exit 0

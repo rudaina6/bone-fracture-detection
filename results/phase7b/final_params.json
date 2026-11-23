@@ -1,0 +1,86 @@
+{
+ "selected": {
+  "clf": "hgb",
+  "feat": "wc",
+  "cal": false,
+  "variant": "H-wc"
+ },
+ "grid": "revised",
+ "cfg": {
+  "max_leaf_nodes": 63,
+  "min_samples_leaf": 20
+ },
+ "cfg_index": 1,
+ "inner_scores": [
+  0.021743006653082302,
+  0.04050260779068063
+ ],
+ "calibration": null,
+ "provenance": {
+  "0": {
+   "source": "not0",
+   "source_train_folds": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "1": {
+   "source": "not1",
+   "source_train_folds": [
+    0,
+    2,
+    3,
+    4
+   ]
+  },
+  "2": {
+   "source": "not2",
+   "source_train_folds": [
+    0,
+    1,
+    3,
+    4
+   ]
+  },
+  "3": {
+   "source": "not3",
+   "source_train_folds": [
+    0,
+    1,
+    2,
+    4
+   ]
+  },
+  "4": {
+   "source": "not4",
+   "source_train_folds": [
+    0,
+    1,
+    2,
+    3
+   ]
+  },
+  "outer_fold": null,
+  "train_folds": [
+   "0",
+   "1",
+   "2",
+   "3",
+   "4"
+  ],
+  "n_pos": 3511,
+  "n_neg": 35110,
+  "n_train_images": 3266,
+  "train_image_folds": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ]
+ },
+ "seconds": 1239.0621218681335,
+ "date": "2026-11-23T18:13:24"
+}

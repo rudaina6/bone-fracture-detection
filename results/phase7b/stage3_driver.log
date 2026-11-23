@@ -12,3 +12,5 @@
 [2026-11-23 17:49:51] end cv_fold4 exit 0
 [2026-11-23 17:49:52] start select: --select
 [2026-11-23 17:52:40] end select exit 0
+[2026-11-23 17:52:40] start final_params: --final-params
+[2026-11-23 18:13:25] end final_params exit 0
