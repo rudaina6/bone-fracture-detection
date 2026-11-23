@@ -11,10 +11,14 @@ test box is read before step T4:
       selected classifier / features, the final hyperparameters and calibration (results/phase7b/final_params.json)
   T3  the box-score threshold from results/phase7b/cv_summary.json
   T4  the lock results/phase7b/TEST_EVALUATED.json is written
+  T4b near-duplicate scan, test images against training images (pixels only; no test label or prediction), same
+      method as results/phase7b/post_cv/near_duplicates.py -> results/phase7b/test_train_duplicates.json
+      [added at the STOP 3 approval, 2026-11-23]
   T5  the 817 test images are scored once (maps computed after the lock; 1,000 proposals; NMS 0.3; at most 10 boxes)
   T6  AP@50, AP@50:95, recall / precision / F1 at the threshold, recall at IoU 0.3, reachability and proposal recall,
       overall and per region, 95% image-bootstrap CIs; paired AP@50 difference against the Phase 7 test detections;
-      image-level PR-AUC / ROC-AUC against the Phase 3 test scores; hip and shoulder CI half-widths
+      image-level PR-AUC / ROC-AUC against the Phase 3 test scores; hip and shoulder CI half-widths.
+      Reported twice: all test images, and test images with no near-duplicate in training (T4b) [added at STOP 3]
 Running again needs --allow-rerun, and then BOTH results must be reported.
 """
 import argparse
@@ -39,6 +43,41 @@ def test_table():
     return F7.test_table()
 
 
+THUMB, THUMB_CORR, FULL_CORR = 32, 0.99, 0.999       # as results/phase7b/post_cv/near_duplicates.py
+
+
+def _gray(file_path):
+    from PIL import Image
+    return Image.open(REPO_ROOT / "data" / "FracAtlas" / file_path).convert("L")
+
+
+def _thumbs(file_paths):
+    from PIL import Image
+    out = []
+    for fp in file_paths:
+        v = np.asarray(_gray(fp).resize((THUMB, THUMB), Image.BILINEAR), dtype=np.float32).ravel()
+        v = (v - v.mean()) / (v.std() + 1e-6)
+        out.append(v / np.sqrt(len(v)))
+    return np.stack(out)
+
+
+def near_duplicates(Q, R):
+    """Near-duplicates between query images Q and reference images R (DataFrames with image_id, file_path; R also
+    fold): 32x32 thumbnail correlation > 0.99, then full-image correlation > 0.999 (same size), as the training-set
+    scan. Reads pixels only. Returns every candidate pair with both correlations and a duplicate flag."""
+    Q, R = Q.reset_index(drop=True), R.reset_index(drop=True)
+    S = _thumbs(Q.file_path) @ _thumbs(R.file_path).T
+    pairs = []
+    for i, j in np.argwhere(S > THUMB_CORR):
+        a = np.asarray(_gray(Q.file_path[i]), dtype=np.float32)
+        b = np.asarray(_gray(R.file_path[j]), dtype=np.float32)
+        full = float(np.corrcoef(a.ravel(), b.ravel())[0, 1]) if a.shape == b.shape else None
+        pairs.append(dict(test_image=Q.image_id[i], train_image=R.image_id[j], train_fold=int(R.fold[j]),
+                          thumb_corr=float(S[i, j]), full_corr=full,
+                          duplicate=bool(full is not None and full > FULL_CORR)))
+    return pairs
+
+
 def _test_chunk(rows, w1, b1):
     out = []
     for image_id, file_path, boxes in rows:
@@ -53,6 +92,68 @@ def _test_chunk(rows, w1, b1):
         out.append(dict(image_id=image_id, gt=gt, reach=reach, prop_iou=piou, B=B[prop], Tt=Tt[prop],
                         X=C.window_rows(maps, idx, Tt, prop, s1[prop])))
     return out
+
+
+def test_metrics(Te, det, p7, p3, gt, reach, piou, thr, args):
+    """T6 on the test images in Te (one detector: plain image bootstrap = one "fold")."""
+    Tq = Te.assign(fold=0)
+    groups = C.GROUPS
+    keep = set(Te.image_id)
+    det, p7 = det[det.image_id.isin(keep)], p7[p7.image_id.isin(keep)]
+    res = C.boot_ap(Tq, gt, {"7b": det, "P7": p7}, groups, args.n_boot, args.boot_seed)
+    region = dict(zip(Te.image_id, Te.region))
+    evt = {0: {g: D.EvalSet([i for i in Te.image_id if g == "overall" or region[i] == g], det, gt) for g in groups}}
+    tm = D._threshold_boot(evt, thr, args.n_boot, args.boot_seed)
+    rng = np.random.default_rng(args.boot_seed)
+    ids = list(Te.image_id)
+    nb = np.array([[len(piou[i]), (piou[i] >= 0.5).sum(), (piou[i] >= 0.3).sum(), reach[i].sum()] for i in ids], float)
+    rg = np.array([region[i] for i in ids])
+    pdraws = {g: [] for g in groups}
+    for _ in range(args.n_boot):
+        m = rng.multinomial(len(ids), np.full(len(ids), 1 / len(ids))).astype(float)
+        for g in groups:
+            sel_g = np.ones(len(ids), bool) if g == "overall" else rg == g
+            t = (m[sel_g, None] * nb[sel_g]).sum(0)
+            pdraws[g].append(t[1:3] / t[0] if t[0] else [np.nan, np.nan])
+    rows = []
+    for g in groups:
+        sg = np.ones(len(ids), bool) if g == "overall" else rg == g
+        t = nb[sg].sum(0)
+        row = dict(group=g, n_images=int(sg.sum()), n_boxes=int(t[0]), reach_iou50=t[3] / t[0] if t[0] else np.nan,
+                   proposal_recall50=t[1] / t[0] if t[0] else np.nan, proposal_recall30=t[2] / t[0] if t[0] else np.nan)
+        pdr = np.array(pdraws[g], float)
+        row.update(proposal_recall50_lo=D.ci(pdr[:, 0])[0], proposal_recall50_hi=D.ci(pdr[:, 0])[1])
+        for key, lab in (("ap50", "ap50"), ("ap50_95", "ap50_95")):
+            e, d = res[("7b", g, key)]
+            lo, hi = D.ci(d)
+            row.update({lab: e, f"{lab}_lo": lo, f"{lab}_hi": hi, f"{lab}_half_width": (hi - lo) / 2})
+        for key in ("recall", "precision", "f1", "recall_iou30"):
+            e, lo, hi = tm[(g, key)]
+            row.update({key: e, f"{key}_lo": lo, f"{key}_hi": hi, f"{key}_half_width": (hi - lo) / 2})
+        dp = C.paired(res, "7b", "P7", g)
+        row.update(p7_ap50=res[("P7", g, "ap50")][0], d_p7=dp["diff"], d_p7_lo=dp["lo"], d_p7_hi=dp["hi"])
+        rows.append(row)
+    table = pd.DataFrame(rows)
+    best = det[det["rank"] == 0].set_index("image_id").score
+    j = Te[["image_id", "region", "fractured"]].merge(p3[["image_id", "score"]], on="image_id", validate="one_to_one")
+    j["score_det"] = j.image_id.map(best).fillna(-np.inf)
+    pb = paired_bootstrap(j.fractured, j.score_det, j.score, 0.0, 0.0, groups=j.region, n_boot=args.n_boot,
+                          seed=args.boot_seed, metrics=("pr_auc", "roc_auc"))
+    il = []
+    for g in groups:
+        d = j if g == "overall" else j[j.region == g]
+        row = dict(group=g, det_pr_auc=D._fast_ap(d.fractured.to_numpy(), d.score_det.to_numpy()),
+                   p3_pr_auc=D._fast_ap(d.fractured.to_numpy(), d.score.to_numpy()),
+                   det_roc_auc=D._fast_auc(d.fractured.to_numpy(), d.score_det.to_numpy()),
+                   p3_roc_auc=D._fast_auc(d.fractured.to_numpy(), d.score.to_numpy()))
+        for met in ("pr_auc", "roc_auc"):
+            r = pb[(pb.group == g) & (pb.metric == met)]
+            if len(r):
+                r = r.iloc[0]
+                row.update({f"d_{met}": r["diff"], f"d_{met}_lo": r["lo"], f"d_{met}_hi": r["hi"]})
+        il.append(row)
+    iltab = pd.DataFrame(il)
+    return table, iltab
 
 
 def main(argv=None):
@@ -118,8 +219,21 @@ def main(argv=None):
     lock.write_text(json.dumps(settings, indent=1, default=str))
     print(f"T4: lock written -> {lock}", flush=True)
 
-    # T5: the test images, once
+    # T4b: near-duplicate scan, test against training (pixels only), after the lock and before scoring
     Te = test_table()
+    td = time.time()
+    pairs = near_duplicates(Te[["image_id", "file_path"]], T[["image_id", "file_path", "fold"]])
+    dup_ids = sorted({q["test_image"] for q in pairs if q["duplicate"]})
+    (args.out_dir / "test_train_duplicates.json").write_text(json.dumps(dict(
+        method=f"{THUMB}x{THUMB} thumbnail correlation > {THUMB_CORR}, then full-image correlation > {FULL_CORR} "
+               "(same size), as results/phase7b/post_cv/near_duplicates.py; pixels only, before scoring",
+        n_test_images=len(Te), n_train_images=len(T), n_candidate_pairs=len(pairs),
+        n_duplicate_pairs=sum(q["duplicate"] for q in pairs), n_test_images_with_duplicate=len(dup_ids),
+        test_images_with_duplicate=dup_ids, pairs=pairs, seconds=time.time() - td), indent=1))
+    print(f"T4b: {len(dup_ids)} of {len(Te)} test images have a near-duplicate in training "
+          f"({sum(q['duplicate'] for q in pairs)} pairs, {len(pairs)} candidates)", flush=True)
+
+    # T5: the test images, once
     rows = [(r.image_id, r.file_path, r.boxes) for r in Te.itertuples()]
     dets, gt, reach, piou = [], {}, {}, {}
     for s0 in range(0, len(rows), 64):
@@ -134,74 +248,28 @@ def main(argv=None):
     det = pd.DataFrame(dets)
     det.to_csv(args.out_dir / "test_detections.csv", index=False)
 
-    # T6: metrics (one detector: plain image bootstrap = one "fold")
-    Tq = Te.assign(fold=0)
-    groups = C.GROUPS
+    # T6: metrics, all test images and test images without a near-duplicate in training
     p7 = pd.read_csv(args.p7_dir / "test_detections.csv", float_precision="round_trip")
-    res = C.boot_ap(Tq, gt, {"7b": det, "P7": p7}, groups, args.n_boot, args.boot_seed)
-    region = dict(zip(Te.image_id, Te.region))
-    evt = {0: {g: D.EvalSet([i for i in Te.image_id if g == "overall" or region[i] == g], det, gt) for g in groups}}
-    tm = D._threshold_boot(evt, thr, args.n_boot, args.boot_seed)
-    rng = np.random.default_rng(args.boot_seed)
-    ids = list(Te.image_id)
-    nb = np.array([[len(piou[i]), (piou[i] >= 0.5).sum(), (piou[i] >= 0.3).sum(), reach[i].sum()] for i in ids], float)
-    rg = np.array([region[i] for i in ids])
-    pdraws = {g: [] for g in groups}
-    for _ in range(args.n_boot):
-        m = rng.multinomial(len(ids), np.full(len(ids), 1 / len(ids))).astype(float)
-        for g in groups:
-            sel_g = np.ones(len(ids), bool) if g == "overall" else rg == g
-            t = (m[sel_g, None] * nb[sel_g]).sum(0)
-            pdraws[g].append(t[1:3] / t[0] if t[0] else [np.nan, np.nan])
-    rows = []
-    for g in groups:
-        sg = np.ones(len(ids), bool) if g == "overall" else rg == g
-        t = nb[sg].sum(0)
-        row = dict(group=g, n_images=int(sg.sum()), n_boxes=int(t[0]), reach_iou50=t[3] / t[0] if t[0] else np.nan,
-                   proposal_recall50=t[1] / t[0] if t[0] else np.nan, proposal_recall30=t[2] / t[0] if t[0] else np.nan)
-        pdr = np.array(pdraws[g], float)
-        row.update(proposal_recall50_lo=D.ci(pdr[:, 0])[0], proposal_recall50_hi=D.ci(pdr[:, 0])[1])
-        for key, lab in (("ap50", "ap50"), ("ap50_95", "ap50_95")):
-            e, d = res[("7b", g, key)]
-            lo, hi = D.ci(d)
-            row.update({lab: e, f"{lab}_lo": lo, f"{lab}_hi": hi, f"{lab}_half_width": (hi - lo) / 2})
-        for key in ("recall", "precision", "f1", "recall_iou30"):
-            e, lo, hi = tm[(g, key)]
-            row.update({key: e, f"{key}_lo": lo, f"{key}_hi": hi, f"{key}_half_width": (hi - lo) / 2})
-        dp = C.paired(res, "7b", "P7", g)
-        row.update(p7_ap50=res[("P7", g, "ap50")][0], d_p7=dp["diff"], d_p7_lo=dp["lo"], d_p7_hi=dp["hi"])
-        rows.append(row)
-    table = pd.DataFrame(rows)
-    best = det[det["rank"] == 0].set_index("image_id").score
     p3 = pd.read_csv(args.phase3_dir / "test_scores.csv", float_precision="round_trip")
-    j = Te[["image_id", "region", "fractured"]].merge(p3[["image_id", "score"]], on="image_id", validate="one_to_one")
-    j["score_det"] = j.image_id.map(best).fillna(-np.inf)
-    pb = paired_bootstrap(j.fractured, j.score_det, j.score, 0.0, 0.0, groups=j.region, n_boot=args.n_boot,
-                          seed=args.boot_seed, metrics=("pr_auc", "roc_auc"))
-    il = []
-    for g in groups:
-        d = j if g == "overall" else j[j.region == g]
-        row = dict(group=g, det_pr_auc=D._fast_ap(d.fractured.to_numpy(), d.score_det.to_numpy()),
-                   p3_pr_auc=D._fast_ap(d.fractured.to_numpy(), d.score.to_numpy()),
-                   det_roc_auc=D._fast_auc(d.fractured.to_numpy(), d.score_det.to_numpy()),
-                   p3_roc_auc=D._fast_auc(d.fractured.to_numpy(), d.score.to_numpy()))
-        for met in ("pr_auc", "roc_auc"):
-            r = pb[(pb.group == g) & (pb.metric == met)]
-            if len(r):
-                r = r.iloc[0]
-                row.update({f"d_{met}": r["diff"], f"d_{met}_lo": r["lo"], f"d_{met}_hi": r["hi"]})
-        il.append(row)
-    iltab = pd.DataFrame(il)
+    Td = Te[~Te.image_id.isin(dup_ids)].reset_index(drop=True)
+    table, iltab = test_metrics(Te, det, p7, p3, gt, reach, piou, thr, args)
+    table_d, iltab_d = test_metrics(Td, det, p7, p3, gt, reach, piou, thr, args)
     args.tables_dir.mkdir(parents=True, exist_ok=True)
     table.round(5).to_csv(args.tables_dir / "phase7b_test_localizer.csv", index=False)
     iltab.round(4).to_csv(args.tables_dir / "phase7b_test_image_level.csv", index=False)
+    table_d.round(5).to_csv(args.tables_dir / "phase7b_test_localizer_dedup.csv", index=False)
+    iltab_d.round(4).to_csv(args.tables_dir / "phase7b_test_image_level_dedup.csv", index=False)
     run = dict(settings, seconds=time.time() - t0, n_test_images=len(Te), n_test_boxes=int(table.n_boxes.iloc[0]),
+               n_test_images_dedup=len(Td), n_test_boxes_dedup=int(table_d.n_boxes.iloc[0]),
                post_hoc="second use of the test set (Phase 7 used it first)")
     (args.out_dir / "test_run.json").write_text(json.dumps(run, indent=1, default=str))
     pd.set_option("display.width", 250, "display.max_columns", 60)
     print("\n=== TEST (second use, post-hoc follow-up), Phase 7b localizer ===")
     print(table.round(4).to_string(index=False))
     print(iltab.round(3).to_string(index=False))
+    print(f"\n=== TEST, images with no near-duplicate in training ({len(Td)} of {len(Te)}) ===")
+    print(table_d.round(4).to_string(index=False))
+    print(iltab_d.round(3).to_string(index=False))
     if not args.no_log:
         o = table.set_index("group").loc["overall"]
         log_run(regions="all (pooled), test on all regions", feature_set=f"Phase 7b {sel['feat']} features",
@@ -209,7 +277,8 @@ def main(argv=None):
                 key_hyperparameters=f"cfg {fp['cfg']}; threshold {thr}; K {C.K_PROP}",
                 cv_score="see docs/phase7b_improvement.md",
                 test_metrics=(f"TEST (2nd use) AP@50={o.ap50:.4f} [{o.ap50_lo:.4f}, {o.ap50_hi:.4f}]; "
-                              f"vs Phase 7 {o.d_p7:+.4f} [{o.d_p7_lo:+.4f}, {o.d_p7_hi:+.4f}]"),
+                              f"vs Phase 7 {o.d_p7:+.4f} [{o.d_p7_lo:+.4f}, {o.d_p7_hi:+.4f}]; dedup "
+                              f"({len(Td)} images) AP@50={table_d.set_index('group').loc['overall'].ap50:.4f}"),
                 notes="Phase 7b FINAL test (post-hoc follow-up, second use of the test set)")
     print(f"\nDone in {(time.time() - t0) / 60:.1f} min.")
 
