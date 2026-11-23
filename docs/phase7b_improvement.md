@@ -327,11 +327,138 @@ Outputs: `results/phase7b/` (JSON, CSV, and a log of stdout and stderr for every
 
 ## Results
 
-*(Empty until the runs. The protocol above was fixed before any 7b model was trained.)*
+CV on the 3,266 training images (576 fractured, 748 boxes), Phase 7's frozen folds, run 2026-11-23 (revised grid,
+`--n-jobs 3`, keep-awake on; 2 h 29 min end to end). No test image or test box was read; `TEST_EVALUATED.json` does
+not exist. Outputs: `results/phase7b/` (`stage1.json`, `cv_fold{0-4}.json` + detections, `selection.json`,
+`final_params.json`, `cv_summary.json`, a `stage3_*.log` per step), `results/tables/phase7b_cv_*.csv`,
+`results/figures/phase7b_cv_*.png`.
 
-### Reproduce (planned)
+**Headline: the cascade raises CV AP@50 about 30-fold over stage 1 alone (0.032 against 0.001) and passes B6, but it
+is still a weak localizer.** At the CV threshold it finds 11% of the boxes at IoU 0.5 (22% at IoU 0.3) with precision
+9%, and its top box score ranks images worse than Phase 3 does.
 
-Run with the repository's `.venv` Python.
+### Self-test and gates
+
+- End-to-end self-test rerun on the revised code: all 7 checks pass (`stage2_selftests_revised.log`).
+- Real-data gates before the CV (`gates.json`): all pass. Leakage gates (1) no test data before the 7b lock
+  (L1: all 3,266 maps and every image read are training; no test identifier in the cascade code); (2) one fold per
+  image (L2; also asserted for every stage-2 set at runtime by `check_sets`); (3) cross-fitted proposals (L3; re-checked
+  after the CV from the fold provenance: every training proposal of every outer fold comes from a pair model
+  M(not j, not k) that saw neither the image's fold j nor the held-out fold k); (4) fits on training folds only (L4:
+  stage-1 C, stage-2 hyperparameters, calibration and the threshold all come from training-fold or out-of-fold data).
+
+### Stage 1
+
+C = 0.1 in all five outer models (as Phase 7's `final_c.json`). Held-out proposal recall (top 1,000): **81.4%** of the
+boxes at IoU 0.5, **94.8%** at IoU 0.3 (reachability 93.9%), the ceiling for stage 2.
+
+### Variants and selection (B1-B3)
+
+Fold-mean AP@50 (95% fold-stratified bootstrap CI, 2,000 resamples, seed 0), out-of-fold detections:
+
+| Variant | AP@50 | 95% CI | AP@50:95 |
+|---|---|---|---|
+| **H-wc** (window + context, raw) | **0.0321** | 0.0250-0.0478 | 0.0065 |
+| H-w (window only, raw) | 0.0101 | 0.0075-0.0206 | 0.0019 |
+| H-wc-cal (window + context, per-type calibration) | 0.0343 | 0.0267-0.0525 | 0.0067 |
+| H-w-cal | 0.0113 | 0.0080-0.0226 | 0.0025 |
+| S1 (stage 1 alone, Phase 7 round 0) | 0.0011 | 0.0008-0.0023 | 0.0002 |
+| P7 (Phase 7 detector, round 2) | 0.0001 | 0.0001-0.0005 | 0.0000 |
+
+- **B1:** HGB (fixed at the STOP 2 revision; no comparison).
+- **B2:** H-wc - H-w = **+0.0221 [+0.0136, +0.0337]**, CI excludes 0, so **context is kept**.
+- **B3:** H-wc-cal - H-wc = +0.0022 [-0.0052, +0.0115], CI includes 0, so **no calibration** (raw scores).
+- **Selected: H-wc.** Every outer fold's inner tuning chose max_leaf_nodes 63, min_samples_leaf 20, and the final
+  detector's inner tuning on all training images chose the same (`final_params.json`; inner weighted AP 0.022 against
+  0.041 for 15 / 63 leaves).
+- **B4:** every outer fold chose the final stage-2 configuration and stage-1 C (0.1), so no threshold CV; the threshold
+  is the F1-optimal score at IoU 0.5 on the pooled out-of-fold H-wc detections: **0.9694** (pooled F1 0.100).
+
+![variants](../results/figures/phase7b_cv_variants.png)
+
+### Selected localizer (H-wc), per region
+
+Fold means with 95% fold-stratified bootstrap CIs (2,000, seed 0). Recall, precision and F1 are at the B4 threshold,
+chosen on the same out-of-fold detections, so they are optimistic.
+
+| Group | Images | AP@50 | AP@50:95 | Recall IoU 0.5 | Recall IoU 0.3 | Precision | F1 |
+|---|---|---|---|---|---|---|---|
+| Overall | 3,266 | 0.032 [0.025, 0.048] | 0.0065 [0.0050, 0.0107] | 0.114 [0.091, 0.137] | 0.217 [0.189, 0.246] | 0.090 [0.071, 0.109] | 0.100 [0.081, 0.120] |
+| Hand | 1,025 | 0.034 [0.025, 0.054] | 0.0070 [0.0047, 0.0129] | 0.131 [0.099, 0.166] | 0.298 [0.254, 0.345] | 0.078 [0.058, 0.100] | 0.098 [0.074, 0.123] |
+| Leg | 1,699 | 0.057 [0.037, 0.099] | 0.0146 [0.0093, 0.0265] | 0.120 [0.081, 0.163] | 0.164 [0.118, 0.215] | 0.121 [0.082, 0.165] | 0.121 [0.083, 0.160] |
+| Hip | 256 | 0.090 [0.028, 0.203] | 0.0181 [0.0049, 0.0408] | 0.061 [0.000, 0.139] | 0.082 [0.017, 0.170] | 0.143 [0.000, 0.800] | 0.086 [0.000, 0.200] |
+| Shoulder | 267 | 0.002 [0.000, 0.009] | 0.0004 [0.000, 0.0025] | 0.000 [0.000, 0.000] | 0.000 [0.000, 0.000] | 0.000 [0.000, 0.000] | 0.000 [0.000, 0.000] |
+
+Ceilings: proposal recall at IoU 0.5 is 81.4% overall (hand 86.5%, leg 79.2%, hip 73.2%, shoulder 66.2%); reachability
+93.9%. Hip (49 boxes) and shoulder (50 boxes) are not resolvable: the hip CIs span an order of magnitude, and shoulder
+has no hit at the threshold.
+
+### Comparison with stage 1 alone and the Phase 7 detector
+
+Paired fold-mean AP@50 differences (same resamples):
+
+| Group | H-wc - S1 | H-wc - P7 |
+|---|---|---|
+| Overall | **+0.0311 [+0.0236, +0.0465]** | **+0.0320 [+0.0248, +0.0476]** |
+| Hand | +0.0302 [+0.0196, +0.0494] | +0.0330 [+0.0235, +0.0531] |
+| Leg | +0.0553 [+0.0352, +0.0962] | +0.0567 [+0.0369, +0.0982] |
+| Hip | +0.0897 [+0.0276, +0.2022] | +0.0896 [+0.0271, +0.2023] |
+| Shoulder | +0.0020 [+0.0002, +0.0091] | +0.0021 [+0.0002, +0.0092] |
+
+Image level (descriptive; top box score as image score, against Phase 3's RBF-SVM out-of-fold scores): PR-AUC 0.370
+against 0.602 (difference -0.232 [-0.271, -0.181]), ROC-AUC 0.714 against 0.822 (-0.108 [-0.137, -0.080]). The
+localizer is not a better image classifier; Phase 3 stays the image-level model.
+
+### Implant check
+
+AP@50 on the training images without hardware: H-wc **0.0325**, S1 0.0011, P7 0.0002, the same as on all images
+(0.0321). Dropping the hardware images does not lower the cascade's AP, so the gain is not explained by an implant
+shortcut.
+
+### B6 outcome
+
+H-wc beats S1 (+0.0311 [+0.0236, +0.0465]) **and** P7 (+0.0320 [+0.0248, +0.0476]) on fold-mean AP@50, both CIs
+excluding 0. **B6 passes**: `cv_summary.json` records "final test allowed (after approval)". The final test (T1-T7)
+has **not** been run; it waits for approval at STOP 3.
+
+### Post-CV observation: near-duplicate training images (not part of the protocol)
+
+Found while checking the example figure: IMG0002935 (fold 0) and IMG0004217 (fold 3) are the same radiograph (pixel
+correlation 0.99998, different files). A read-only scan of the training images (`results/phase7b/post_cv/`, 32x32
+thumbnail correlation > 0.99, then full-image correlation > 0.999) finds **67 near-duplicate pairs** over 120 images,
+**58 pairs across folds**, involving **34 of the 576 fractured images** (17 pairs both fractured). FracAtlas has no
+patient ID, so the frozen folds could not separate them (a known threat in every phase).
+
+Sensitivity (descriptive, same out-of-fold detections, nothing refitted or re-selected):
+
+| Images | H-wc AP@50 | S1 | P7 | H-wc - S1 | H-wc - P7 |
+|---|---|---|---|---|---|
+| All (3,266) | 0.0321 | 0.0011 | 0.0001 | +0.0311 [+0.0236, +0.0465] | +0.0320 [+0.0248, +0.0476] |
+| Without any near-duplicate (3,146) | 0.0236 | 0.0011 | 0.0002 | +0.0226 [+0.0165, +0.0361] | +0.0235 [+0.0174, +0.0373] |
+| Without cross-fold near-duplicates (3,164) | 0.0243 | 0.0010 | 0.0002 | +0.0233 [+0.0171, +0.0367] | +0.0241 [+0.0182, +0.0380] |
+
+The cascade's CV AP@50 drops by about a quarter without the duplicates while S1 does not move, so stage 2 partly
+memorizes repeated images across folds and the CV number above is **optimistic**. The B6 comparison still holds without
+them (both CIs well above 0). B6 itself was applied exactly as written, on all training images. Whether test images
+duplicate training images cannot be checked without reading the test set, which is allowed only after the 7b lock;
+the same inflation could affect a test number.
+
+### Reading
+
+- Most of the gain comes from context: window-only HGB (0.010) is 10 times S1, and the ring context triples it again
+  (B2). Calibration adds nothing measurable (B3).
+- The cascade is still far from useful localization: 11% recall at IoU 0.5 against an 81% proposal ceiling, and AP@50:95
+  stays below 0.02 because windows are fixed-size with no box regression.
+- Leg and hand carry the result; shoulder is a failure, hip unresolvable.
+- Threats carried into any test report: near-duplicate images inflate the cascade's CV AP@50 by about a third
+  (0.024 without them); the threshold-dependent numbers are optimistic in CV; the stage-1 score shift
+  (three-fold training proposals, four-fold held-out ones) is untested; the test would be a second look at the test
+  set (post-hoc follow-up).
+
+### Reproduce
+
+Run with the repository's `.venv` Python (`results/phase7b/run_cv.sh` ran the Stage 3 steps below in order, with
+`--n-jobs 3`, one log and one commit per step).
 ```
 python tests/test_phase7b.py                      # unit tests, debug CV, mock final test
 python src/phase7b_cascade.py --gates             # real-data gates (training images)
@@ -341,5 +468,7 @@ python src/phase7b_cascade.py --cv-fold 0         # one outer fold per call (0 .
 python src/phase7b_cascade.py --final-params      # final detector's stage-2 hyperparameters
 python src/phase7b_cascade.py --threshold-cv 0    # only if B4 needs it
 python src/phase7b_cascade.py --summarize         # B1-B4, tables, figures
+python results/phase7b/post_cv/near_duplicates.py   # post-CV observation (training images)
+python results/phase7b/post_cv/dup_sensitivity.py   # AP@50 without near-duplicate images (descriptive)
 python src/phase7b_final_test.py                  # test set, ONCE, after approval (lock: results/phase7b/TEST_EVALUATED.json)
 ```

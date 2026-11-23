@@ -1,0 +1,10 @@
+{
+ "training_images": 3266,
+ "candidate_pairs_thumb_gt_0_99": 85,
+ "pairs_full_corr_gt_0_999": 67,
+ "pairs_cross_fold": 58,
+ "pairs_both_fractured": 17,
+ "images_involved": 120,
+ "fractured_images_involved": 34,
+ "fractured_images_total": 576
+}
