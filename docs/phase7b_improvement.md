@@ -288,6 +288,14 @@ T6. AP@50, AP@50:95, recall / precision / F1 at the threshold, recall at IoU 0.3
 T7. Reported as a post-hoc follow-up on a test set used for the second time. No setting is changed after the test
     numbers are seen.
 
+*[Added at the STOP 3 approval, 2026-11-23, before the test was run, prompted by the post-CV near-duplicate finding:]*
+T4b. After the lock and before scoring, a near-duplicate scan of the 817 test images against the 3,266 training images,
+    same method as the training scan (pixels only; no test label or prediction), saved to
+    `results/phase7b/test_train_duplicates.json`. (The scan runs after the lock, not before it, because no test image
+    may be read before T4.)
+T6 is reported twice: on all test images, and on the test images with no near-duplicate in training. No setting
+depends on the scan.
+
 ## Code and outputs
 
 | File | Role |
@@ -418,8 +426,8 @@ shortcut.
 ### B6 outcome
 
 H-wc beats S1 (+0.0311 [+0.0236, +0.0465]) **and** P7 (+0.0320 [+0.0248, +0.0476]) on fold-mean AP@50, both CIs
-excluding 0. **B6 passes**: `cv_summary.json` records "final test allowed (after approval)". The final test (T1-T7)
-has **not** been run; it waits for approval at STOP 3.
+excluding 0. **B6 passes**: `cv_summary.json` records "final test allowed (after approval)". The final test was
+approved at STOP 3 and run once afterwards (see "Test results").
 
 ### Post-CV observation: near-duplicate training images (not part of the protocol)
 
@@ -454,6 +462,91 @@ the same inflation could affect a test number.
   (0.024 without them); the threshold-dependent numbers are optimistic in CV; the stage-1 score shift
   (three-fold training proposals, four-fold held-out ones) is untested; the test would be a second look at the test
   set (post-hoc follow-up).
+
+## Test results (second use of the test set, post-hoc follow-up; run once, 2026-11-23)
+
+**The CV results, the B1-B4 outcomes and the B6 verdict were written here and committed (`a5bd325`) before the test,
+which ran after approval at STOP 3, exactly as locked.** Settings: H-wc, HGB max_leaf_nodes 63 / min_samples_leaf 20,
+no calibration, stage-1 C 0.1, box-score threshold 0.9694, 1,000 proposals, NMS 0.3, at most 10 boxes per image.
+Nothing was changed after the test numbers were seen. This is the second look at the test set (Phase 7 used it
+first), so it is a post-hoc follow-up, not a fresh estimate.
+
+- **T1:** stage-1 C 0.1, equal to `results/phase7/final_c.json`. **T2:** stage 2 refitted on all training images,
+  38,621 rows (3,511 positives).
+- **T4, lock before any test image:** `results/phase7b/TEST_EVALUATED.json` written at 19:39:12. Independently, all
+  817 test images were last accessed between 19:40:50 and 19:58:46, with NTFS last-access updates enabled.
+- **T4b, near-duplicates:** 33 candidate pairs, **27 near-duplicate pairs; 26 of the 817 test images (3.2%) have a
+  near-duplicate in training**, carrying 5 of the 176 test boxes (`results/phase7b/test_train_duplicates.json`).
+- **T5:** 817 test images scored once; `results/phase7b/test_detections.csv`. Run 36.2 min, exit 0; log
+  `results/phase7b/stage4_final_test.log`; `results/phase7b/test_run.json`.
+
+### T6, all 817 test images
+
+95% CIs from 2,000 image-bootstrap resamples (seed 0); the test has no folds, so the bootstrap is over images within
+the one test set. Recall, precision and F1 are at IoU 0.5 and the threshold 0.9694, fixed on training data, so they
+are honest (`results/tables/phase7b_test_localizer.csv`).
+
+| Group | Images | Boxes | AP@50 | AP@50:95 | Recall IoU 0.5 | Recall IoU 0.3 | Precision | F1 |
+|---|---|---|---|---|---|---|---|---|
+| **All** | 817 | 176 | **0.021** [0.008, 0.043] | 0.0036 [0.0013, 0.0079] | 0.074 [0.038, 0.113] | 0.176 [0.120, 0.239] | 0.065 [0.034, 0.101] | 0.069 [0.036, 0.104] |
+| Hand | 256 | 95 | 0.032 [0.011, 0.070] | 0.0057 [0.0018, 0.0134] | 0.105 [0.047, 0.170] | 0.253 [0.167, 0.347] | 0.065 [0.029, 0.110] | 0.081 [0.036, 0.130] |
+| Leg | 425 | 53 | 0.009 [0.000, 0.054] | 0.0017 [0.0000, 0.0131] | 0.038 [0.000, 0.097] | 0.075 [0.017, 0.157] | 0.050 [0.000, 0.122] | 0.043 [0.000, 0.104] |
+| Hip | 64 | 11 | 0.054 [0.000, 0.291] | 0.0066 [0.0000, 0.0320] | 0.091 [0.000, 0.308] | 0.182 [0.000, 0.455] | 0.500 [0.000, 1.000] | 0.154 [0.000, 0.444] |
+| Shoulder | 67 | 14 | 0.021 [0.000, 0.083] | 0.0037 [0.0000, 0.0147] | 0.000 | 0.071 [0.000, 0.200] | 0.000 | 0.000 |
+
+13 of the 176 test boxes are hit at IoU 0.5 (hand 10, leg 2, hip 1, shoulder 0) and 31 at IoU 0.3. Ceilings: proposal
+recall at IoU 0.5 78.4% [71.9, 84.3] (hand 88.4%, leg 69.8%, hip 72.7%, shoulder 57.1%), reachability 93.8%. Hip
+(11 boxes) and shoulder (14) are **not resolvable**: hip's AP CI half-width is 0.15, and shoulder has no hit at the
+threshold.
+
+**Against the Phase 7 detector** (paired AP@50 difference, same resamples; Phase 7 test AP@50 0.0003):
+
+| Group | 7b - Phase 7 |
+|---|---|
+| **All** | **+0.021 [+0.008, +0.043]** |
+| Hand | +0.031 [+0.010, +0.070] |
+| Leg | +0.008 [-0.000, +0.053] |
+| Hip | +0.052 [-0.003, +0.288] |
+| Shoulder | +0.021 [+0.000, +0.083] |
+
+No stage-1-alone (S1) test comparison exists: the protocol scores only the selected localizer on test, and Phase 7's
+test detections are round 2 (P7).
+
+**Image level** (top box score against the Phase 3 test scores, paired image bootstrap,
+`results/tables/phase7b_test_image_level.csv`): PR-AUC 0.382 against 0.626 (difference -0.244 [-0.338, -0.143]);
+ROC-AUC 0.718 against 0.834 (-0.116 [-0.174, -0.060]). Phase 3 remains the better image classifier.
+
+### T6, the 791 test images with no near-duplicate in training
+
+Same metrics and bootstrap on the subset (`results/tables/phase7b_test_localizer_dedup.csv`,
+`phase7b_test_image_level_dedup.csv`):
+
+| Group | Images | Boxes | AP@50 | AP@50:95 | Recall IoU 0.5 | Recall IoU 0.3 | Precision | F1 |
+|---|---|---|---|---|---|---|---|---|
+| **All** | 791 | 171 | **0.020** [0.007, 0.045] | 0.0036 [0.0012, 0.0086] | 0.070 [0.034, 0.115] | 0.164 [0.107, 0.224] | 0.066 [0.032, 0.108] | 0.068 [0.033, 0.110] |
+| Hand | 240 | 90 | 0.031 [0.010, 0.076] | 0.0059 [0.0018, 0.0149] | 0.100 [0.039, 0.173] | 0.233 [0.146, 0.333] | 0.066 [0.027, 0.119] | 0.080 [0.032, 0.138] |
+| Leg | 415 | 53 | 0.009 [0.000, 0.056] | 0.0017 [0.0000, 0.0128] | 0.038 [0.000, 0.098] | 0.075 [0.017, 0.154] | 0.051 [0.000, 0.129] | 0.044 [0.000, 0.110] |
+| Hip | 64 | 11 | 0.054 [0.000, 0.305] | 0.0066 [0.0001, 0.0330] | 0.091 [0.000, 0.333] | 0.182 [0.000, 0.462] | 0.500 [0.000, 1.000] | 0.154 [0.000, 0.462] |
+| Shoulder | 67 | 14 | 0.021 [0.000, 0.088] | 0.0037 [0.0000, 0.0160] | 0.000 | 0.071 [0.000, 0.200] | 0.000 | 0.000 |
+
+Against the Phase 7 detector: overall **+0.020 [+0.007, +0.045]** (hand +0.030 [+0.009, +0.075], leg +0.008
+[-0.000, +0.056], hip +0.052 [-0.003, +0.301], shoulder +0.021 [+0.000, +0.088]). Image level: PR-AUC 0.385 against
+0.619 (-0.234 [-0.334, -0.124]), ROC-AUC 0.718 against 0.829 (-0.111 [-0.173, -0.051]). The near-duplicates hardly
+touch the test result (AP@50 0.021 against 0.020): only 26 test images and 5 boxes are involved.
+
+### Reading the test
+
+- **The CV gain over the Phase 7 detector replicates on test:** AP@50 0.021 against 0.0003, CI excluding 0, on all
+  images and without near-duplicates. The test AP@50 (0.021) sits below the CV estimate (0.032) and close to the CV
+  number without near-duplicates (0.024), as the post-CV sensitivity suggested.
+- **It is still not a usable localizer:** 7.4% of the test boxes are found at IoU 0.5 (17.6% at IoU 0.3) with 6.5%
+  precision, against a 78% proposal ceiling.
+- **By region:** hand carries the result (10 of 13 hits; AP@50 0.032, CI excluding 0 against Phase 7); leg is weaker
+  on test than in CV (0.009 against 0.057, CI touching 0); hip and shoulder are not resolvable.
+- **Image level:** Phase 3 stays clearly better as an image classifier (PR-AUC -0.24, ROC-AUC -0.12, both CIs
+  excluding 0).
+- **Caveats:** second use of the test set; no patient ID (near-duplicates found by pixels only; other views of the same
+  patient are not detected); hip 11 and shoulder 14 test boxes.
 
 ### Reproduce
 

@@ -1,6 +1,6 @@
 # Project status (living document)
 
-**Last updated:** 2026-11-22 (Phase 6 complete; Phase 7 protocol written, no model trained) · **Read this first** if you are picking up the project. The plan is in
+**Last updated:** 2026-11-23 (Phase 7 and Phase 7b complete and closed; Phase 8 next) · **Read this first** if you are picking up the project. The plan is in
 `Fracture_Project_Phases.md`; this file says where we actually are, what was decided, and how to reproduce it.
 Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 
@@ -15,9 +15,10 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 | 4 | Region-specific classifiers | **Complete** | 100% | `docs/phase4_regional.md`, `src/phase4_regional.py`, `src/phase4_final_test.py`, `results/phase4/`, `results/tables/phase4_*.csv` |
 | 5 | Comparative analysis | **Complete** | 100% | `docs/phase5_analysis.md`, `src/phase5_main.py`, `src/phase5_curves.py`, `src/phase5_features.py`, `src/phase5_errors.py`, `src/phase5_box_contrast.py`, `src/phase5_viz.py`, `results/phase5/`, `results/tables/phase5_*.csv`, `results/figures/phase5_*.png` |
 | 6 | Gap-closing | **Complete** | 100% | `docs/phase6_gap_closing.md`, `src/phase6_thresholds.py`, `src/phase6_kernel.py`, `src/phase6_final_test.py`, `tests/test_phase6.py`, `results/phase6/`, `results/tables/phase6_*.csv`, `results/figures/phase6_*.png` |
-| 7 | Localization | Protocol written, no model trained | 0% | `docs/phase7_localization.md`, `src/phase7_window_design.py` |
+| 7 | Localization | **Complete** | 100% | `docs/phase7_localization.md`, `src/phase7_window_design.py`, `src/phase7_windows.py`, `src/phase7_detect.py`, `src/phase7_final_test.py`, `results/phase7/`, `results/tables/phase7_*.csv`, `results/figures/phase7_*.png` |
+| 7b | Localization improvement (two-stage cascade, post-hoc follow-up) | **Complete, closed** | 100% | `docs/phase7b_improvement.md`, `src/phase7b_cascade.py`, `src/phase7b_final_test.py`, `tests/test_phase7b.py`, `results/phase7b/`, `results/tables/phase7b_*.csv`, `results/figures/phase7b_*.png` |
 | 8 | Report and presentation | Not started | 0% | |
-| | **Whole project** | | **~70%** | |
+| | **Whole project** | | **~90%** | |
 
 ## Phase 2 summary (full detail: `docs/phase2_features.md`)
 - **Choice:** 256 px, CLAHE, all five handcrafted families (8,641 dims), `StandardScaler` inside the CV folds, each family weighted 1/sqrt(dims), no dimensionality reduction. Reference linear SVM: C=0.1, `class_weight="balanced"`.
@@ -58,6 +59,19 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 - **Answer to the plan's question:** one model with a region term and per-region thresholds matches the four region models (no measurable gap left) but does not measurably beat the unified model on test. The hip region effect is real in CV and reachable by a shared kernel; whether it generalises still needs more hip test data.
 - **Secondary finding:** the hip-only kernel `mtrbf_hip` recovered almost as much hip (+0.101 [+0.030, +0.174]) with no region pointing down in CV; it was not adoptable under rule S1 and was not tested.
 
+## Phase 7 summary (full detail: `docs/phase7_localization.md`)
+- **Design:** sliding windows {16, 40, 64} px (nine types) on the 448 px CLAHE image, handcrafted window features, linear SVM (C 0.1), 2 rounds of hard-negative mining, NMS 0.3, at most 10 boxes per image; 93.9% of training boxes reachable at IoU 0.5.
+- **CV (training images):** AP@50 0.0001 [0.0001, 0.0005]; round 0 (no mining) scored higher (0.0011) but D1 kept the planned 2 rounds. Best-window score as an image classifier: ROC-AUC 0.511 against Phase 3's 0.822.
+- **Test (used once, CV failure known beforehand, nothing changed):** AP@50 0.0003 [0.0001, 0.0009]; 6 of 176 test boxes hit at IoU 0.5. **The sliding-window detector does not localize fractures.** Lock: `results/phase7/TEST_EVALUATED.json`.
+- A read-only diagnosis on training images (`results/phase7b/diagnosis/`) found the false boxes are bone and joints as edge-rich as fractures, and that mining collapsed the detector; it motivated Phase 7b.
+
+## Phase 7b summary (full detail: `docs/phase7b_improvement.md`)
+- **Design:** two-stage cascade. Stage 1 = Phase 7 round-0 linear SVM, top 1,000 windows per image as proposals (cross-fitted: no stage-2 training proposal comes from a model that saw its image's fold). Stage 2 = HistGradientBoosting on window + context-ring features + window type + stage-1 score, trained on positives and 10:1 proposal negatives. Protocol, decision rules B1-B6 and leakage gates fixed before any 7b model (random forest dropped for runtime at STOP 2, before any CV run).
+- **CV (training images):** selected **H-wc** (context kept: +0.022 [+0.014, +0.034]; calibration not kept). AP@50 **0.032** [0.025, 0.048] against 0.0011 for stage 1 alone and 0.0001 for Phase 7; recall 11% at IoU 0.5 against an 81% proposal ceiling. B6 passed (beats both, CIs excluding 0). No implant shortcut (AP@50 without hardware 0.0325).
+- **Near-duplicates (new caveat):** 67 near-identical training image pairs (58 across folds, 34 fractured images involved) inflate the cascade's CV AP@50 (0.024 without them); stage 1 unaffected. On test, 26 of 817 images (5 of 176 boxes) have a near-duplicate in training.
+- **Test (second use of the test set, post-hoc follow-up; lock `results/phase7b/TEST_EVALUATED.json`):** AP@50 **0.021** [0.008, 0.043], against Phase 7 **+0.021 [+0.008, +0.043]**; without near-duplicates 0.020 [0.007, 0.045], +0.020 [+0.007, +0.045]. Recall 7.4% at IoU 0.5 (17.6% at IoU 0.3), precision 6.5%. Hand carries it (10 of 13 hits); leg weaker than in CV; hip and shoulder not resolvable. Image level still clearly below Phase 3 (PR-AUC 0.38 against 0.63).
+- **Answer:** a classical two-stage cascade gives a real, replicated localization gain over the Phase 7 detector, but it remains far from usable localization; Phase 3 stays the image-level model. Phase 7b is closed; the test set is not used again.
+
 ## Decisions to keep (details in `docs/data_decisions.md`)
 - Images: 4,083 total, 719 fractured (the plan says 717; 719 is correct, see `docs/data_decisions.md`).
 - Region groups: hand, leg (+leg-only), hip (+leg+hip), shoulder (+hand+shoulder), other (9 fractured images).
@@ -72,13 +86,15 @@ Percentages are rough, by planned effort (weeks in the plan), not by calendar.
 - Phase 2 scores tuned C and the feature set on the same folds and are slightly optimistic; Phase 3 CV numbers are nested (tuning inside the training folds). The Phase 3 test CIs hold the threshold fixed, so they ignore the uncertainty of choosing it.
 - Reproduction across machines is ~1e-3, not exact (Phase 6 gate G1); exact reproductions only hold on one machine with the same `--n-jobs`. Use the repo's `.venv` (Python 3.11.9); on the Phase 6 machine the bare `python` is 3.14 without imbalanced-learn.
 - Phase 6 shoulder loss on test (F2 -0.129 [-0.275, -0.034]) rests on 12 fractured images and was not significant in CV; report it as a single finding.
+- Near-duplicate images: 67 near-identical pairs in training (58 across folds) and 26 test images with a near-duplicate in training (pixel correlation > 0.999; found in Phase 7b). They inflate the Phase 7b cascade's CV AP@50 by about a third and barely change its test result; earlier phases' CV numbers may carry a smaller inflation of the same kind.
+- Phase 7b used the test set a second time (after Phase 7); its test numbers are a post-hoc follow-up.
 - Surgical hardware: 97 of 99 hardware images are fractured. Phase 3 test recall is the same with and without hardware, so no sign of a shortcut, but only 21 test images have hardware.
 
 ## Open items (from the plan)
 - [ ] Actual deadlines for remaining deliverables and the final presentation
 - [ ] Ask the instructor whether pretrained CNN features used only as feature extractors are allowed (assume not)
 - [x] FracAtlas metadata column names and treatment of multi-region / hardware images (Phase 1)
-- [ ] Patch sizes and window stride for Phase 7 (box-size percentiles are in `results/tables/eda_box_side_percentiles_256.csv`)
+- [x] Patch sizes and window stride for Phase 7 (done: {16, 40, 64} px windows, `docs/phase7_localization.md`) (box-size percentiles are in `results/tables/eda_box_side_percentiles_256.csv`)
 - [x] Which gap-closing strategies to prioritise (done in Phase 6; see the Phase 6 summary). Phase 5 had narrowed this to two, in order of cost: **per-region thresholds** on the single unified model (5.1: specialisation changes the threshold far more than the ranking), and a **shared-plus-region-specific kernel** aimed at hip (5.2: a region classifier reaches accuracy 0.94 from the features, macro-F1 0.765, but the unified model is not exploiting it). Both need validating in Phase 6 on their own terms.
 
 ## When a phase is finished (checklist)
