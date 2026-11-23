@@ -2,3 +2,5 @@
 [2026-11-23 16:01:05] end stage1 exit 0
 [2026-11-23 16:01:06] start cv_fold0: --cv-fold 0
 [2026-11-23 16:28:52] end cv_fold0 exit 0
+[2026-11-23 16:28:52] start cv_fold1: --cv-fold 1
+[2026-11-23 16:49:08] end cv_fold1 exit 0
