@@ -1,0 +1,33 @@
+{
+ "B1": {
+  "compare": "none (random forest dropped at the STOP 2 review)",
+  "diff": NaN,
+  "lo": NaN,
+  "hi": NaN,
+  "choice": "hgb"
+ },
+ "B2": {
+  "compare": "H-wc - H-w",
+  "diff": 0.022054672769674308,
+  "lo": 0.013564478066763782,
+  "hi": 0.03371839306763019,
+  "choice": "wc"
+ },
+ "B3": {
+  "compare": "H-wc-cal - H-wc",
+  "diff": 0.0021646349763733835,
+  "lo": -0.005158330766912055,
+  "hi": 0.011471113687490462,
+  "choice": false
+ },
+ "selected": {
+  "clf": "hgb",
+  "feat": "wc",
+  "cal": false,
+  "variant": "H-wc"
+ },
+ "grid": "revised",
+ "n_boot": 2000,
+ "boot_seed": 0,
+ "date": "2026-11-23T17:52:39"
+}

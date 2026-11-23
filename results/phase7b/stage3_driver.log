@@ -10,3 +10,5 @@
 [2026-11-23 17:31:42] end cv_fold3 exit 0
 [2026-11-23 17:31:42] start cv_fold4: --cv-fold 4
 [2026-11-23 17:49:51] end cv_fold4 exit 0
+[2026-11-23 17:49:52] start select: --select
+[2026-11-23 17:52:40] end select exit 0

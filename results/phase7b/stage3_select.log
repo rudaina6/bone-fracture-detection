@@ -1,0 +1,13 @@
+3266 training images (576 fractured, 748 boxes); stage-2 threads {'hgb_single': 3, 'inner_workers': 3, 'inner_threads': 2, 'rf_jobs': 6}
+ variant    ap50  ap50_lo  ap50_hi  ap50_95
+    H-wc 0.03213  0.02501  0.04784  0.00654
+     H-w 0.01008  0.00753  0.02055  0.00193
+H-wc-cal 0.03430  0.02671  0.05246  0.00669
+ H-w-cal 0.01134  0.00796  0.02259  0.00246
+      S1 0.00106  0.00075  0.00226  0.00023
+      P7 0.00015  0.00008  0.00052  0.00003
+B1: none (random forest dropped at the STOP 2 review) = +nan [+nan, +nan] -> hgb
+B2: H-wc - H-w = +0.02205 [+0.01356, +0.03372] -> wc
+B3: H-wc-cal - H-wc = +0.00216 [-0.00516, +0.01147] -> False
+selected: H-wc
+exit 0
