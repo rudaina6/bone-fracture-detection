@@ -4,3 +4,5 @@
 [2026-11-23 16:28:52] end cv_fold0 exit 0
 [2026-11-23 16:28:52] start cv_fold1: --cv-fold 1
 [2026-11-23 16:49:08] end cv_fold1 exit 0
+[2026-11-23 16:49:09] start cv_fold2: --cv-fold 2
+[2026-11-23 17:10:08] end cv_fold2 exit 0
