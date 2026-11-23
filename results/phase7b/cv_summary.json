@@ -1,0 +1,98 @@
+{
+ "selection": {
+  "B1": {
+   "compare": "none (random forest dropped at the STOP 2 review)",
+   "diff": NaN,
+   "lo": NaN,
+   "hi": NaN,
+   "choice": "hgb"
+  },
+  "B2": {
+   "compare": "H-wc - H-w",
+   "diff": 0.022054672769674308,
+   "lo": 0.013564478066763782,
+   "hi": 0.03371839306763019,
+   "choice": "wc"
+  },
+  "B3": {
+   "compare": "H-wc-cal - H-wc",
+   "diff": 0.0021646349763733835,
+   "lo": -0.005158330766912055,
+   "hi": 0.011471113687490462,
+   "choice": false
+  },
+  "selected": {
+   "clf": "hgb",
+   "feat": "wc",
+   "cal": false,
+   "variant": "H-wc"
+  },
+  "grid": "revised",
+  "n_boot": 2000,
+  "boot_seed": 0,
+  "date": "2026-11-23T17:52:39"
+ },
+ "threshold": 0.9694119744214414,
+ "threshold_f1_pooled": 0.10035419126328217,
+ "threshold_source": "detection CV (every outer fold chose the final configuration)",
+ "threshold_cv_needed": false,
+ "hyperparameter_check": {
+  "fold_cfgs": [
+   {
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 20
+   },
+   {
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 20
+   },
+   {
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 20
+   },
+   {
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 20
+   },
+   {
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 20
+   }
+  ],
+  "final_cfg": {
+   "max_leaf_nodes": 63,
+   "min_samples_leaf": 20
+  },
+  "fold_C": [
+   0.1,
+   0.1,
+   0.1,
+   0.1,
+   0.1
+  ],
+  "final_C": 0.1
+ },
+ "d_vs_S1": {
+  "diff": 0.03107602643155214,
+  "lo": 0.02364859233462476,
+  "hi": 0.046452976430236076
+ },
+ "d_vs_P7": {
+  "diff": 0.031986201696111626,
+  "lo": 0.02478612416273352,
+  "hi": 0.047648003422171015
+ },
+ "B6": {
+  "passed": true,
+  "rule": "selected beats S1 AND P7 on fold-mean AP@50, each 95% CI excluding 0",
+  "verdict": "final test allowed (after approval)"
+ },
+ "ap50_no_hardware": {
+  "H-wc": 0.0324652444829579,
+  "S1": 0.0011124981785127623,
+  "P7": 0.00016677109761734874
+ },
+ "n_boot": 2000,
+ "boot_seed": 0,
+ "date": "2026-11-23T18:21:11"
+}

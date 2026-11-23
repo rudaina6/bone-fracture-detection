@@ -14,3 +14,7 @@
 [2026-11-23 17:52:40] end select exit 0
 [2026-11-23 17:52:40] start final_params: --final-params
 [2026-11-23 18:13:25] end final_params exit 0
+{'fold_cfgs': [{'max_leaf_nodes': 63, 'min_samples_leaf': 20}, {'max_leaf_nodes': 63, 'min_samples_leaf': 20}, {'max_leaf_nodes': 63, 'min_samples_leaf': 20}, {'max_leaf_nodes': 63, 'min_samples_leaf': 20}, {'max_leaf_nodes': 63, 'min_samples_leaf': 20}], 'final_cfg': {'max_leaf_nodes': 63, 'min_samples_leaf': 20}, 'fold_C': [0.1, 0.1, 0.1, 0.1, 0.1], 'final_C': 0.1}
+threshold CV needed: 0
+[2026-11-23 18:13:32] start summarize: --summarize
+[2026-11-23 18:21:16] end summarize exit 0
