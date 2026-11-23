@@ -1,0 +1,28 @@
+{
+ "variant": "H-wc",
+ "cfg": {
+  "max_leaf_nodes": 63,
+  "min_samples_leaf": 20
+ },
+ "calibration": null,
+ "stage1_C": 0.1,
+ "threshold": 0.9694119744214414,
+ "threshold_source": "detection CV (every outer fold chose the final configuration)",
+ "k_prop": 1000,
+ "neg_ratio": 10,
+ "nms_iou": 0.3,
+ "keep_per_image": 10,
+ "n_train_rows": 38621,
+ "b6": {
+  "passed": true,
+  "rule": "selected beats S1 AND P7 on fold-mean AP@50, each 95% CI excluding 0",
+  "verdict": "final test allowed (after approval)"
+ },
+ "date": "2026-11-23T19:39:12",
+ "seconds": 2173.515456676483,
+ "n_test_images": 817,
+ "n_test_boxes": 176,
+ "n_test_images_dedup": 791,
+ "n_test_boxes_dedup": 171,
+ "post_hoc": "second use of the test set (Phase 7 used it first)"
+}
